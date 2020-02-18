@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useImperativeHandle, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -45,6 +45,9 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     tabIndex: tabIndexProp,
     ...other
   } = props;
+  
+  const listItemRef = useRef(null);
+  useImperativeHandle(ref, () => listItemRef.current);
 
   const hasSubMenu = nestedItems.length > 0;
 
@@ -70,12 +73,12 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           },
           className,
         )}
-        ref={ref}
+        ref={listItemRef}
         {...other}
       />
       {hasSubMenu ? (
         <Menu
-          anchorEl={ref.current}
+          anchorEl={listItemRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           autoFocus={false}
           disableAutoFocus
