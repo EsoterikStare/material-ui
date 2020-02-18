@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -54,12 +54,17 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   } = props;
   const theme = useTheme();
 
+  const [lastEnteredItemIndex, setLastEnteredItemIndex] = useState();
+
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
 
   const menuListActionsRef = React.useRef(null);
   const contentAnchorRef = React.useRef(null);
 
-  const getContentAnchorEl = () => contentAnchorRef.current;
+  const getContentAnchorEl = () => {
+    console.log('Menu getContentAnchorEl func', contentAnchorRef.current);
+    return contentAnchorRef.current;
+  };
 
   const handleEntering = (element, isAppearing) => {
     if (menuListActionsRef.current) {
@@ -115,14 +120,40 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   });
 
+  // const calcAnyNestedMenus = () =>
+  //   React.Children.map(child => Boolean(child.props.nestedItems));
+  // const atLeastOneNestedMenu = React.useMemo(() => calcAnyNestedMenus().some(hasNestedItems => hasNestedItems === true), calcAnyNestedMenus);
+
   const items = React.Children.map(children, (child, index) => {
+    const hasNestedMenu = Boolean(child.props.nestedItems);
+    const additionalProps = {};
+
     if (index === activeItemIndex) {
+      additionalProps.ref = instance => {
+        // #StrictMode ready
+        contentAnchorRef.current = ReactDOM.findDOMNode(instance);
+        setRef(child.ref, instance);
+      },
+    }
+
+    if (hasNestedMenu) {
+      additionalProps.openNested = hasNestedMenu && index === lastEnteredItemIndex;
+    }
+
+    if (/* atLeastOneNestedMenu */ true) {
+      additionalProps.onMouseEnter = () => {
+        setLastEnteredItemIndex(index);
+        console.log('item onEnter', {
+          nestedItems: child.props.nestedItems,
+          index,
+          lastEnteredItemIndex,
+        });
+      };
+    }
+
+    if (Object.keys(additionalProps).length > 0) {
       return React.cloneElement(child, {
-        ref: (instance) => {
-          // #StrictMode ready
-          contentAnchorRef.current = ReactDOM.findDOMNode(instance);
-          setRef(child.ref, instance);
-        },
+        ...additionalProps,
       });
     }
 
@@ -135,7 +166,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       classes={PopoverClasses}
       onClose={onClose}
       onEntering={handleEntering}
-      anchorOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
+      anchorOrigin={theme.direction !== 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       PaperProps={{
         ...PaperProps,

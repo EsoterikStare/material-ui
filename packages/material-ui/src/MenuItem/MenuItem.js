@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ListItem from '../ListItem';
+import Menu from '../Menu';
 
 export const styles = (theme) => ({
   /* Styles applied to the root element. */
@@ -37,36 +38,56 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     className,
     component = 'li',
     disableGutters = false,
+    nestedItems = [],
+    openNested,
     role = 'menuitem',
     selected,
     tabIndex: tabIndexProp,
     ...other
   } = props;
 
+  const hasSubMenu = nestedItems.length > 0;
+
   let tabIndex;
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
   return (
-    <ListItem
-      button
-      role={role}
-      tabIndex={tabIndex}
-      component={component}
-      selected={selected}
-      disableGutters={disableGutters}
-      classes={{ dense: classes.dense }}
-      className={clsx(
-        classes.root,
-        {
-          [classes.selected]: selected,
-          [classes.gutters]: !disableGutters,
-        },
-        className,
-      )}
-      ref={ref}
-      {...other}
-    />
+    <>
+      <ListItem
+        button
+        role={role}
+        tabIndex={tabIndex}
+        component={component}
+        selected={selected}
+        disableGutters={disableGutters}
+        classes={{ dense: classes.dense }}
+        className={clsx(
+          classes.root,
+          {
+            [classes.selected]: selected,
+            [classes.gutters]: !disableGutters,
+          },
+          className,
+        )}
+        ref={ref}
+        {...other}
+      />
+      {hasSubMenu ? (
+        <Menu
+          anchorEl={ref.current}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          autoFocus={false}
+          disableAutoFocus
+          disableEnforceFocus
+          // onClose={() => setAnchorEl(null)}
+          open={openNested}
+          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        >
+          {nestedItems}
+        </Menu>
+      ) : null}
+    </>
   );
 });
 
@@ -102,8 +123,17 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
+   * An array of MenuItems to render in a sub-Menu
+   */
+  nestedItems: PropTypes.arrayOf(PropTypes.node),
+  /**
    * @ignore
    */
+  openNested: PropTypes.bool,
+  /**
+   * @ignore
+   */
+  
   role: PropTypes.string,
   /**
    * @ignore

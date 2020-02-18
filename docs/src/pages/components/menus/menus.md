@@ -28,6 +28,13 @@ To use a selected menu item without impacting the initial focus or the vertical 
 
 {{"demo": "pages/components/menus/SimpleListMenu.js"}}
 
+## Nested menus
+
+Test demo for WIP cascading/nested menu solution
+
+{{"demo": "pages/components/menus/NestedMenu.js"}}
+
+
 ## MenuList composition
 
 The `Menu` component uses the `Popover` component internally.
