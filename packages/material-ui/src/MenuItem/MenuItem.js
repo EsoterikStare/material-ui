@@ -40,12 +40,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     disableGutters = false,
     nestedItems = [],
     openNested,
+    parentMenuOpen,
     role = 'menuitem',
     selected,
+    onSubMenuClose,
     tabIndex: tabIndexProp,
     ...other
   } = props;
-  
+
   const listItemRef = useRef(null);
   useImperativeHandle(ref, () => listItemRef.current);
 
@@ -55,6 +57,9 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
+
+  console.log('MenuItem', { openNested });
+
   return (
     <>
       <ListItem
@@ -83,11 +88,15 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           autoFocus={false}
           disableAutoFocus
           disableEnforceFocus
-          // onClose={() => setAnchorEl(null)}
-          open={openNested}
+          onClose={() => {console.log('sub menu closed!'); onSubMenuClose();}}
+          open={openNested && parentMenuOpen}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          style={{ pointerEvents: 'none' }} // disable click away mask for submenus
+          subMenu
         >
-          {nestedItems}
+          <div style={{ pointerEvents: 'auto' }} /* re-enable click events on submenu child */ > 
+            {nestedItems}
+          </div>
         </Menu>
       ) : null}
     </>
@@ -136,7 +145,6 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
-  
   role: PropTypes.string,
   /**
    * @ignore

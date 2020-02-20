@@ -43,28 +43,31 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     classes,
     disableAutoFocusItem = false,
     MenuListProps = {},
-    onClose,
+    onClose: onCloseProp,
     onEntering,
     open,
     PaperProps = {},
     PopoverClasses,
     transitionDuration = 'auto',
+    subMenu = false,
     variant = 'selectedMenu',
     ...other
   } = props;
   const theme = useTheme();
 
-  const [lastEnteredItemIndex, setLastEnteredItemIndex] = useState();
+  const [lastEnteredItemIndex, setLastEnteredItemIndexActual] = useState(null);
+
+  const setLastEnteredItemIndex = val => {
+    console.log('setLastEnteredItemIndex called: ', val);
+    setLastEnteredItemIndexActual(val)
+  };
 
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
 
   const menuListActionsRef = React.useRef(null);
   const contentAnchorRef = React.useRef(null);
 
-  const getContentAnchorEl = () => {
-    console.log('Menu getContentAnchorEl func', contentAnchorRef.current);
-    return contentAnchorRef.current;
-  };
+  const getContentAnchorEl = () => contentAnchorRef.current;
 
   const handleEntering = (element, isAppearing) => {
     if (menuListActionsRef.current) {
@@ -80,8 +83,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (event.key === 'Tab') {
       event.preventDefault();
 
-      if (onClose) {
-        onClose(event, 'tabKeyDown');
+      if (onCloseProp) {
+        onCloseProp(event, 'tabKeyDown');
       }
     }
   };
@@ -126,9 +129,15 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const items = React.Children.map(children, (child, index) => {
     const hasNestedMenu = Boolean(child.props.nestedItems);
+    let additionalPropsAdded = false;
     const additionalProps = {};
+    const { anchorEl, subMenuIndex } = other;
+
+    // console.log('items children build-up', { hasNestedMenu });
 
     if (index === activeItemIndex) {
+      additionalPropsAdded = true;
+
       additionalProps.ref = instance => {
         // #StrictMode ready
         contentAnchorRef.current = ReactDOM.findDOMNode(instance);
@@ -137,21 +146,28 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
 
     if (hasNestedMenu) {
-      additionalProps.openNested = hasNestedMenu && index === lastEnteredItemIndex;
-    }
+      additionalPropsAdded = true;
 
+      additionalProps.openNested = hasNestedMenu && index === lastEnteredItemIndex;
+      additionalProps.parentMenuOpen = Boolean(anchorEl);
+      additionalProps.onSubMenuClose = () => setLastEnteredItemIndex(null);
+    }
+    
     if (/* atLeastOneNestedMenu */ true) {
+      additionalPropsAdded = true;
+      
+      const onClickWithMenuReset = event => {
+        console.log('onClickWithReset')
+        setLastEnteredItemIndex(null);
+        if (child.props.onClick) child.props.onClick(event);
+      };
+      additionalProps.onClick = onClickWithMenuReset;
       additionalProps.onMouseEnter = () => {
         setLastEnteredItemIndex(index);
-        console.log('item onEnter', {
-          nestedItems: child.props.nestedItems,
-          index,
-          lastEnteredItemIndex,
-        });
       };
     }
 
-    if (Object.keys(additionalProps).length > 0) {
+    if (additionalPropsAdded) {
       return React.cloneElement(child, {
         ...additionalProps,
       });
@@ -159,6 +175,15 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
     return child;
   });
+
+  const onClose = event => {
+    setLastEnteredItemIndex(null);
+    console.log('root menu onClose called');
+
+    if (onCloseProp) onCloseProp(event);
+  };
+
+  console.log('Menu', { items: items.map(item => ({itemName: item.props.children, onClick: item.props.onClick})) })
 
   return (
     <Popover
@@ -190,7 +215,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         {...MenuListProps}
         className={clsx(classes.list, MenuListProps.className)}
       >
-        {items}
+        {subMenu ? items[0] : items}
       </MenuList>
     </Popover>
   );

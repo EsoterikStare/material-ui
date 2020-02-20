@@ -7,6 +7,7 @@ export default function SimpleMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
+    console.log('demo onClick')
     setAnchorEl(event.currentTarget);
   };
 
@@ -14,11 +15,21 @@ export default function SimpleMenu() {
     setAnchorEl(null);
   };
 
+  const autoSaveItems = [
+    <MenuItem onClick={handleClose}>On Exit</MenuItem>,
+    <MenuItem onClick={handleClose}>On Change</MenuItem>,
+  ];
+
   const settingItems = [
     <MenuItem onClick={handleClose}>Dark Mode</MenuItem>,
     <MenuItem onClick={handleClose}>Verbos Logging</MenuItem>,
-    <MenuItem onClick={handleClose}>Auto-save</MenuItem>
+    <MenuItem nestedItems={autoSaveItems}>Auto-save</MenuItem>
   ];
+
+  const myAccountItems = [
+    <MenuItem onClick={handleClose}>Reset password</MenuItem>,
+    <MenuItem onClick={handleClose}>Change username</MenuItem>,
+  ]
 
   return (
     <div>
@@ -34,7 +45,7 @@ export default function SimpleMenu() {
         // variant="selectedMenu"
       >
         <MenuItem nestedItems={settingItems}>Settings</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem nestedItems={myAccountItems}>My account</MenuItem>
         <MenuItem onClick={handleClose}>Logout</MenuItem>
       </Menu>
     </div>
