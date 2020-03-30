@@ -142,7 +142,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         // #StrictMode ready
         contentAnchorRef.current = ReactDOM.findDOMNode(instance);
         setRef(child.ref, instance);
-      },
+      };
     }
 
     if (hasNestedMenu) {
