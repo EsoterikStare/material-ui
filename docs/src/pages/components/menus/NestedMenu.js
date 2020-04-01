@@ -7,7 +7,7 @@ export default function SimpleMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
-    console.log('demo onClick')
+    // console.log('demo onClick')
     setAnchorEl(event.currentTarget);
   };
 
@@ -16,20 +16,26 @@ export default function SimpleMenu() {
   };
 
   const autoSaveItems = [
-    <MenuItem onClick={handleClose}>On Exit</MenuItem>,
-    <MenuItem onClick={handleClose}>On Change</MenuItem>,
+    <MenuItem debug onClick={handleClose}>On Exit</MenuItem>,
+    <MenuItem debug onClick={handleClose}>On Change</MenuItem>,
   ];
 
   const settingItems = [
-    <MenuItem onClick={handleClose}>Dark Mode</MenuItem>,
-    <MenuItem onClick={handleClose}>Verbos Logging</MenuItem>,
-    <MenuItem nestedItems={autoSaveItems}>Auto-save</MenuItem>
+    // <MenuItem debug onClick={handleClose}>Dark Mode</MenuItem>,
+    // <MenuItem debug onClick={handleClose}>Verbos Logging</MenuItem>,
+    <MenuItem debug nestedItems={autoSaveItems}>Auto-save</MenuItem>
   ];
 
   const myAccountItems = [
-    <MenuItem onClick={handleClose}>Reset password</MenuItem>,
-    <MenuItem onClick={handleClose}>Change username</MenuItem>,
-  ]
+    <MenuItem debug onClick={handleClose}>Reset password</MenuItem>,
+    <MenuItem debug onClick={handleClose}>Change username</MenuItem>,
+  ];
+
+  const mainMenuItems = [
+    <MenuItem debug nestedItems={settingItems}>Settings</MenuItem>,
+    // <MenuItem debug nestedItems={myAccountItems}>My account</MenuItem>,
+    // <MenuItem debug onClick={handleClose}>Logout</MenuItem>
+  ];
 
   return (
     <div>
@@ -37,6 +43,7 @@ export default function SimpleMenu() {
         Open Menu
       </Button>
       <Menu
+        debug
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -44,9 +51,7 @@ export default function SimpleMenu() {
         onClose={handleClose}
         // variant="selectedMenu"
       >
-        <MenuItem nestedItems={settingItems}>Settings</MenuItem>
-        <MenuItem nestedItems={myAccountItems}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        {mainMenuItems}
       </Menu>
     </div>
   );

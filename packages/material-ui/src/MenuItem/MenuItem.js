@@ -38,9 +38,9 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     className,
     component = 'li',
     disableGutters = false,
-    nestedItems = [],
-    openNested,
-    parentMenuOpen,
+    nestedItems = undefined,
+    openSubMenu = false,
+    parentMenuOpen = false,
     role = 'menuitem',
     selected,
     onSubMenuClose,
@@ -48,20 +48,26 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     ...other
   } = props;
 
+  const debugConsole = (...args) => {
+    const targetItems = undefined;
+    // const targetItems = ['Auto-save', 'On Exit', 'On Change'];
+    if (other.debug === true && (!targetItems || targetItems.includes(other.children))) {
+      console.log(...args);
+    }
+  }
+
   const listItemRef = useRef(null);
   useImperativeHandle(ref, () => listItemRef.current);
-
-  const hasSubMenu = nestedItems.length > 0;
 
   let tabIndex;
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
 
-  console.log('MenuItem', { openNested });
+  debugConsole(`${other.children} MenuItem`, { listItemRef, openSubMenu, parentMenuOpen, nestedItems, other });
 
   return (
-    <>
+    <React.Fragment>
       <ListItem
         button
         role={role}
@@ -81,15 +87,16 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         ref={listItemRef}
         {...other}
       />
-      {hasSubMenu ? (
+      {nestedItems ? (
         <Menu
+          debug
           anchorEl={listItemRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           autoFocus={false}
           disableAutoFocus
           disableEnforceFocus
           onClose={() => {console.log('sub menu closed!'); onSubMenuClose();}}
-          open={openNested && parentMenuOpen}
+          open={(openSubMenu && parentMenuOpen) || false}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           style={{ pointerEvents: 'none' }} // disable click away mask for submenus
           subMenu
@@ -99,7 +106,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           </div>
         </Menu>
       ) : null}
-    </>
+    </React.Fragment>
   );
 });
 
@@ -141,7 +148,7 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
-  openNested: PropTypes.bool,
+  openSubMenu: PropTypes.bool,
   /**
    * @ignore
    */

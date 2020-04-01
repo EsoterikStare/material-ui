@@ -42,6 +42,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     children,
     classes,
     disableAutoFocusItem = false,
+    subMenuIndexPath = [],
     MenuListProps = {},
     onClose: onCloseProp,
     onEntering,
@@ -55,10 +56,16 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   } = props;
   const theme = useTheme();
 
+  const debugConsole = (...args) => {
+    if (other.debug === true) {
+      console.log(...args);
+    }
+  }
+
   const [lastEnteredItemIndex, setLastEnteredItemIndexActual] = useState(null);
 
   const setLastEnteredItemIndex = val => {
-    console.log('setLastEnteredItemIndex called: ', val);
+    // debugConsole('setLastEnteredItemIndex called: ', val);
     setLastEnteredItemIndexActual(val)
   };
 
@@ -123,51 +130,72 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   });
 
-  // const calcAnyNestedMenus = () =>
-  //   React.Children.map(child => Boolean(child.props.nestedItems));
-  // const atLeastOneNestedMenu = React.useMemo(() => calcAnyNestedMenus().some(hasNestedItems => hasNestedItems === true), calcAnyNestedMenus);
-
   const items = React.Children.map(children, (child, index) => {
-    const hasNestedMenu = Boolean(child.props.nestedItems);
+    const relevantProps = subMenu ? child.props.children[index].props : child.props;
+    const { anchorEl } = other;
+    const hasNestedMenu = Boolean(relevantProps.nestedItems);
+
     let additionalPropsAdded = false;
-    const additionalProps = {};
-    const { anchorEl, subMenuIndex } = other;
-
-    // console.log('items children build-up', { hasNestedMenu });
-
+    const additionalProps = {}; 
+    
+    // This is the original purpase of this React.Children.map and is basically unchanged.
     if (index === activeItemIndex) {
       additionalPropsAdded = true;
-
-      additionalProps.ref = instance => {
-        // #StrictMode ready
-        contentAnchorRef.current = ReactDOM.findDOMNode(instance);
-        setRef(child.ref, instance);
-      };
+      
+      Object.assign(additionalProps, {
+        ref: instance => {
+          // #StrictMode ready
+          contentAnchorRef.current = ReactDOM.findDOMNode(instance);
+          setRef(child.ref, instance);
+        }
+      });
     }
-
+    
+    // If the current child (MenuItem) in this map has nestedItems,
+    // we need the Menu to orchestrate its submenu
     if (hasNestedMenu) {
       additionalPropsAdded = true;
 
-      additionalProps.openNested = hasNestedMenu && index === lastEnteredItemIndex;
-      additionalProps.parentMenuOpen = Boolean(anchorEl);
-      additionalProps.onSubMenuClose = () => setLastEnteredItemIndex(null);
+      Object.assign(additionalProps, {
+        openSubMenu: hasNestedMenu && index === lastEnteredItemIndex,
+        parentMenuOpen: Boolean(anchorEl),
+        onSubMenuClose: () => setLastEnteredItemIndex(null),
+      });
+      
     }
     
+    // If there are ANY children with nestedMenus, then ALL 
+    // of the children need to know how to close any open submenus
+    // and reset the state that controls which nested menu is open.
     if (/* atLeastOneNestedMenu */ true) {
       additionalPropsAdded = true;
       
       const onClickWithMenuReset = event => {
-        console.log('onClickWithReset')
+        // debugConsole('onClickWithReset')
         setLastEnteredItemIndex(null);
         if (child.props.onClick) child.props.onClick(event);
       };
-      additionalProps.onClick = onClickWithMenuReset;
-      additionalProps.onMouseEnter = () => {
-        setLastEnteredItemIndex(index);
-      };
+      
+      Object.assign(additionalProps, {
+        onClick: onClickWithMenuReset,
+        onMouseEnter: () => {
+          setLastEnteredItemIndex(index);
+        }
+      });
     }
+    
+    debugConsole(`Menu orchestration for ${relevantProps.children}`, { relevantProps, index, other, hasNestedMenu, anchorEl, lastEnteredItemIndex });
 
+    // Using a semaphore instead of inspecting addtionalProps
+    // directly to avoid performance hits at scale. Might be 
+    // fine to just do Object.keys(additionalProps).length > 0,
+    // but that seems like iterations we can avoid.
     if (additionalPropsAdded) {
+      // if (subMenu) {
+      //   return React.cloneElement(child.props.children, {
+      //     ...additionalProps,
+      //   })
+      // }
       return React.cloneElement(child, {
         ...additionalProps,
       });
@@ -178,12 +206,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const onClose = event => {
     setLastEnteredItemIndex(null);
-    console.log('root menu onClose called');
 
     if (onCloseProp) onCloseProp(event);
   };
-
-  console.log('Menu', { items: items.map(item => ({itemName: item.props.children, onClick: item.props.onClick})) })
 
   return (
     <Popover
@@ -215,7 +240,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         {...MenuListProps}
         className={clsx(classes.list, MenuListProps.className)}
       >
-        {subMenu ? items[0] : items}
+        {items}
       </MenuList>
     </Popover>
   );
