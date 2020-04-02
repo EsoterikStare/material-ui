@@ -11,30 +11,53 @@ export default function SimpleMenu() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleItemClick = () => {
+    console.log('handle item click')
     setAnchorEl(null);
   };
 
   const autoSaveItems = [
-    <MenuItem debug onClick={handleClose}>On Exit</MenuItem>,
-    <MenuItem debug onClick={handleClose}>On Change</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>On Exit</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>On Change</MenuItem>,
   ];
 
+  const deeper3 = [
+    <MenuItem debug onClick={handleItemClick}>You did it!</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>You did it!</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>You did it!</MenuItem>
+  ]
+  
+  const deeper2 = [
+    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem debug nestedItems={deeper3}>Go deeper</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>
+  ]
+  
+  const deeper1= [
+    <MenuItem debug nestedItems={deeper2}>Go deeper</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>
+  ]
+
   const settingItems = [
-    // <MenuItem debug onClick={handleClose}>Dark Mode</MenuItem>,
-    // <MenuItem debug onClick={handleClose}>Verbos Logging</MenuItem>,
-    <MenuItem debug nestedItems={autoSaveItems}>Auto-save</MenuItem>
+    <MenuItem debug onClick={handleItemClick}>Dark Mode</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Verbos Logging</MenuItem>,
+    <MenuItem debug nestedItems={autoSaveItems}>Auto-save</MenuItem>,
+    <MenuItem debug nestedItems={deeper1}>Go deeper</MenuItem>
   ];
 
   const myAccountItems = [
-    <MenuItem debug onClick={handleClose}>Reset password</MenuItem>,
-    <MenuItem debug onClick={handleClose}>Change username</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Reset password</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Change username</MenuItem>,
   ];
 
   const mainMenuItems = [
     <MenuItem debug nestedItems={settingItems}>Settings</MenuItem>,
-    // <MenuItem debug nestedItems={myAccountItems}>My account</MenuItem>,
-    // <MenuItem debug onClick={handleClose}>Logout</MenuItem>
+    <MenuItem debug nestedItems={myAccountItems}>My account</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>Logout</MenuItem>
   ];
 
   return (
@@ -43,12 +66,12 @@ export default function SimpleMenu() {
         Open Menu
       </Button>
       <Menu
-        debug
+        // debug
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}
+        onClose={handleItemClick}
         // variant="selectedMenu"
       >
         {mainMenuItems}

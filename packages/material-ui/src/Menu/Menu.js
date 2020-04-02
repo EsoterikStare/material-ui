@@ -34,6 +34,9 @@ export const styles = {
     // We disable the focus ring for mouse, touch and keyboard users.
     outline: 0,
   },
+  nestedMenuItem: {
+    pointerEvents: 'auto' // re-enable click events on nested Menu items
+  },
 };
 
 const Menu = React.forwardRef(function Menu(props, ref) {
@@ -42,7 +45,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     children,
     classes,
     disableAutoFocusItem = false,
-    subMenuIndexPath = [],
     MenuListProps = {},
     onClose: onCloseProp,
     onEntering,
@@ -50,7 +52,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     PaperProps = {},
     PopoverClasses,
     transitionDuration = 'auto',
-    subMenu = false,
+    nestedMenu = false,
     variant = 'selectedMenu',
     ...other
   } = props;
@@ -131,9 +133,11 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   });
 
   const items = React.Children.map(children, (child, index) => {
-    const relevantProps = subMenu ? child.props.children[index].props : child.props;
-    const { anchorEl } = other;
-    const hasNestedMenu = Boolean(relevantProps.nestedItems);
+    const { nestedItems } = child.props;
+    const { anchorEl, atLeastOneNestedMenu } = other;
+
+    const hasNestedMenu = Boolean(nestedItems);
+    const parentMenuOpen = Boolean(anchorEl)
 
     let additionalPropsAdded = false;
     const additionalProps = {}; 
@@ -150,54 +154,61 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         }
       });
     }
+
+    if (nestedMenu) {
+      additionalPropsAdded = true;
+
+      Object.assign(additionalProps, {
+        // Tells each MenuItem that it's in a nested Menu so the style that re-enables
+        // pointer-events can be applied.
+        className: classes.nestedMenuItem 
+      });
+    }
     
-    // If the current child (MenuItem) in this map has nestedItems,
-    // we need the Menu to orchestrate its submenu
+    // If the current item in this map has nestedItems,
+    // we need the Menu to orchestrate its nestedMenu
     if (hasNestedMenu) {
       additionalPropsAdded = true;
 
       Object.assign(additionalProps, {
-        openSubMenu: hasNestedMenu && index === lastEnteredItemIndex,
-        parentMenuOpen: Boolean(anchorEl),
-        onSubMenuClose: () => setLastEnteredItemIndex(null),
+        openNestedMenu: index === lastEnteredItemIndex && parentMenuOpen ,
       });
       
     }
     
     // If there are ANY children with nestedMenus, then ALL 
-    // of the children need to know how to close any open submenus
+    // of the children need to know how to close any open nestedMenus
     // and reset the state that controls which nested menu is open.
-    if (/* atLeastOneNestedMenu */ true) {
+    if (atLeastOneNestedMenu || true) {
       additionalPropsAdded = true;
       
-      const onClickWithMenuReset = event => {
-        // debugConsole('onClickWithReset')
+      // If there is an incoming onClick for the item, inject our menu state management
+      // function into it, otherwise do nothing.
+      const onClickWithMenuReset = child.props.onClick ? event => {
+        console.log('onClickWithReset')
         setLastEnteredItemIndex(null);
-        if (child.props.onClick) child.props.onClick(event);
-      };
+        child.props.onClick(event);
+      } : undefined;
       
       Object.assign(additionalProps, {
+        onNestedMenuClose: () => setLastEnteredItemIndex(null),
         onClick: onClickWithMenuReset,
         onMouseEnter: () => {
+          // console.log('Menu\'s onMouseEnter', { index, setLastEnteredItemIndex, lastEnteredItemIndex })
           setLastEnteredItemIndex(index);
         }
       });
     }
-    
-    debugConsole(`Menu orchestration for ${relevantProps.children}`, { relevantProps, index, other, hasNestedMenu, anchorEl, lastEnteredItemIndex });
+
+    debugConsole(`${child.props.children} Menu orchestration`, { child, additionalProps, additionalPropsAdded, index, other, hasNestedMenu, anchorEl, lastEnteredItemIndex });
 
     // Using a semaphore instead of inspecting addtionalProps
     // directly to avoid performance hits at scale. Might be 
     // fine to just do Object.keys(additionalProps).length > 0,
     // but that seems like iterations we can avoid.
     if (additionalPropsAdded) {
-      // if (subMenu) {
-      //   return React.cloneElement(child.props.children, {
-      //     ...additionalProps,
-      //   })
-      // }
       return React.cloneElement(child, {
-        ...additionalProps,
+        ...additionalProps
       });
     }
 

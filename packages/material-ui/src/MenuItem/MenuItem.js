@@ -30,6 +30,9 @@ export const styles = (theme) => ({
     ...theme.typography.body2,
     minHeight: 'auto',
   },
+  nestedMenu: {
+    pointerEvents: 'none' // disable click away mask for nested Menus
+  },
 });
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
@@ -39,11 +42,11 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     component = 'li',
     disableGutters = false,
     nestedItems = undefined,
-    openSubMenu = false,
-    parentMenuOpen = false,
+    openNestedMenu = false,
     role = 'menuitem',
     selected,
-    onSubMenuClose,
+    onMouseEnter: onMouseEnterProp = undefined,
+    onNestedMenuClose,
     tabIndex: tabIndexProp,
     ...other
   } = props;
@@ -64,7 +67,17 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
 
-  debugConsole(`${other.children} MenuItem`, { listItemRef, openSubMenu, parentMenuOpen, nestedItems, other });
+  const onMouseEnter = e => {
+    // console.log('Menu Item mouse-enter');
+    if (onMouseEnterProp) {
+      onMouseEnterProp(e);
+    }
+  }
+
+  // TODO: This doesn't work correctly yet. Consumption in the Menu component is hard-coded to true to keep stuff working for now.
+  const atLeastOneNestedMenu = nestedItems ? nestedItems.some(item => typeof item.props.nestedItems !== 'undefined') : false;
+
+  // debugConsole(`${other.children} MenuItem`, { listItemRef, openNestedMenu, nestedItems, other });
 
   return (
     <React.Fragment>
@@ -84,26 +97,26 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           },
           className,
         )}
+        onMouseEnter={onMouseEnter}
         ref={listItemRef}
         {...other}
       />
-      {nestedItems ? (
+      {openNestedMenu ? (
         <Menu
+          atLeastOneNestedMenu={atLeastOneNestedMenu}
+          className={classes.nestedMenu}
           debug
           anchorEl={listItemRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           autoFocus={false}
           disableAutoFocus
           disableEnforceFocus
-          onClose={() => {console.log('sub menu closed!'); onSubMenuClose();}}
-          open={(openSubMenu && parentMenuOpen) || false}
+          onClose={() => {console.log('nested menu closed!'); onNestedMenuClose();}}
+          open={openNestedMenu}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          style={{ pointerEvents: 'none' }} // disable click away mask for submenus
-          subMenu
+          nestedMenu
         >
-          <div style={{ pointerEvents: 'auto' }} /* re-enable click events on submenu child */ > 
-            {nestedItems}
-          </div>
+          {nestedItems}
         </Menu>
       ) : null}
     </React.Fragment>
@@ -148,7 +161,7 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
-  openSubMenu: PropTypes.bool,
+  openNestedMenu: PropTypes.bool,
   /**
    * @ignore
    */
