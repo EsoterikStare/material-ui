@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useRef, useState } from 'react';
+import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -41,11 +41,11 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     className,
     component = 'li',
     disableGutters = false,
-    nestedItems = undefined,
+    nestedItems,
     openNestedMenu = false,
     role = 'menuitem',
     selected,
-    onMouseEnter: onMouseEnterProp = undefined,
+    onMouseEnter: onMouseEnterProp,
     onNestedMenuClose,
     tabIndex: tabIndexProp,
     ...other
@@ -149,6 +149,14 @@ MenuItem.propTypes = {
    * An array of MenuItems to render in a sub-Menu
    */
   nestedItems: PropTypes.arrayOf(PropTypes.node),
+  /**
+   * @ignore
+   */
+  onMouseEnter: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onNestedMenuClose: PropTypes.func,
   /**
    * @ignore
    */
