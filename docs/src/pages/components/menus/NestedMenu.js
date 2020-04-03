@@ -6,13 +6,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 export default function SimpleMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = event => {
-    // console.log('demo onClick')
+  const handleButtonClick = event => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleItemClick = () => {
-    console.log('handle item click')
     setAnchorEl(null);
   };
 
@@ -62,7 +60,7 @@ export default function SimpleMenu() {
 
   return (
     <div>
-      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleButtonClick}>
         Open Menu
       </Button>
       <Menu
