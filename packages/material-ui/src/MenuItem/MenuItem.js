@@ -45,7 +45,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     openNestedMenu = false,
     role = 'menuitem',
     selected,
-    onMouseEnter: onMouseEnterProp,
     onNestedMenuClose,
     tabIndex: tabIndexProp,
     ...other
@@ -58,18 +57,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
-
-  const onMouseEnter = e => {
-    // console.log('Menu Item mouse-enter');
-    if (onMouseEnterProp) {
-      onMouseEnterProp(e);
-    }
-  }
-
-  // TODO: This doesn't work correctly yet. Consumption in the Menu component is hard-coded to true to keep stuff working for now.
-  const atLeastOneNestedMenu = nestedItems ? nestedItems.some(item => typeof item.props.nestedItems !== 'undefined') : false;
-
-  // debugConsole(`${other.children} MenuItem`, { listItemRef, openNestedMenu, nestedItems, other });
 
   return (
     <React.Fragment>
@@ -89,13 +76,11 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           },
           className,
         )}
-        onMouseEnter={onMouseEnter}
         ref={listItemRef}
         {...other}
       />
       {openNestedMenu ? (
         <Menu
-          atLeastOneNestedMenu={atLeastOneNestedMenu}
           className={classes.nestedMenu}
           anchorEl={listItemRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
