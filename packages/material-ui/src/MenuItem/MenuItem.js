@@ -51,14 +51,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     ...other
   } = props;
 
-  const debugConsole = (...args) => {
-    const targetItems = undefined;
-    // const targetItems = ['Auto-save', 'On Exit', 'On Change'];
-    if (other.debug === true && (!targetItems || targetItems.includes(other.children))) {
-      console.log(...args);
-    }
-  }
-
   const listItemRef = useRef(null);
   useImperativeHandle(ref, () => listItemRef.current);
 
@@ -105,13 +97,12 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         <Menu
           atLeastOneNestedMenu={atLeastOneNestedMenu}
           className={classes.nestedMenu}
-          debug
           anchorEl={listItemRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           autoFocus={false}
           disableAutoFocus
           disableEnforceFocus
-          onClose={() => {console.log('nested menu closed!'); onNestedMenuClose();}}
+          onClose={e => onNestedMenuClose(e)}
           open={openNestedMenu}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           nestedMenu

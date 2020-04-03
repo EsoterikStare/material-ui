@@ -16,11 +16,6 @@ export default function SimpleMenu() {
     setAnchorEl(null);
   };
 
-  const autoSaveItems = [
-    <MenuItem debug onClick={handleItemClick}>On Exit</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>On Change</MenuItem>,
-  ];
-
   const deeper3 = [
     <MenuItem debug onClick={handleItemClick}>You did it!</MenuItem>,
     <MenuItem debug onClick={handleItemClick}>You did it!</MenuItem>,
@@ -41,6 +36,11 @@ export default function SimpleMenu() {
     <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
     <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>
   ]
+  
+  const autoSaveItems = [
+    <MenuItem debug onClick={handleItemClick}>On Exit</MenuItem>,
+    <MenuItem debug onClick={handleItemClick}>On Change</MenuItem>,
+  ];
 
   const settingItems = [
     <MenuItem debug onClick={handleItemClick}>Dark Mode</MenuItem>,
@@ -66,7 +66,6 @@ export default function SimpleMenu() {
         Open Menu
       </Button>
       <Menu
-        // debug
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted

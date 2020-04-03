@@ -46,7 +46,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     classes,
     disableAutoFocusItem = false,
     MenuListProps = {},
-    onClose: onCloseProp,
+    onClose,
     onEntering,
     open,
     PaperProps = {},
@@ -58,16 +58,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   } = props;
   const theme = useTheme();
 
-  const debugConsole = (...args) => {
-    if (other.debug === true) {
-      console.log(...args);
-    }
-  }
-
   const [lastEnteredItemIndex, setLastEnteredItemIndexActual] = useState(null);
 
   const setLastEnteredItemIndex = val => {
-    // debugConsole('setLastEnteredItemIndex called: ', val);
     setLastEnteredItemIndexActual(val)
   };
 
@@ -91,11 +84,18 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const handleListKeyDown = (event) => {
     if (event.key === 'Tab') {
       event.preventDefault();
+      setLastEnteredItemIndex(null);
 
-      if (onCloseProp) {
-        onCloseProp(event, 'tabKeyDown');
+      if (onClose) {
+        onClose(event, 'tabKeyDown');
       }
     }
+  };
+
+  const handleMenuClose = event => {
+    setLastEnteredItemIndex(null);
+    
+    if (onClose) onClose(event);
   };
 
   /**
@@ -182,25 +182,21 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (atLeastOneNestedMenu || true) {
       additionalPropsAdded = true;
       
-      // If there is an incoming onClick for the item, inject our menu state management
+      // If there is an incoming onClick for the item, inject parent menu state management
       // function into it, otherwise do nothing.
-      const onClickWithMenuReset = child.props.onClick ? event => {
-        console.log('onClickWithReset')
-        setLastEnteredItemIndex(null);
-        child.props.onClick(event);
+      const onClickWithMenuReset = child.props.onClick ? e => {
+        handleMenuClose(e);
+        child.props.onClick(e);
       } : undefined;
       
       Object.assign(additionalProps, {
-        onNestedMenuClose: () => setLastEnteredItemIndex(null),
+        onNestedMenuClose: e => handleMenuClose(e),
         onClick: onClickWithMenuReset,
         onMouseEnter: () => {
-          // console.log('Menu\'s onMouseEnter', { index, setLastEnteredItemIndex, lastEnteredItemIndex })
           setLastEnteredItemIndex(index);
         }
       });
     }
-
-    debugConsole(`${child.props.children} Menu orchestration`, { child, additionalProps, additionalPropsAdded, index, other, hasNestedMenu, anchorEl, lastEnteredItemIndex });
 
     // Using a semaphore instead of inspecting addtionalProps
     // directly to avoid performance hits at scale. Might be 
@@ -214,18 +210,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
     return child;
   });
-
-  const onClose = event => {
-    setLastEnteredItemIndex(null);
-
-    if (onCloseProp) onCloseProp(event);
-  };
-
+  
   return (
     <Popover
       getContentAnchorEl={getContentAnchorEl}
       classes={PopoverClasses}
-      onClose={onClose}
+      onClose={handleMenuClose}
       onEntering={handleEntering}
       anchorOrigin={theme.direction !== 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
