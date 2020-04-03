@@ -133,7 +133,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   });
 
   const items = React.Children.map(children, (child, index) => {
-    const { nestedItems } = child.props;
+    const { nestedItems, onMouseEnter: onMouseEnterChildProp } = child.props;
     const { anchorEl, atLeastOneNestedMenu } = other;
 
     const hasNestedMenu = Boolean(nestedItems);
@@ -179,6 +179,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     // If there are ANY children with nestedMenus, then ALL 
     // of the children need to know how to close any open nestedMenus
     // and reset the state that controls which nested menu is open.
+
+    // eslint-disable-next-line no-constant-condition
     if (atLeastOneNestedMenu || true) {
       additionalPropsAdded = true;
       
@@ -190,10 +192,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       } : undefined;
       
       Object.assign(additionalProps, {
-        onNestedMenuClose: e => handleMenuClose(e),
+        onNestedMenuClose: handleMenuClose,
         onClick: onClickWithMenuReset,
-        onMouseEnter: () => {
+        onMouseEnter: e => {
           setLastEnteredItemIndex(index);
+          if (onMouseEnterChildProp) {
+            onMouseEnterChildProp(e);
+          }
         }
       });
     }
@@ -286,6 +291,11 @@ Menu.propTypes = {
    * Props applied to the [`MenuList`](/api/menu-list/) element.
    */
   MenuListProps: PropTypes.object,
+  /**
+   * @ignore
+   * Whether or not the menu is a nested menu.
+   */
+  nestedMenu: PropTypes.bool,
   /**
    * Callback fired when the component requests to be closed.
    *
