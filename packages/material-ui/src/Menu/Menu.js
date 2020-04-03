@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -132,9 +132,15 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   });
 
+  const atLeastOneNestedMenu = useMemo(() => {
+    return children.map(child => child.props && typeof child.props.nestedItems).some(val => val !== 'undefined')
+  }, [children]);
+
+  console.log('Menu atLeastOneNestedMenu', {children, atLeastOneNestedMenu})
+
   const items = React.Children.map(children, (child, index) => {
-    const { nestedItems, onMouseEnter: onMouseEnterChildProp } = child.props;
-    const { anchorEl, atLeastOneNestedMenu } = other;
+    const { nestedItems, onClick: onClickChildProp, onMouseEnter: onMouseEnterChildProp } = child.props;
+    const { anchorEl } = other;
 
     const hasNestedMenu = Boolean(nestedItems);
     const parentMenuOpen = Boolean(anchorEl)
@@ -179,16 +185,14 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     // If there are ANY children with nestedMenus, then ALL 
     // of the children need to know how to close any open nestedMenus
     // and reset the state that controls which nested menu is open.
-
-    // eslint-disable-next-line no-constant-condition
-    if (atLeastOneNestedMenu || true) {
+    if (nestedMenu || atLeastOneNestedMenu) {
       additionalPropsAdded = true;
       
       // If there is an incoming onClick for the item, inject parent menu state management
       // function into it, otherwise do nothing.
-      const onClickWithMenuReset = child.props.onClick ? e => {
+      const onClickWithMenuReset = onClickChildProp ? e => {
         handleMenuClose(e);
-        child.props.onClick(e);
+        onClickChildProp(e);
       } : undefined;
       
       Object.assign(additionalProps, {
