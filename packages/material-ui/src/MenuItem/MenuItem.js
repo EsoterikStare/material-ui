@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ListItem from '../ListItem';
+import ListItemSecondaryAction from '../ListItemSecondaryAction';
+import KeyboardArrowRight from '../internal/svg-icons/KeyboardArrowRight';
 import Menu from '../Menu';
 
 export const styles = (theme) => ({
@@ -31,17 +33,19 @@ export const styles = (theme) => ({
     minHeight: 'auto',
   },
   nestedMenu: {
-    pointerEvents: 'none' // disable click away mask for nested Menus
+    pointerEvents: 'none', // disable click away mask for nested Menus
   },
 });
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   const {
+    children: childrenProp,
     classes,
     className,
     component = 'li',
     disableGutters = false,
     nestedItems,
+    NestedMenuIndicator = KeyboardArrowRight,
     openNestedMenu = false,
     role = 'menuitem',
     selected,
@@ -78,7 +82,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         )}
         ref={listItemRef}
         {...other}
-      />
+      >
+        {childrenProp}
+        {nestedItems ? (
+          <ListItemSecondaryAction>
+            <NestedMenuIndicator />
+          </ListItemSecondaryAction>
+        ) : null}
+      </ListItem>
       {openNestedMenu ? (
         <Menu
           className={classes.nestedMenu}
@@ -87,7 +98,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           autoFocus={false}
           disableAutoFocus
           disableEnforceFocus
-          onClose={e => onNestedMenuClose(e)}
+          onClose={onNestedMenuClose}
           open={openNestedMenu}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           nestedMenu
@@ -131,9 +142,13 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
-   * An array of MenuItems to render in a sub-Menu
+   * An array of MenuItems to render in a nested Menu
    */
   nestedItems: PropTypes.arrayOf(PropTypes.node),
+  /**
+   * Customize the icon used to indicate a MenuItem has a nested Menu.
+   */
+  NestedMenuIndicator: PropTypes.node,
   /**
    * @ignore
    */
