@@ -133,11 +133,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   });
 
   const atLeastOneNestedMenu = useMemo(() => {
-    const output = Array.isArray(children) ? children.map(child => React.isValidElement(child) && child.props && typeof child.props.nestedItems).some(val => typeof val !== 'undefined') : false;
-
-    // eslint-disable-next-line no-console
-    // console.log({ output })
-    return output;
+    const hasNestedItems = Array.isArray(children) ? children.some(child => React.isValidElement(child) && child.props && child.props.nestedItems && child.props.nestedItems.length > 0) : false;
+    return hasNestedItems;
   }, [children]);
 
   // console.log('Menu atLeastOneNestedMenu', {children, atLeastOneNestedMenu})
