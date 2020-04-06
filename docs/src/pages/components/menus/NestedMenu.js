@@ -15,47 +15,47 @@ export default function SimpleMenu() {
   };
 
   const deeper3 = [
-    <MenuItem debug onClick={handleItemClick}>You did it!</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>You did it!</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>You did it!</MenuItem>
+    <MenuItem onClick={handleItemClick}>You did it!</MenuItem>,
+    <MenuItem onClick={handleItemClick}>You did it!</MenuItem>,
+    <MenuItem onClick={handleItemClick}>You did it!</MenuItem>
   ]
   
   const deeper2 = [
-    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem debug nestedItems={deeper3}>Go deeper</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>
+    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem nestedItems={deeper3}>Go deeper</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
   ]
   
   const deeper1= [
-    <MenuItem debug nestedItems={deeper2}>Go deeper</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Not this one</MenuItem>
+    <MenuItem nestedItems={deeper2}>Go deeper</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
   ]
   
   const autoSaveItems = [
-    <MenuItem debug onClick={handleItemClick}>On Exit</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>On Change</MenuItem>,
+    <MenuItem onClick={handleItemClick}>On Exit</MenuItem>,
+    <MenuItem onClick={handleItemClick}>On Change</MenuItem>,
   ];
 
   const settingItems = [
-    <MenuItem debug onClick={handleItemClick}>Dark Mode</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Verbos Logging</MenuItem>,
-    <MenuItem debug nestedItems={autoSaveItems}>Auto-save</MenuItem>,
-    <MenuItem debug nestedItems={deeper1}>Go deeper</MenuItem>
+    <MenuItem onClick={handleItemClick}>Dark Mode</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Verbos Logging</MenuItem>,
+    <MenuItem nestedItems={autoSaveItems}>Auto-save</MenuItem>,
+    <MenuItem nestedItems={deeper1}>Go deeper</MenuItem>
   ];
 
   const myAccountItems = [
-    <MenuItem debug onClick={handleItemClick}>Reset password</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Change username</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Reset password</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Change username</MenuItem>,
   ];
 
   const mainMenuItems = [
-    <MenuItem debug nestedItems={settingItems}>Settings</MenuItem>,
-    <MenuItem debug nestedItems={myAccountItems}>My account</MenuItem>,
-    <MenuItem debug onClick={handleItemClick}>Logout</MenuItem>
+    <MenuItem nestedItems={settingItems}>Settings</MenuItem>,
+    <MenuItem nestedItems={myAccountItems}>My account</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Logout</MenuItem>
   ];
 
   return (
