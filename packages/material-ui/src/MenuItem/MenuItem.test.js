@@ -8,6 +8,7 @@ import ListItemSecondaryAction from '../ListItemSecondaryAction';
 import MenuItem from './MenuItem';
 
 describe('<MenuItem />', () => {
+  // eslint-disable-next-line no-unused-vars
   let shallow;
   let classes;
   let mount;
@@ -31,30 +32,31 @@ describe('<MenuItem />', () => {
   }));
 
   it('should render a button ListItem with with ripple', () => {
-    const wrapper = shallow(<MenuItem />);
-    assert.strictEqual(wrapper.type(), ListItem);
+    const wrapper = mount(<MenuItem />);
+
+    assert.strictEqual(wrapper.find(ListItem).type(), ListItem);
     assert.strictEqual(wrapper.find(ListItem).props().button, true);
     assert.strictEqual(wrapper.find(ListItem).props().disableRipple, undefined);
   });
 
   it('should render with the selected class', () => {
-    const wrapper = shallow(<MenuItem selected />);
-    assert.strictEqual(wrapper.hasClass(classes.selected), true);
+    const wrapper = mount(<MenuItem selected />);
+    assert.strictEqual(wrapper.find(ListItem).hasClass(classes.selected), true);
   });
 
   it('should have a default role of menuitem', () => {
-    const wrapper = shallow(<MenuItem />);
-    assert.strictEqual(wrapper.props().role, 'menuitem');
+    const wrapper = mount(<MenuItem />);
+    assert.strictEqual(wrapper.find(ListItem).props().role, 'menuitem');
   });
 
   it('should have a role of option', () => {
-    const wrapper = shallow(<MenuItem role="option" aria-selected={false} />);
-    assert.strictEqual(wrapper.props().role, 'option');
+    const wrapper = mount(<MenuItem role="option" aria-selected={false} />);
+    assert.strictEqual(wrapper.find(ListItem).props().role, 'option');
   });
 
   it('should have a tabIndex of -1 by default', () => {
-    const wrapper = shallow(<MenuItem />);
-    assert.strictEqual(wrapper.props().tabIndex, -1);
+    const wrapper = mount(<MenuItem />);
+    assert.strictEqual(wrapper.find(ListItem).props().tabIndex, -1);
   });
 
   describe('event callbacks', () => {
@@ -77,11 +79,11 @@ describe('<MenuItem />', () => {
         return result;
       }, {});
 
-      const wrapper = shallow(<MenuItem {...handlers} />);
+      const wrapper = mount(<MenuItem {...handlers} />);
 
       events.forEach((n) => {
         const event = n.charAt(2).toLowerCase() + n.slice(3);
-        wrapper.simulate(event, { persist: () => {} });
+        wrapper.find(ListItem).simulate(event, { persist: () => {} });
         assert.strictEqual(handlers[n].callCount, 1, `should have called the ${n} handler`);
       });
     });

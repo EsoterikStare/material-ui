@@ -49,7 +49,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     openNestedMenu = false,
     role = 'menuitem',
     selected,
-    onNestedMenuClose,
+    handleNestedMenuClose,
     tabIndex: tabIndexProp,
     ...other
   } = props;
@@ -98,7 +98,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           autoFocus={false}
           disableAutoFocus
           disableEnforceFocus
-          onClose={onNestedMenuClose}
+          onClose={handleNestedMenuClose}
           open={openNestedMenu}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           nestedMenu
@@ -144,6 +144,10 @@ MenuItem.propTypes = {
   /**
    * An array of MenuItems to render in a nested Menu
    */
+  handleNestedMenuClose: PropTypes.func,
+  /**
+   * @ignore
+   */
   nestedItems: PropTypes.arrayOf(PropTypes.node),
   /**
    * Customize the icon used to indicate a MenuItem has a nested Menu.
@@ -153,10 +157,6 @@ MenuItem.propTypes = {
    * @ignore
    */
   onMouseEnter: PropTypes.func,
-  /**
-   * @ignore
-   */
-  onNestedMenuClose: PropTypes.func,
   /**
    * @ignore
    */

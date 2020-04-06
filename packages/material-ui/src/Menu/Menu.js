@@ -94,7 +94,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const handleMenuClose = event => {
     setLastEnteredItemIndex(null);
-    
+
     if (onClose) onClose(event);
   };
 
@@ -133,12 +133,20 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   });
 
   const atLeastOneNestedMenu = useMemo(() => {
-    return children.map(child => child.props && typeof child.props.nestedItems).some(val => val !== 'undefined')
+    const output = Array.isArray(children) ? children.map(child => React.isValidElement(child) && child.props && typeof child.props.nestedItems).some(val => typeof val !== 'undefined') : false;
+
+    // eslint-disable-next-line no-console
+    // console.log({ output })
+    return output;
   }, [children]);
 
-  console.log('Menu atLeastOneNestedMenu', {children, atLeastOneNestedMenu})
+  // console.log('Menu atLeastOneNestedMenu', {children, atLeastOneNestedMenu})
 
   const items = React.Children.map(children, (child, index) => {
+    if (!React.isValidElement(child)) {
+      return;
+    }
+
     const { nestedItems, onClick: onClickChildProp, onMouseEnter: onMouseEnterChildProp } = child.props;
     const { anchorEl } = other;
 
@@ -146,12 +154,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     const parentMenuOpen = Boolean(anchorEl)
 
     let additionalPropsAdded = false;
-    const additionalProps = {}; 
-    
-    // This is the original purpase of this React.Children.map and is basically unchanged.
+    const additionalProps = {};
+
+    // This is the original purpose of this React.Children.map and is basically unchanged.
     if (index === activeItemIndex) {
       additionalPropsAdded = true;
-      
+
       Object.assign(additionalProps, {
         ref: instance => {
           // #StrictMode ready
@@ -167,10 +175,10 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       Object.assign(additionalProps, {
         // Tells each MenuItem that it's in a nested Menu so the style that re-enables
         // pointer-events can be applied.
-        className: classes.nestedMenuItem 
+        className: classes.nestedMenuItem
       });
     }
-    
+
     // If the current item in this map has nestedItems,
     // we need the Menu to orchestrate its nestedMenu
     if (hasNestedMenu) {
@@ -179,24 +187,24 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       Object.assign(additionalProps, {
         openNestedMenu: index === lastEnteredItemIndex && parentMenuOpen ,
       });
-      
+
     }
-    
-    // If there are ANY children with nestedMenus, then ALL 
+
+    // If there are ANY children with nestedMenus, then ALL
     // of the children need to know how to close any open nestedMenus
     // and reset the state that controls which nested menu is open.
     if (nestedMenu || atLeastOneNestedMenu) {
       additionalPropsAdded = true;
-      
+
       // If there is an incoming onClick for the item, inject parent menu state management
       // function into it, otherwise do nothing.
       const onClickWithMenuReset = onClickChildProp ? e => {
         handleMenuClose(e);
         onClickChildProp(e);
       } : undefined;
-      
+
       Object.assign(additionalProps, {
-        onNestedMenuClose: handleMenuClose,
+        handleNestedMenuClose: handleMenuClose,
         onClick: onClickWithMenuReset,
         onMouseEnter: e => {
           setLastEnteredItemIndex(index);
@@ -208,18 +216,20 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
 
     // Using a semaphore instead of inspecting addtionalProps
-    // directly to avoid performance hits at scale. Might be 
+    // directly to avoid performance hits at scale. Might be
     // fine to just do Object.keys(additionalProps).length > 0,
     // but that seems like iterations we can avoid.
     if (additionalPropsAdded) {
+      // eslint-disable-next-line consistent-return
       return React.cloneElement(child, {
         ...additionalProps
       });
     }
 
+    // eslint-disable-next-line consistent-return
     return child;
   });
-  
+
   return (
     <Popover
       getContentAnchorEl={getContentAnchorEl}
