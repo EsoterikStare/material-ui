@@ -54,6 +54,14 @@ function moveFocus(
   traversalFunction,
   textCriteria,
 ) {
+  console.log('moveFocus', {
+    list,
+    currentFocus,
+    disableListWrap,
+    disabledItemsFocusable,
+    traversalFunction,
+    textCriteria,
+  });
   let wrappedOnce = false;
   let nextFocus = traversalFunction(list, currentFocus, currentFocus ? disableListWrap : false);
 
@@ -104,6 +112,9 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
     className,
     disabledItemsFocusable = false,
     disableListWrap = false,
+    nestedMenu,
+    manageParentMenuNestedMenuIndex,
+    atLeastOneNestedMenu,
     onKeyDown,
     variant = 'selectedMenu',
     ...other
@@ -143,6 +154,8 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
   );
 
   const handleKeyDown = (event) => {
+    console.log(`MenuList: ${event.key} pressed`)
+
     const list = listRef.current;
     const key = event.key;
     /**
@@ -156,10 +169,18 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
     if (key === 'ArrowDown') {
       // Prevent scroll of the page
       event.preventDefault();
+      if (nestedMenu) event.stopPropagation();
       moveFocus(list, currentFocus, disableListWrap, disabledItemsFocusable, nextItem);
     } else if (key === 'ArrowUp') {
       event.preventDefault();
+      if (nestedMenu) event.stopPropagation();
       moveFocus(list, currentFocus, disableListWrap, disabledItemsFocusable, previousItem);
+    } else if (key === 'ArrowRight' && atLeastOneNestedMenu) {
+      event.preventDefault();
+      manageParentMenuNestedMenuIndex();
+    } else if (key === 'ArrowLeft' && atLeastOneNestedMenu) {
+      event.preventDefault();
+      manageParentMenuNestedMenuIndex(null);
     } else if (key === 'Home') {
       event.preventDefault();
       moveFocus(list, null, disableListWrap, disabledItemsFocusable, nextItem);
@@ -196,7 +217,7 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
     }
 
     if (onKeyDown) {
-      onKeyDown(event);
+      onKeyDown(event, currentFocus, moveFocus);
     }
   };
 

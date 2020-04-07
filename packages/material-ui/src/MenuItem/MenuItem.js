@@ -51,6 +51,8 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     role = 'menuitem',
     selected,
     handleArrowKeyDown,
+    manageParentMenuNestedMenuIndex,
+    atLeastOneNestedMenu,
     handleNestedMenuClose,
     tabIndex: tabIndexProp,
     ...other
@@ -102,6 +104,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           // disableAutoFocus
           // disableEnforceFocus
           nestedMenu
+          MenuListProps={{ manageParentMenuNestedMenuIndex, nestedMenu: true, atLeastOneNestedMenu }}
           onClose={handleNestedMenuClose}
           open={openNestedMenu}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}

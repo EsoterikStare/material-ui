@@ -68,7 +68,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
             child.props &&
             child.props.nestedItems &&
             child.props.nestedItems.length > 0,
-        )
+        ) || nestedMenu
       : false;
     return hasNestedItems;
   }, [children]);
@@ -197,7 +197,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     // If there are ANY children with nestedMenus, then ALL
     // of the children need to know how to close any open nestedMenus
     // and reset the state that controls which nested menu is open.
-    if (nestedMenu || atLeastOneNestedMenu) {
+    if (atLeastOneNestedMenu) {
       additionalPropsAdded = true;
 
       const handleArrowKeyDown = (event) => {
@@ -213,12 +213,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
             event.preventDefault();
             console.log(key, {target});
             break;
-          case 'ArrowDown':
-          case 'ArrowUp':
-            console.log(key)
-            event.preventDefault();
-            // event.stopPropagation();
-            break;
+          // case 'ArrowDown':
+          // case 'ArrowUp':
+          //   console.log(key)
+          //   event.preventDefault();
+          //   // event.stopPropagation();
+          //   break;
           default:
             break;
         }
@@ -242,7 +242,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
             onMouseEnterChildProp(e);
           }
         },
-        handleArrowKeyDown
+        handleArrowKeyDown,
+        manageParentMenuNestedMenuIndex: newValue => setLastEnteredItemIndex(newValue || index),
+        atLeastOneNestedMenu
       });
     }
 
