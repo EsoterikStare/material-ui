@@ -3,8 +3,10 @@ import { spy } from 'sinon';
 import { assert } from 'chai';
 import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
+import Button from '../Button';
 import Popover from '../Popover';
 import Menu from './Menu';
+import MenuItem from '../MenuItem';
 import MenuList from '../MenuList';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
 import PropTypes from 'prop-types';
@@ -19,6 +21,81 @@ describe('<Menu />', () => {
     anchorEl: () => document.createElement('div'),
   };
 
+  const NestedMenu = () => {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleButtonClick = event => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleItemClick = () => {
+      setAnchorEl(null);
+    };
+
+    const deeper3 = [
+      <MenuItem id="you-did-it" onClick={handleItemClick}>You did it!</MenuItem>,
+      <MenuItem onClick={handleItemClick}>You did it!</MenuItem>,
+      <MenuItem onClick={handleItemClick}>You did it!</MenuItem>
+    ];
+
+    const deeper2 = [
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+      <MenuItem id="go-deeper-3" nestedItems={deeper3}>Go deeper</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+    ];
+
+    const deeper1= [
+      <MenuItem id="go-deeper-2" nestedItems={deeper2}>Go deeper</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+    ];
+
+    const autoSaveItems = [
+      <MenuItem onClick={handleItemClick}>On Exit</MenuItem>,
+      <MenuItem id="on-change" onClick={handleItemClick}>On Change</MenuItem>,
+    ];
+
+    const settingItems = [
+      <MenuItem id="dark-mode" onClick={handleItemClick}>Dark Mode</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Verbos Logging</MenuItem>,
+      <MenuItem nestedItems={autoSaveItems}>Auto-save</MenuItem>,
+      <MenuItem id="go-deeper-1" nestedItems={deeper1}>Go deeper</MenuItem>
+    ];
+
+    const myAccountItems = [
+      <MenuItem onClick={handleItemClick}>Reset password</MenuItem>,
+      <MenuItem id="change-username" onClick={handleItemClick}>Change username</MenuItem>,
+    ];
+
+    const mainMenuItems = [
+      <MenuItem nestedItems={settingItems}>Settings</MenuItem>,
+      <MenuItem nestedItems={myAccountItems}>My account</MenuItem>,
+      <MenuItem id="logout" onClick={handleItemClick}>Logout</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Thing</MenuItem>,
+      <MenuItem onClick={handleItemClick}>Other thing</MenuItem>
+    ];
+
+    return (
+      <div>
+        <Button aria-controls="simple-menu" aria-haspopup="true" data-test="open-menu" onClick={handleButtonClick}>
+          Open Menu
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleItemClick}
+          variant="selectedMenu"
+        >
+          {mainMenuItems}
+        </Menu>
+      </div>
+    );
+  }
   before(() => {
     classes = getClasses(<Menu {...defaultProps} />);
     // StrictModeViolation: uses Popover
@@ -249,5 +326,48 @@ describe('<Menu />', () => {
         "Material-UI: the Menu component doesn't accept a Fragment as a child.",
       );
     });
+
+    it('displays a nested menu', () => {
+      const wrapper = mount(<NestedMenu />);
+      wrapper.find(Button).simulate('click');
+      wrapper.find(MenuItem).at(0).simulate('mouseenter');
+
+      const expected = true;
+      const actual = wrapper.find('#dark-mode').exists();
+
+      assert.strictEqual(actual, expected);
+    });
+
+    it('displays nested submenus', () => {
+      const wrapper = mount(<NestedMenu />);
+      wrapper.find(Button).simulate('click');
+      wrapper.find(MenuItem).at(0).simulate('mouseenter');
+      wrapper.find('#go-deeper-1').at(0).simulate('mouseenter');
+
+      const expected = true;
+      const actual = wrapper.find('#go-deeper-2').exists();
+
+      assert.strictEqual(actual, expected);
+    });
+
+    it('nested menus collapse when parent menu is changed', () => {
+      const wrapper = mount(<NestedMenu />);
+      wrapper.find(Button).simulate('click');
+      wrapper.find(MenuItem).at(1).simulate('mouseenter');
+
+      assert.strictEqual(wrapper.find('#change-username').exists(), true);
+      wrapper.find('#logout').at(0).simulate('mouseenter');
+      assert.strictEqual(wrapper.find('#change-username').exists(), false);
+    });
+
+    it('nested menus stay open when menus are not focused', () => {
+      const wrapper = mount(<NestedMenu />);
+      wrapper.find(Button).simulate('click');
+      wrapper.find(MenuItem).at(1).simulate('mouseenter');
+
+      wrapper.find('[data-test="open-menu"]').hostNodes().simulate('mouseenter');
+      assert.strictEqual(wrapper.find('#change-username').exists(), true);
+    });
+
   });
 });
