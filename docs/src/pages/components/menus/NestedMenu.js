@@ -36,7 +36,7 @@ export default function SimpleMenu() {
     { onClick: handleItemClick, children: 'Not this one' },
     { onClick: handleItemClick, children: 'Not this one' },
     {
-      nestedItems: deeper3.map((item, index) => renderMenuItem(item, index)),
+      nestedItems: deeper3.map(renderMenuItem),
       children: 'Go deeper',
     },
     { onClick: handleItemClick, children: 'Not this one' },
@@ -45,7 +45,7 @@ export default function SimpleMenu() {
 
   const deeper1 = [
     {
-      nestedItems: deeper2.map((item, index) => renderMenuItem(item, index)),
+      nestedItems: deeper2.map(renderMenuItem),
       children: 'Go deeper',
     },
     { onClick: handleItemClick, children: 'Not this one' },
@@ -61,11 +61,11 @@ export default function SimpleMenu() {
     { onClick: handleItemClick, children: 'Dark Mode' },
     { onClick: handleItemClick, children: 'Verbos Logging' },
     {
-      nestedItems: autoSaveItems.map((item, index) => renderMenuItem(item, index)),
+      nestedItems: autoSaveItems.map(renderMenuItem),
       children: 'Auto-save',
     },
     {
-      nestedItems: deeper1.map((item, index) => renderMenuItem(item, index)),
+      nestedItems: deeper1.map(renderMenuItem),
       children: 'Go deeper',
     },
   ];
@@ -77,11 +77,11 @@ export default function SimpleMenu() {
 
   const mainMenuItems = [
     {
-      nestedItems: settingItems.map((item, index) => renderMenuItem(item, index)),
+      nestedItems: settingItems.map(renderMenuItem),
       children: 'Settings',
     },
     {
-      nestedItems: myAccountItems.map((item, index) => renderMenuItem(item, index)),
+      nestedItems: myAccountItems.map(renderMenuItem),
       children: 'My account',
     },
     { onClick: handleItemClick, children: 'Logout' },
@@ -102,7 +102,7 @@ export default function SimpleMenu() {
         onClose={handleItemClick}
         // variant="selectedMenu"
       >
-        {mainMenuItems.map((item, index) => renderMenuItem(item, index))}
+        {mainMenuItems.map(renderMenuItem)}
       </Menu>
     </div>
   );
