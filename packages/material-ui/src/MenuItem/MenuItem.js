@@ -65,11 +65,8 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   }
 
   const onKeyDown = (event) => {
-    handleArrowKeyDown(event);
-
-    if (onKeyDownProp) {
-      onKeyDownProp(event);
-    }
+    if (handleArrowKeyDown) handleArrowKeyDown(event);
+    if (onKeyDownProp) onKeyDownProp(event);
   };
 
   return (
