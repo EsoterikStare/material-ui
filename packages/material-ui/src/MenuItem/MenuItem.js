@@ -65,11 +65,8 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   }
 
   const onKeyDown = (event) => {
-    handleArrowKeyDown(event);
-
-    if (onKeyDownProp) {
-      onKeyDownProp(event);
-    }
+    if (handleArrowKeyDown) handleArrowKeyDown(event);
+    if (onKeyDownProp) onKeyDownProp(event);
   };
 
   return (
@@ -101,13 +98,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           className={classes.nestedMenu}
           anchorEl={listItemRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          autoFocus={false}
-          disableAutoFocus
-          disableEnforceFocus
+          // autoFocus={false}
+          // disableAutoFocus
+          // disableEnforceFocus
+          nestedMenu
           onClose={handleNestedMenuClose}
           open={openNestedMenu}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          nestedMenu
+          variant="menu"
         >
           {nestedItems}
         </Menu>

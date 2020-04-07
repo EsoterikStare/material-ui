@@ -1,4 +1,5 @@
 import React from 'react';
+import {string} from 'prop-types'
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -6,7 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 export default function SimpleMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleButtonClick = event => {
+  const handleButtonClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -14,50 +15,78 @@ export default function SimpleMenu() {
     setAnchorEl(null);
   };
 
+  const renderMenuItem = ({ children, ...rest }, index) => (
+    <MenuItem key={index.toString()} {...rest}>
+      {children}
+    </MenuItem>
+  );
+
+  renderMenuItem.propTypes = {
+    children: string
+  }
+
   const deeper3 = [
-    <MenuItem onClick={handleItemClick}>You did it!</MenuItem>,
-    <MenuItem onClick={handleItemClick}>You did it!</MenuItem>,
-    <MenuItem onClick={handleItemClick}>You did it!</MenuItem>
-  ]
-  
+    { onClick: handleItemClick, children: 'You did it!' },
+    { onClick: handleItemClick, children: 'You did it!' },
+    { onClick: handleItemClick, children: 'You did it!' },
+  ];
+
   const deeper2 = [
-    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem nestedItems={deeper3}>Go deeper</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
-  ]
-  
-  const deeper1= [
-    <MenuItem nestedItems={deeper2}>Go deeper</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
-  ]
-  
+    { onClick: handleItemClick, children: 'Not this one' },
+    { onClick: handleItemClick, children: 'Not this one' },
+    { onClick: handleItemClick, children: 'Not this one' },
+    {
+      nestedItems: deeper3.map(renderMenuItem),
+      children: 'Go deeper',
+    },
+    { onClick: handleItemClick, children: 'Not this one' },
+    { onClick: handleItemClick, children: 'Not this one' },
+  ];
+
+  const deeper1 = [
+    {
+      nestedItems: deeper2.map(renderMenuItem),
+      children: 'Go deeper',
+    },
+    { onClick: handleItemClick, children: 'Not this one' },
+    { onClick: handleItemClick, children: 'Not this one' },
+  ];
+
   const autoSaveItems = [
-    <MenuItem onClick={handleItemClick}>On Exit</MenuItem>,
-    <MenuItem onClick={handleItemClick}>On Change</MenuItem>,
+    { onClick: handleItemClick, children: 'On Exit' },
+    { onClick: handleItemClick, children: 'On Change' },
   ];
 
   const settingItems = [
-    <MenuItem onClick={handleItemClick}>Dark Mode</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Verbos Logging</MenuItem>,
-    <MenuItem nestedItems={autoSaveItems}>Auto-save</MenuItem>,
-    <MenuItem nestedItems={deeper1}>Go deeper</MenuItem>
+    { onClick: handleItemClick, children: 'Dark Mode' },
+    { onClick: handleItemClick, children: 'Verbos Logging' },
+    {
+      nestedItems: autoSaveItems.map(renderMenuItem),
+      children: 'Auto-save',
+    },
+    {
+      nestedItems: deeper1.map(renderMenuItem),
+      children: 'Go deeper',
+    },
   ];
 
   const myAccountItems = [
-    <MenuItem onClick={handleItemClick}>Reset password</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Change username</MenuItem>,
+    { onClick: handleItemClick, children: 'Reset password' },
+    { onClick: handleItemClick, children: 'Change username' },
   ];
 
   const mainMenuItems = [
-    <MenuItem nestedItems={settingItems}>Settings</MenuItem>,
-    <MenuItem nestedItems={myAccountItems}>My account</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Logout</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Thing</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Other thing</MenuItem>
+    {
+      nestedItems: settingItems.map(renderMenuItem),
+      children: 'Settings',
+    },
+    {
+      nestedItems: myAccountItems.map(renderMenuItem),
+      children: 'My account',
+    },
+    { onClick: handleItemClick, children: 'Logout' },
+    { onClick: handleItemClick, children: 'Thing' },
+    { onClick: handleItemClick, children: 'Other thing' },
   ];
 
   return (
@@ -68,12 +97,12 @@ export default function SimpleMenu() {
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
-        keepMounted
+        // keepMounted
         open={Boolean(anchorEl)}
         onClose={handleItemClick}
-        variant="selectedMenu"
+        // variant="selectedMenu"
       >
-        {mainMenuItems}
+        {mainMenuItems.map(renderMenuItem)}
       </Menu>
     </div>
   );

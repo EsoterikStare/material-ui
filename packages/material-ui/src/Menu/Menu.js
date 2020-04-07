@@ -206,12 +206,18 @@ const Menu = React.forwardRef(function Menu(props, ref) {
           case 'ArrowRight':
             event.preventDefault();
             setLastEnteredItemIndex(index)
-            console.log('ArrowRight', {target});
+            console.log(key, {target});
             break;
           case 'ArrowLeft':
-            setLastEnteredItemIndex(null);
+            handleMenuClose(event)
             event.preventDefault();
-            console.log('ArrowLeft', {target});
+            console.log(key, {target});
+            break;
+          case 'ArrowDown':
+          case 'ArrowUp':
+            console.log(key)
+            event.preventDefault();
+            // event.stopPropagation();
             break;
           default:
             break;
