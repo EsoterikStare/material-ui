@@ -84,11 +84,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         {...other}
       >
         {childrenProp}
-        {nestedItems ? (
-          <ListItemSecondaryAction>
-            <NestedMenuIndicator />
-          </ListItemSecondaryAction>
-        ) : null}
       </ListItem>
       {openNestedMenu ? (
         <Menu
