@@ -35,7 +35,7 @@ export const styles = {
     outline: 0,
   },
   nestedMenuItem: {
-    pointerEvents: 'auto' // re-enable click events on nested Menu items
+    pointerEvents: 'auto', // re-enable click events on nested Menu items
   },
 };
 
@@ -58,11 +58,20 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   } = props;
   const theme = useTheme();
 
-  const [lastEnteredItemIndex, setLastEnteredItemIndexActual] = useState(null);
+  const [lastEnteredItemIndex, setLastEnteredItemIndex] = useState(null);
 
-  const setLastEnteredItemIndex = val => {
-    setLastEnteredItemIndexActual(val)
-  };
+  const atLeastOneNestedMenu = useMemo(() => {
+    const hasNestedItems = Array.isArray(children)
+      ? children.some(
+          (child) =>
+            React.isValidElement(child) &&
+            child.props &&
+            child.props.nestedItems &&
+            child.props.nestedItems.length > 0,
+        )
+      : false;
+    return hasNestedItems;
+  }, [children]);
 
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
 
@@ -92,7 +101,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   };
 
-  const handleMenuClose = event => {
+  const handleMenuClose = (event) => {
     setLastEnteredItemIndex(null);
 
     if (onClose) onClose(event);
@@ -132,11 +141,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   });
 
-  const atLeastOneNestedMenu = useMemo(() => {
-    const hasNestedItems = Array.isArray(children) ? children.some(child => React.isValidElement(child) && child.props && child.props.nestedItems && child.props.nestedItems.length > 0) : false;
-    return hasNestedItems;
-  }, [children]);
-
   // console.log('Menu atLeastOneNestedMenu', {children, atLeastOneNestedMenu})
 
   const items = React.Children.map(children, (child, index) => {
@@ -144,11 +148,15 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       return;
     }
 
-    const { nestedItems, onClick: onClickChildProp, onMouseEnter: onMouseEnterChildProp } = child.props;
+    const {
+      nestedItems,
+      onClick: onClickChildProp,
+      onMouseEnter: onMouseEnterChildProp,
+    } = child.props;
     const { anchorEl } = other;
 
     const hasNestedMenu = Boolean(nestedItems);
-    const parentMenuOpen = Boolean(anchorEl)
+    const parentMenuOpen = Boolean(anchorEl);
 
     let additionalPropsAdded = false;
     const additionalProps = {};
@@ -158,11 +166,11 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       additionalPropsAdded = true;
 
       Object.assign(additionalProps, {
-        ref: instance => {
+        ref: (instance) => {
           // #StrictMode ready
           contentAnchorRef.current = ReactDOM.findDOMNode(instance);
           setRef(child.ref, instance);
-        }
+        },
       });
     }
 
@@ -172,7 +180,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       Object.assign(additionalProps, {
         // Tells each MenuItem that it's in a nested Menu so the style that re-enables
         // pointer-events can be applied.
-        className: classes.nestedMenuItem
+        className: classes.nestedMenuItem,
       });
     }
 
@@ -182,9 +190,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       additionalPropsAdded = true;
 
       Object.assign(additionalProps, {
-        openNestedMenu: index === lastEnteredItemIndex && parentMenuOpen ,
+        openNestedMenu: index === lastEnteredItemIndex && parentMenuOpen,
       });
-
     }
 
     // If there are ANY children with nestedMenus, then ALL
@@ -195,20 +202,22 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
       // If there is an incoming onClick for the item, inject parent menu state management
       // function into it, otherwise do nothing.
-      const onClickWithMenuReset = onClickChildProp ? e => {
-        handleMenuClose(e);
-        onClickChildProp(e);
-      } : undefined;
+      const onClickWithMenuReset = onClickChildProp
+        ? (e) => {
+            handleMenuClose(e);
+            onClickChildProp(e);
+          }
+        : undefined;
 
       Object.assign(additionalProps, {
         handleNestedMenuClose: handleMenuClose,
         onClick: onClickWithMenuReset,
-        onMouseEnter: e => {
+        onMouseEnter: (e) => {
           setLastEnteredItemIndex(index);
           if (onMouseEnterChildProp) {
             onMouseEnterChildProp(e);
           }
-        }
+        },
       });
     }
 
@@ -219,7 +228,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (additionalPropsAdded) {
       // eslint-disable-next-line consistent-return
       return React.cloneElement(child, {
-        ...additionalProps
+        ...additionalProps,
       });
     }
 
