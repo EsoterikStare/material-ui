@@ -200,6 +200,24 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (nestedMenu || atLeastOneNestedMenu) {
       additionalPropsAdded = true;
 
+      const handleArrowKeyDown = (event) => {
+        const { key, target } = event;
+        switch (key) {
+          case 'ArrowRight':
+            event.preventDefault();
+            setLastEnteredItemIndex(index)
+            console.log('ArrowRight', {target});
+            break;
+          case 'ArrowLeft':
+            setLastEnteredItemIndex(null);
+            event.preventDefault();
+            console.log('ArrowLeft', {target});
+            break;
+          default:
+            break;
+        }
+      };
+
       // If there is an incoming onClick for the item, inject parent menu state management
       // function into it, otherwise do nothing.
       const onClickWithMenuReset = onClickChildProp
@@ -218,6 +236,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
             onMouseEnterChildProp(e);
           }
         },
+        handleArrowKeyDown
       });
     }
 

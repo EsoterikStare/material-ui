@@ -47,8 +47,10 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     nestedItems,
     NestedMenuIndicator = KeyboardArrowRight,
     openNestedMenu = false,
+    onKeyDown: onKeyDownProp,
     role = 'menuitem',
     selected,
+    handleArrowKeyDown,
     handleNestedMenuClose,
     tabIndex: tabIndexProp,
     ...other
@@ -61,6 +63,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
+
+  const onKeyDown = (event) => {
+    handleArrowKeyDown(event);
+
+    if (onKeyDownProp) {
+      onKeyDownProp(event);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -80,6 +90,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           },
           className,
         )}
+        onKeyDown={onKeyDown}
         ref={listItemRef}
         {...other}
       >

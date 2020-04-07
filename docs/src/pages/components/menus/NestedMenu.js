@@ -55,7 +55,9 @@ export default function SimpleMenu() {
   const mainMenuItems = [
     <MenuItem nestedItems={settingItems}>Settings</MenuItem>,
     <MenuItem nestedItems={myAccountItems}>My account</MenuItem>,
-    <MenuItem onClick={handleItemClick}>Logout</MenuItem>
+    <MenuItem onClick={handleItemClick}>Logout</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Thing</MenuItem>,
+    <MenuItem onClick={handleItemClick}>Other thing</MenuItem>
   ];
 
   return (
@@ -69,7 +71,7 @@ export default function SimpleMenu() {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleItemClick}
-        // variant="selectedMenu"
+        variant="selectedMenu"
       >
         {mainMenuItems}
       </Menu>
