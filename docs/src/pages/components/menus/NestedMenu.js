@@ -68,10 +68,10 @@ export default function SimpleMenu() {
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
-        keepMounted
+        // keepMounted
         open={Boolean(anchorEl)}
         onClose={handleItemClick}
-        variant="selectedMenu"
+        // variant="selectedMenu"
       >
         {mainMenuItems}
       </Menu>
