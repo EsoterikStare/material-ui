@@ -50,13 +50,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     onKeyDown: onKeyDownProp,
     role = 'menuitem',
     selected,
-    handleArrowKeyDown,
-    manageParentMenuNestedMenuIndex,
-    atLeastOneNestedMenu,
-    handleNestedMenuClose,
+    handleMenuItemKeyDown,
+    parentMenuActions = {},
+    parentMenuLevel,
     tabIndex: tabIndexProp,
     ...other
   } = props;
+
+  const {handleMenuClose: handleParentMenuClose} = parentMenuActions;
 
   const listItemRef = useRef(null);
   useImperativeHandle(ref, () => listItemRef.current);
@@ -67,7 +68,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   }
 
   const onKeyDown = (event) => {
-    if (handleArrowKeyDown) handleArrowKeyDown(event);
+    if (handleMenuItemKeyDown) handleMenuItemKeyDown(event);
     if (onKeyDownProp) onKeyDownProp(event);
   };
 
@@ -100,13 +101,12 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           className={classes.nestedMenu}
           anchorEl={listItemRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          // autoFocus={false}
-          // disableAutoFocus
-          // disableEnforceFocus
           nestedMenu
-          MenuListProps={{ manageParentMenuNestedMenuIndex, nestedMenu: true, atLeastOneNestedMenu }}
-          onClose={handleNestedMenuClose}
+          MenuListProps={{ nestedMenu: true }}
+          menuLevel={parentMenuLevel + 1}
+          onClose={handleParentMenuClose}
           open={openNestedMenu}
+          parentMenuActions={parentMenuActions}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           variant="menu"
         >

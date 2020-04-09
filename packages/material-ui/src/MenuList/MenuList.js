@@ -113,8 +113,6 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
     disabledItemsFocusable = false,
     disableListWrap = false,
     nestedMenu,
-    manageParentMenuNestedMenuIndex,
-    atLeastOneNestedMenu,
     onKeyDown,
     variant = 'selectedMenu',
     ...other
@@ -175,12 +173,6 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
       event.preventDefault();
       if (nestedMenu) event.stopPropagation();
       moveFocus(list, currentFocus, disableListWrap, disabledItemsFocusable, previousItem);
-    } else if (key === 'ArrowRight' && atLeastOneNestedMenu) {
-      event.preventDefault();
-      manageParentMenuNestedMenuIndex();
-    } else if (key === 'ArrowLeft' && atLeastOneNestedMenu) {
-      event.preventDefault();
-      manageParentMenuNestedMenuIndex(null);
     } else if (key === 'Home') {
       event.preventDefault();
       moveFocus(list, null, disableListWrap, disabledItemsFocusable, nextItem);

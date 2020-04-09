@@ -46,10 +46,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     classes,
     disableAutoFocusItem = false,
     MenuListProps = {},
+    menuLevel = 1,
     onClose,
     onEntering,
     open,
     PaperProps = {},
+    parentMenuActions = {},
     PopoverClasses,
     transitionDuration = 'auto',
     nestedMenu = false,
@@ -59,6 +61,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const theme = useTheme();
 
   const [lastEnteredItemIndex, setLastEnteredItemIndex] = useState(null);
+  const [preventCloseCascade, setPreventCloseCascade] = useState(false);
 
   const atLeastOneNestedMenu = useMemo(() => {
     const hasNestedItems = Array.isArray(children)
@@ -71,7 +74,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         ) || nestedMenu
       : false;
     return hasNestedItems;
-  }, [children]);
+  }, [children, nestedMenu]);
 
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
 
@@ -91,30 +94,30 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   };
 
   const handleListKeyDown = (event) => {
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      setLastEnteredItemIndex(null);
-    }
-    
     if (event.key === 'Tab') {
       event.preventDefault();
       setLastEnteredItemIndex(null);
-
 
       if (onClose) {
         onClose(event, 'tabKeyDown');
       }
     }
+
+    if (event.key === 'ArrowLeft') {
+      console.log(`handleListKeyDown called at level ${menuLevel}`);
+      event.stopPropagation();
+      parentMenuActions.setLastEnteredItemIndex(null);
+    }
   };
 
   const handleMenuClose = (event) => {
     const { key } = event;
+    console.log(`handleMenuClose level ${menuLevel}`, { event, key });
 
     setLastEnteredItemIndex(null);
-    console.log('Menu handleMenuClose', { key });
+    // console.log('Menu handleMenuClose', { key });
 
-    if (key === 'ArrowLeft') return;
-
+    console.log(`handleMenuClose level ${menuLevel} about to call parent onClose`);
     if (onClose) onClose(event);
   };
 
@@ -211,41 +214,23 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (atLeastOneNestedMenu) {
       additionalPropsAdded = true;
 
-      const handleArrowKeyDown = (event) => {
-        const { key, target } = event;
-        switch (key) {
-          case 'ArrowRight':
-            event.preventDefault();
-            setLastEnteredItemIndex(index);
-            console.log(key, { target });
-            break;
-          case 'ArrowLeft':
-            handleMenuClose(event);
-            event.preventDefault();
-            console.log(key, { target });
-            break;
-          // case 'ArrowDown':
-          // case 'ArrowUp':
-          //   console.log(key)
-          //   event.preventDefault();
-          //   // event.stopPropagation();
-          //   break;
-          default:
-            break;
+      const handleMenuItemKeyDown = (event) => {
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          setLastEnteredItemIndex(index);
         }
       };
 
       // If there is an incoming onClick for the item, inject parent menu state management
       // function into it, otherwise do nothing.
       const onClickWithMenuReset = onClickChildProp
-        ? (e) => {
-            handleMenuClose(e);
-            onClickChildProp(e);
+        ? (event) => {
+            handleMenuClose(event);
+            onClickChildProp(event);
           }
         : undefined;
 
       Object.assign(additionalProps, {
-        handleNestedMenuClose: handleMenuClose,
         onClick: onClickWithMenuReset,
         onMouseEnter: (e) => {
           setLastEnteredItemIndex(index);
@@ -253,9 +238,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
             onMouseEnterChildProp(e);
           }
         },
-        handleArrowKeyDown,
-        manageParentMenuNestedMenuIndex: (newValue) => setLastEnteredItemIndex(newValue || index),
-        atLeastOneNestedMenu,
+        handleMenuItemKeyDown,
+        parentMenuLevel: menuLevel,
+        parentMenuActions: {
+          handleMenuClose,
+          setLastEnteredItemIndex,
+        },
       });
     }
 
