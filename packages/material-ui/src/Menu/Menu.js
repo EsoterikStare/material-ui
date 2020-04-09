@@ -61,19 +61,18 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const theme = useTheme();
 
   const [lastEnteredItemIndex, setLastEnteredItemIndex] = useState(null);
-  const [preventCloseCascade, setPreventCloseCascade] = useState(false);
 
   const atLeastOneNestedMenu = useMemo(() => {
-    const hasNestedItems = Array.isArray(children)
-      ? children.some(
-          (child) =>
-            React.isValidElement(child) &&
-            child.props &&
-            child.props.nestedItems &&
-            child.props.nestedItems.length > 0,
-        ) || nestedMenu
+    return Array.isArray(children)
+      ? nestedMenu ||
+          children.some(
+            (child) =>
+              React.isValidElement(child) &&
+              child.props &&
+              child.props.nestedItems &&
+              child.props.nestedItems.length > 0,
+          )
       : false;
-    return hasNestedItems;
   }, [children, nestedMenu]);
 
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
@@ -103,21 +102,17 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       }
     }
 
-    if (event.key === 'ArrowLeft') {
-      console.log(`handleListKeyDown called at level ${menuLevel}`);
+    if (event.key === 'ArrowLeft' && nestedMenu) {
+      // Tell the parent Menu to close the nested Menu that you're in, but
+      // don't trigger the nested Menu onClose cascade.
       event.stopPropagation();
       parentMenuActions.setLastEnteredItemIndex(null);
     }
   };
 
   const handleMenuClose = (event) => {
-    const { key } = event;
-    console.log(`handleMenuClose level ${menuLevel}`, { event, key });
-
     setLastEnteredItemIndex(null);
-    // console.log('Menu handleMenuClose', { key });
 
-    console.log(`handleMenuClose level ${menuLevel} about to call parent onClose`);
     if (onClose) onClose(event);
   };
 
@@ -155,8 +150,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   });
 
-  // console.log('Menu atLeastOneNestedMenu', {children, atLeastOneNestedMenu})
-
   const items = React.Children.map(children, (child, index) => {
     if (!React.isValidElement(child)) {
       return;
@@ -188,6 +181,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       });
     }
 
+    // If this Menu is a nested Menu we need to manage pointer-events to control
+    // click away behavior and allow mouse access to nested MenuItems
     if (nestedMenu) {
       additionalPropsAdded = true;
 
