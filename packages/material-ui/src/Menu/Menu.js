@@ -91,9 +91,15 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   };
 
   const handleListKeyDown = (event) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      setLastEnteredItemIndex(null);
+    }
+    
     if (event.key === 'Tab') {
       event.preventDefault();
       setLastEnteredItemIndex(null);
+
 
       if (onClose) {
         onClose(event, 'tabKeyDown');
@@ -102,7 +108,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   };
 
   const handleMenuClose = (event) => {
+    const { key } = event;
+
     setLastEnteredItemIndex(null);
+    console.log('Menu handleMenuClose', { key });
+
+    if (key === 'ArrowLeft') return;
 
     if (onClose) onClose(event);
   };
@@ -205,13 +216,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         switch (key) {
           case 'ArrowRight':
             event.preventDefault();
-            setLastEnteredItemIndex(index)
-            console.log(key, {target});
+            setLastEnteredItemIndex(index);
+            console.log(key, { target });
             break;
           case 'ArrowLeft':
-            handleMenuClose(event)
+            handleMenuClose(event);
             event.preventDefault();
-            console.log(key, {target});
+            console.log(key, { target });
             break;
           // case 'ArrowDown':
           // case 'ArrowUp':
@@ -243,8 +254,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
           }
         },
         handleArrowKeyDown,
-        manageParentMenuNestedMenuIndex: newValue => setLastEnteredItemIndex(newValue || index),
-        atLeastOneNestedMenu
+        manageParentMenuNestedMenuIndex: (newValue) => setLastEnteredItemIndex(newValue || index),
+        atLeastOneNestedMenu,
       });
     }
 
