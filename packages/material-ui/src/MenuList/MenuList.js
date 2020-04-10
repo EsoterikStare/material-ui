@@ -54,14 +54,6 @@ function moveFocus(
   traversalFunction,
   textCriteria,
 ) {
-  console.log('moveFocus', {
-    list,
-    currentFocus,
-    disableListWrap,
-    disabledItemsFocusable,
-    traversalFunction,
-    textCriteria,
-  });
   let wrappedOnce = false;
   let nextFocus = traversalFunction(list, currentFocus, currentFocus ? disableListWrap : false);
 
@@ -152,8 +144,6 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
   );
 
   const handleKeyDown = (event) => {
-    console.log(`MenuList: ${event.key} pressed`)
-
     const list = listRef.current;
     const key = event.key;
     /**
@@ -313,6 +303,10 @@ MenuList.propTypes = {
    * If `true`, the menu items will not wrap focus.
    */
   disableListWrap: PropTypes.bool,
+   /**
+   * @ignore
+   */
+  nestedMenu: PropTypes.bool,
   /**
    * @ignore
    */

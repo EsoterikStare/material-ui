@@ -57,7 +57,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     ...other
   } = props;
 
-  const {handleMenuClose: handleParentMenuClose} = parentMenuActions;
+  const { handleMenuClose: handleParentMenuClose } = parentMenuActions;
 
   const listItemRef = useRef(null);
   useImperativeHandle(ref, () => listItemRef.current);
@@ -149,6 +149,10 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
+   * @ignore
+   */
+  handleMenuItemKeyDown: PropTypes.func,
+  /**
    * An array of MenuItems to render in a nested Menu
    */
   handleNestedMenuClose: PropTypes.func,
@@ -163,11 +167,22 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
+  onKeyDown: PropTypes.func,
+  /**
+   * @ignore
+   */
   onMouseEnter: PropTypes.func,
   /**
    * @ignore
    */
   openNestedMenu: PropTypes.bool,
+  /**
+   * @ignore
+   */
+  parentMenuActions: PropTypes.shape({
+    handleMenuClose: PropTypes.func,
+    setLastEnteredItemIndex: PropTypes.func,
+  }),
   /**
    * @ignore
    */
