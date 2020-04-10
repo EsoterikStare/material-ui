@@ -22,7 +22,7 @@ export const styles = (theme) => ({
     textAlign: 'left',
     paddingTop: 8,
     paddingBottom: 8,
-    '&$focusVisible': {
+    '&$focusVisible, &:focus': {
       backgroundColor: theme.palette.action.selected,
     },
     '&$selected, &$selected:hover': {
