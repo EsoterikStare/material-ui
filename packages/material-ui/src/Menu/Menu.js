@@ -158,7 +158,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     const {
       nestedItems,
       onClick: onClickChildProp,
-      onMouseEnter: onMouseEnterChildProp,
+      onMouseMove: onMouseMoveChildProp,
     } = child.props;
     const { anchorEl } = other;
 
@@ -227,10 +227,10 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
       Object.assign(additionalProps, {
         onClick: onClickWithMenuReset,
-        onMouseEnter: (e) => {
+        onMouseMove: (e) => {
           setLastEnteredItemIndex(index);
-          if (onMouseEnterChildProp) {
-            onMouseEnterChildProp(e);
+          if (onMouseMoveChildProp) {
+            onMouseMoveChildProp(e);
           }
         },
         handleMenuItemKeyDown,
