@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {string} from 'prop-types'
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
+import Switch from '@material-ui/core/Switch';
 
 export default function SimpleMenu() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [darkMode, setDarkMode] = useState(false)
 
   const handleButtonClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleItemClick = () => {
+  const specialItemClick = (event) => {
+    console.log(event.target)
+    window.alert(event.target.innerHtml)
+  }
+
+  const handleItemClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();  
+    console.log('Item clicked!')
     setAnchorEl(null);
   };
 
@@ -28,7 +39,7 @@ export default function SimpleMenu() {
   const deeper3 = [
     { onClick: handleItemClick, children: 'You did it!' },
     { onClick: handleItemClick, children: 'You did it!' },
-    { onClick: handleItemClick, children: 'You did it!' },
+    { onClick: specialItemClick, children: 'This one is special!' },
   ];
 
   const deeper2 = [
@@ -58,7 +69,16 @@ export default function SimpleMenu() {
   ];
 
   const settingItems = [
-    { onClick: handleItemClick, children: 'Dark Mode' },
+    { onClick: event => {
+      event.stopPropagation();
+      event.preventDefault();
+      setDarkMode(!darkMode);
+    }, children: (
+      <Grid alignItems="center" container justify="space-between">
+        <Grid item>{'Dark Mode'}</Grid>
+        <Grid item><Switch checked={darkMode}/></Grid>
+      </Grid>
+    )},
     { onClick: handleItemClick, children: 'Verbos Logging' },
     {
       nestedItems: autoSaveItems.map(renderMenuItem),
