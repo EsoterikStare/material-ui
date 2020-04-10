@@ -52,7 +52,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     selected,
     handleMenuItemKeyDown,
     parentMenuActions = {},
-    parentMenuLevel,
+    // parentMenuLevel,
     tabIndex: tabIndexProp,
     ...other
   } = props;

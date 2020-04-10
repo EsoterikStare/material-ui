@@ -46,7 +46,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     classes,
     disableAutoFocusItem = false,
     MenuListProps = {},
-    menuLevel = 1,
+    // menuLevel = 1,
     onClose,
     onEntering,
     open,
@@ -234,7 +234,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
           }
         },
         handleMenuItemKeyDown,
-        parentMenuLevel: menuLevel,
+        // parentMenuLevel: menuLevel,
         parentMenuActions: {
           handleMenuClose,
           setLastEnteredItemIndex,
@@ -376,6 +376,13 @@ Menu.propTypes = {
    * @ignore
    */
   PaperProps: PropTypes.object,
+   /**
+   * @ignore
+   */
+  parentMenuActions: PropTypes.shape({
+    handleMenuClose: PropTypes.func,
+    setLastEnteredItemIndex: PropTypes.func,
+  }),
   /**
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
