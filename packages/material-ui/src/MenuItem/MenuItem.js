@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ListItem from '../ListItem';
-import ListItemSecondaryAction from '../ListItemSecondaryAction';
 import KeyboardArrowRight from '../internal/svg-icons/KeyboardArrowRight';
 import Menu from '../Menu';
 
@@ -35,6 +34,14 @@ export const styles = (theme) => ({
   nestedMenu: {
     pointerEvents: 'none', // disable click away mask for nested Menus
   },
+  indicatorWrapper: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  indicator: {
+    marginLeft: theme.spacing(2)
+  }
 });
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
@@ -94,7 +101,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         ref={listItemRef}
         {...other}
       >
-        {childrenProp}
+        {nestedItems ? (
+          <div className={classes.indicatorWrapper}>
+            {childrenProp}
+            <NestedMenuIndicator className={classes.indicator} />
+          </div>
+        ) : (
+          childrenProp
+        )}
       </ListItem>
       {openNestedMenu ? (
         <Menu
