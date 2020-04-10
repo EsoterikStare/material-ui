@@ -153,15 +153,14 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
      * trigger this specific handler.
      */
     const currentFocus = ownerDocument(list).activeElement;
-
+    
+    if (nestedMenu) event.stopPropagation();
     if (key === 'ArrowDown') {
       // Prevent scroll of the page
       event.preventDefault();
-      if (nestedMenu) event.stopPropagation();
       moveFocus(list, currentFocus, disableListWrap, disabledItemsFocusable, nextItem);
     } else if (key === 'ArrowUp') {
       event.preventDefault();
-      if (nestedMenu) event.stopPropagation();
       moveFocus(list, currentFocus, disableListWrap, disabledItemsFocusable, previousItem);
     } else if (key === 'Home') {
       event.preventDefault();
