@@ -79,6 +79,11 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     if (onKeyDownProp) onKeyDownProp(event);
   };
 
+  // This should only be assigned/passed to the ListItem if there are nested items.
+  const ariaExpandedProp = nestedItems ? {
+    "aria-expanded": openNestedMenu
+  } : undefined;
+
   return (
     <React.Fragment>
       <ListItem
@@ -99,6 +104,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         )}
         onKeyDown={onKeyDown}
         ref={listItemRef}
+        {...ariaExpandedProp}
         {...other}
       >
         {nestedItems ? (
