@@ -54,7 +54,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     nestedItems,
     NestedMenuIndicator = KeyboardArrowRight,
     openNestedMenu = false,
-    onKeyDown: onKeyDownProp,
+    onKeyDown,
     role = 'menuitem',
     selected,
     handleArrowRightKeydown,
@@ -93,7 +93,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         },
         className,
       )}
-      onKeyDown={createChainedFunction(handleArrowRightKeydown, onKeyDownProp)}
+      onKeyDown={createChainedFunction(handleArrowRightKeydown, onKeyDown)}
       ref={handleRef}
       aria-expanded={nestedItems ? openNestedMenu : undefined}
       aria-haspopup={nestedItems ? true : undefined}
