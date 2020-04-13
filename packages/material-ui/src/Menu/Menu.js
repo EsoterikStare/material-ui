@@ -110,6 +110,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       // Tell the parent Menu to close the nested Menu that you're in, but
       // don't trigger the nested Menu onClose cascade.
       event.stopPropagation();
+      event.preventDefault();
       setParentLastEnteredItemIndex(null);
     }
   };
