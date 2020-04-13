@@ -54,7 +54,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     onEntering,
     open,
     PaperProps = {},
-    parentMenuActions = {},
+    setParentLastEnteredItemIndex,
     PopoverClasses,
     transitionDuration = 'auto',
     nestedMenu = false,
@@ -110,14 +110,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       // Tell the parent Menu to close the nested Menu that you're in, but
       // don't trigger the nested Menu onClose cascade.
       event.stopPropagation();
-      parentMenuActions.setLastEnteredItemIndex(null);
+      setParentLastEnteredItemIndex(null);
     }
-  };
-
-  const handleMenuClose = (event) => {
-    setLastEnteredItemIndex(null);
-
-    if (onClose) onClose(event);
   };
 
   /**
@@ -161,7 +155,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
     const {
       nestedItems,
-      // onClick: onClickChildProp,
       onMouseMove: onMouseMoveChildProp,
     } = child.props;
     const { anchorEl } = other;
@@ -187,11 +180,20 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
     // If the current item in this map has nestedItems,
     // we need the Menu to orchestrate its nestedMenu
-    if (hasNestedMenu && index === lastEnteredItemIndex && parentMenuOpen && !entering) {
+    if (hasNestedMenu && parentMenuOpen) {
       additionalPropsAdded = true;
 
+      const handleArrowRightKeydown = (event) => {
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          setLastEnteredItemIndex(index);
+        }
+      };
+      
       Object.assign(additionalProps, {
-        openNestedMenu: true,
+        handleArrowRightKeydown,
+        openNestedMenu: index === lastEnteredItemIndex && !entering,
+        setParentLastEnteredItemIndex: setLastEnteredItemIndex,
       });
     }
 
@@ -201,27 +203,15 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (atLeastOneNestedMenu) {
       additionalPropsAdded = true;
 
-      const handleMenuItemKeyDown = (event) => {
-        if (event.key === 'ArrowRight') {
-          event.preventDefault();
-          setLastEnteredItemIndex(index);
-        }
-      };
 
       Object.assign(additionalProps, {
-        // onClick: onClickWithMenuReset,
         onMouseMove: (e) => {
           setLastEnteredItemIndex(index);
           if (onMouseMoveChildProp) {
             onMouseMoveChildProp(e);
           }
         },
-        handleMenuItemKeyDown,
         // parentMenuLevel: menuLevel,
-        parentMenuActions: {
-          handleMenuClose,
-          setLastEnteredItemIndex,
-        },
       });
     }
 
@@ -247,8 +237,11 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         [classes.disablePointerEvents]: nestedMenu
       })}
       classes={PopoverClasses}
-      onClose={handleMenuClose}
-      onEnter={() => setEntering(true)}
+      onClose={onClose}
+      onEnter={() => {
+        setLastEnteredItemIndex(null)
+        setEntering(true)
+      }}
       onEntering={handleEntering}
       onEntered={() => setEntering(false)}
       anchorOrigin={theme.direction !== 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
@@ -366,17 +359,14 @@ Menu.propTypes = {
    * @ignore
    */
   PaperProps: PropTypes.object,
-   /**
-   * @ignore
-   */
-  parentMenuActions: PropTypes.shape({
-    handleMenuClose: PropTypes.func,
-    setLastEnteredItemIndex: PropTypes.func,
-  }),
   /**
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   PopoverClasses: PropTypes.object,
+  /**
+  * @ignore
+  */
+  setParentLastEnteredItemIndex: PropTypes.func,
   /**
    * The length of the transition in `ms`, or 'auto'
    */

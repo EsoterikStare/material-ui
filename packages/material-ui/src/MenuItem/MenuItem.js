@@ -57,13 +57,11 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     onKeyDown: onKeyDownProp,
     role = 'menuitem',
     selected,
-    handleMenuItemKeyDown,
-    parentMenuActions = {},
+    handleArrowRightKeydown,
+    setParentLastEnteredItemIndex,
     tabIndex: tabIndexProp,
     ...other
   } = props;
-
-  const { handleMenuClose: handleParentMenuClose } = parentMenuActions;
 
   const listItemRef = React.useRef(null);
   const handleOwnRef = React.useCallback((instance) => {
@@ -95,7 +93,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           },
           className,
         )}
-        onKeyDown={createChainedFunction(handleMenuItemKeyDown, onKeyDownProp)}
+        onKeyDown={createChainedFunction(handleArrowRightKeydown, onKeyDownProp)}
         ref={handleRef}
         aria-expanded={nestedItems ? openNestedMenu : undefined}
         aria-haspopup={nestedItems ? true : undefined}
@@ -116,9 +114,8 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           nestedMenu
           MenuListProps={{ nestedMenu: true }}
-          onClose={handleParentMenuClose}
           open={openNestedMenu}
-          parentMenuActions={parentMenuActions}
+          setParentLastEnteredItemIndex={setParentLastEnteredItemIndex}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           variant="menu"
         >
@@ -163,7 +160,7 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
-  handleMenuItemKeyDown: PropTypes.func,
+  handleArrowRightKeydown: PropTypes.func,
   /**
    * An array of MenuItems to render in a nested Menu
    */
@@ -191,18 +188,15 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
-  parentMenuActions: PropTypes.shape({
-    handleMenuClose: PropTypes.func,
-    setLastEnteredItemIndex: PropTypes.func,
-  }),
-  /**
-   * @ignore
-   */
   role: PropTypes.string,
   /**
    * @ignore
    */
   selected: PropTypes.bool,
+  /**
+   * @ignore
+   */
+  setParentLastEnteredItemIndex: PropTypes.func,
   /**
    * @ignore
    */
