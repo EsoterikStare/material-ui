@@ -75,55 +75,58 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
 
-  return (
-    <React.Fragment>
-      <ListItem
-        button
-        role={role}
-        tabIndex={tabIndex}
-        component={component}
-        selected={selected}
-        disableGutters={disableGutters}
-        classes={{ dense: classes.dense }}
-        className={clsx(
-          classes.root,
-          {
-            [classes.selected]: selected,
-            [classes.gutters]: !disableGutters,
-          },
-          className,
-        )}
-        onKeyDown={createChainedFunction(handleArrowRightKeydown, onKeyDownProp)}
-        ref={handleRef}
-        aria-expanded={nestedItems ? openNestedMenu : undefined}
-        aria-haspopup={nestedItems ? true : undefined}
-        {...other}
+  const ListItemAndNestedMenu = [
+    <ListItem
+      key="ListItem"
+      button
+      role={role}
+      tabIndex={tabIndex}
+      component={component}
+      selected={selected}
+      disableGutters={disableGutters}
+      classes={{ dense: classes.dense }}
+      className={clsx(
+        classes.root,
+        {
+          [classes.selected]: selected,
+          [classes.gutters]: !disableGutters,
+        },
+        className,
+      )}
+      onKeyDown={createChainedFunction(handleArrowRightKeydown, onKeyDownProp)}
+      ref={handleRef}
+      aria-expanded={nestedItems ? openNestedMenu : undefined}
+      aria-haspopup={nestedItems ? true : undefined}
+      {...other}
+    >
+      {nestedItems ? (
+        <div className={classes.indicatorWrapper}>
+          {childrenProp}
+          <NestedMenuIndicator className={classes.indicator} />
+        </div>
+      ) : (
+        childrenProp
+      )}
+    </ListItem>,
+    openNestedMenu ? (
+      <Menu
+        key='nestedMenu'
+        anchorEl={listItemRef.current}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        nestedMenu
+        MenuListProps={{ nestedMenu: true }}
+        open={openNestedMenu}
+        setParentLastEnteredItemIndex={setParentLastEnteredItemIndex}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        variant="menu"
       >
-        {nestedItems ? (
-          <div className={classes.indicatorWrapper}>
-            {childrenProp}
-            <NestedMenuIndicator className={classes.indicator} />
-          </div>
-        ) : (
-          childrenProp
-        )}
-      </ListItem>
-      {openNestedMenu ? (
-        <Menu
-          anchorEl={listItemRef.current}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          nestedMenu
-          MenuListProps={{ nestedMenu: true }}
-          open={openNestedMenu}
-          setParentLastEnteredItemIndex={setParentLastEnteredItemIndex}
-          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          variant="menu"
-        >
-          {nestedItems}
-        </Menu>
-      ) : null}
-    </React.Fragment>
-  );
+        {nestedItems}
+      </Menu>
+    ) : null
+  ]
+
+  return ListItemAndNestedMenu;
+
 });
 
 MenuItem.propTypes = {
