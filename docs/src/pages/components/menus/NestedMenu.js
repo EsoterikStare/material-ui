@@ -16,7 +16,7 @@ export default function SimpleMenu() {
 
   const specialItemClick = (event) => {
     console.log(event.target)
-    window.alert(event.target.innerHtml)
+    // window.alert(event.target.innerHtml)
   }
 
   const handleItemClick = (event) => {

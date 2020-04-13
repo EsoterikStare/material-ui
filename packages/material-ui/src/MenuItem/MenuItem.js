@@ -1,10 +1,13 @@
-import React, { useImperativeHandle, useRef } from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ListItem from '../ListItem';
 import KeyboardArrowRight from '../internal/svg-icons/KeyboardArrowRight';
+import createChainedFunction from '../utils/createChainedFunction';
+import useForkRef from '../utils/useForkRef';
 import Menu from '../Menu';
+import * as ReactDOM from 'react-dom';
 
 export const styles = (theme) => ({
   /* Styles applied to the root element. */
@@ -31,9 +34,6 @@ export const styles = (theme) => ({
     ...theme.typography.body2,
     minHeight: 'auto',
   },
-  nestedMenu: {
-    pointerEvents: 'none', // disable click away mask for nested Menus
-  },
   indicatorWrapper: {
     width: '100%',
     display: 'flex',
@@ -59,25 +59,23 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     selected,
     handleMenuItemKeyDown,
     parentMenuActions = {},
-    // parentMenuLevel,
     tabIndex: tabIndexProp,
     ...other
   } = props;
 
   const { handleMenuClose: handleParentMenuClose } = parentMenuActions;
 
-  const listItemRef = useRef(null);
-  useImperativeHandle(ref, () => listItemRef.current);
+  const listItemRef = React.useRef(null);
+  const handleOwnRef = React.useCallback((instance) => {
+    // #StrictMode ready
+    listItemRef.current = ReactDOM.findDOMNode(instance);
+  }, []);
+  const handleRef = useForkRef(handleOwnRef, ref);
 
   let tabIndex;
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
-
-  const onKeyDown = (event) => {
-    if (handleMenuItemKeyDown) handleMenuItemKeyDown(event);
-    if (onKeyDownProp) onKeyDownProp(event);
-  };
 
   return (
     <React.Fragment>
@@ -97,8 +95,8 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           },
           className,
         )}
-        onKeyDown={onKeyDown}
-        ref={listItemRef}
+        onKeyDown={createChainedFunction(handleMenuItemKeyDown, onKeyDownProp)}
+        ref={handleRef}
         aria-expanded={nestedItems ? openNestedMenu : undefined}
         aria-haspopup={nestedItems ? true : undefined}
         {...other}
@@ -114,12 +112,10 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       </ListItem>
       {openNestedMenu ? (
         <Menu
-          className={classes.nestedMenu}
           anchorEl={listItemRef.current}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           nestedMenu
           MenuListProps={{ nestedMenu: true }}
-          // menuLevel={parentMenuLevel + 1}
           onClose={handleParentMenuClose}
           open={openNestedMenu}
           parentMenuActions={parentMenuActions}

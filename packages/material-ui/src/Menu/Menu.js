@@ -34,8 +34,11 @@ export const styles = {
     // We disable the focus ring for mouse, touch and keyboard users.
     outline: 0,
   },
-  nestedMenuItem: {
-    pointerEvents: 'auto', // re-enable click events on nested Menu items
+  disablePointerEvents: {
+    pointerEvents: 'none', // To stop Modal from capturing hover events
+  },
+  enablePointerEvents: {
+    pointerEvents: 'auto', // To enable capturing hover events on MenuList
   },
 };
 
@@ -61,6 +64,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const theme = useTheme();
 
   const [lastEnteredItemIndex, setLastEnteredItemIndex] = useState(null);
+  const [entering, setEntering] = useState(null);
 
   const atLeastOneNestedMenu = useMemo(() => {
     return Array.isArray(children)
@@ -93,12 +97,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   };
 
   const handleListKeyDown = (event) => {
-    if (event.key === 'Tab') {
+    if (event.key === 'Tab' || event.key === 'Escape') {
       event.preventDefault();
       setLastEnteredItemIndex(null);
 
       if (onClose) {
-        onClose(event, 'tabKeyDown');
+        onClose(event, `${event.key.toLowerCase()}KeyDown`);
       }
     }
 
@@ -157,7 +161,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
     const {
       nestedItems,
-      onClick: onClickChildProp,
+      // onClick: onClickChildProp,
       onMouseMove: onMouseMoveChildProp,
     } = child.props;
     const { anchorEl } = other;
@@ -181,25 +185,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       });
     }
 
-    // If this Menu is a nested Menu we need to manage pointer-events to control
-    // click away behavior and allow mouse access to nested MenuItems
-    if (nestedMenu) {
-      additionalPropsAdded = true;
-
-      Object.assign(additionalProps, {
-        // Tells each MenuItem that it's in a nested Menu so the style that re-enables
-        // pointer-events can be applied.
-        className: classes.nestedMenuItem,
-      });
-    }
-
     // If the current item in this map has nestedItems,
     // we need the Menu to orchestrate its nestedMenu
-    if (hasNestedMenu) {
+    if (hasNestedMenu && index === lastEnteredItemIndex && parentMenuOpen && !entering) {
       additionalPropsAdded = true;
 
       Object.assign(additionalProps, {
-        openNestedMenu: index === lastEnteredItemIndex && parentMenuOpen,
+        openNestedMenu: true,
       });
     }
 
@@ -216,17 +208,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         }
       };
 
-      // If there is an incoming onClick for the item, inject parent menu state management
-      // function into it, otherwise do nothing.
-      const onClickWithMenuReset = onClickChildProp
-        ? (event) => {
-            handleMenuClose(event);
-            onClickChildProp(event);
-          }
-        : undefined;
-
       Object.assign(additionalProps, {
-        onClick: onClickWithMenuReset,
+        // onClick: onClickWithMenuReset,
         onMouseMove: (e) => {
           setLastEnteredItemIndex(index);
           if (onMouseMoveChildProp) {
@@ -260,9 +243,14 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   return (
     <Popover
       getContentAnchorEl={getContentAnchorEl}
+      className={clsx({
+        [classes.disablePointerEvents]: nestedMenu
+      })}
       classes={PopoverClasses}
       onClose={handleMenuClose}
+      onEnter={() => setEntering(true)}
       onEntering={handleEntering}
+      onEntered={() => setEntering(false)}
       anchorOrigin={theme.direction !== 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       PaperProps={{
@@ -285,7 +273,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         autoFocusItem={autoFocusItem}
         variant={variant}
         {...MenuListProps}
-        className={clsx(classes.list, MenuListProps.className)}
+        className={clsx(classes.list, MenuListProps.className, {
+          [classes.enablePointerEvents]: nestedMenu
+        })}
       >
         {items}
       </MenuList>
