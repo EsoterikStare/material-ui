@@ -8,7 +8,6 @@ import MenuList from '../MenuList';
 import * as ReactDOM from 'react-dom';
 import setRef from '../utils/setRef';
 import useTheme from '../styles/useTheme';
-import createChainedFunction from '../utils/createChainedFunction';
 
 const RTL_ORIGIN = {
   vertical: 'top',
