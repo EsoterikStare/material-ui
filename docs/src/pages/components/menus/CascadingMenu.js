@@ -32,7 +32,7 @@ export default function CascadingMenu() {
         onClose={handleClose}
       >
         <MenuItem disableRipple nestedItems={[
-          <MenuItem disableRipple>Dark Mode <Switch checked={darkMode} onClick={swapDarkMode} /></MenuItem>,
+          <MenuItem onClick={swapDarkMode} disableRipple>Dark Mode <Switch checked={darkMode} /></MenuItem>,
           <MenuItem disableRipple onClick={handleClose} nestedItems={[
             <MenuItem onClick={handleClose}>75%</MenuItem>,
             <MenuItem onClick={handleClose}>100%</MenuItem>,
