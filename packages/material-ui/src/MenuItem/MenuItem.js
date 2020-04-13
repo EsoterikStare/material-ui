@@ -53,6 +53,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     disableGutters = false,
     nestedItems,
     NestedMenuIndicator = KeyboardArrowRight,
+    NestedMenuProps = {},
     openNestedMenu = false,
     onKeyDown,
     role = 'menuitem',
@@ -119,6 +120,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         setParentLastEnteredItemIndex={setParentLastEnteredItemIndex}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         variant="menu"
+        {...NestedMenuProps}
       >
         {nestedItems}
       </Menu>
@@ -176,6 +178,10 @@ MenuItem.propTypes = {
    * Customize the icon used to indicate a MenuItem has a nested Menu.
    */
   NestedMenuIndicator: PropTypes.node,
+  /**
+   * Customize the nested Menu that will render the nestedItems.
+   */
+  NestedMenuProps: PropTypes.object,
   /**
    * @ignore
    */
