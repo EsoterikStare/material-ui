@@ -8,6 +8,7 @@ import MenuList from '../MenuList';
 import * as ReactDOM from 'react-dom';
 import setRef from '../utils/setRef';
 import useTheme from '../styles/useTheme';
+import createChainedFunction from '../utils/createChainedFunction';
 
 const RTL_ORIGIN = {
   vertical: 'top',
@@ -51,7 +52,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     MenuListProps = {},
     // menuLevel = 1,
     onClose,
+    onEnter,
     onEntering,
+    onEntered,
     open,
     PaperProps = {},
     setParentLastEnteredItemIndex,
@@ -86,6 +89,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const getContentAnchorEl = () => contentAnchorRef.current;
 
+  const handleEnter = () => {
+    if (atLeastOneNestedMenu) {
+      setEntering(true);
+      setLastEnteredItemIndex(null);
+    }
+  };
+
   const handleEntering = (element, isAppearing) => {
     if (menuListActionsRef.current) {
       menuListActionsRef.current.adjustStyleForScrollbar(element, theme);
@@ -96,6 +106,10 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   };
 
+  const handleEntered = () => {
+    if (atLeastOneNestedMenu) setEntering(false);
+  };
+  
   const handleListKeyDown = (event) => {
     if (event.key === 'Tab' || event.key === 'Escape') {
       event.preventDefault();
@@ -239,16 +253,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       })}
       classes={PopoverClasses}
       onClose={onClose}
-      onEnter={() => {
-        if (atLeastOneNestedMenu) {
-          setEntering(true);
-          setLastEnteredItemIndex(null);
-        }
-      }}
+      onEnter={createChainedFunction(handleEnter, onEnter)}
       onEntering={handleEntering}
-      onEntered={() => {
-        if (atLeastOneNestedMenu) setEntering(false);
-      }}
+      onEntered={createChainedFunction(handleEntered, onEntered)}
       anchorOrigin={theme.direction !== 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       PaperProps={{
