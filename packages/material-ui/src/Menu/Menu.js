@@ -64,7 +64,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const theme = useTheme();
 
   const [lastEnteredItemIndex, setLastEnteredItemIndex] = useState(null);
-  const [entering, setEntering] = useState(null);
+  const [entering, setEntering] = useState(false);
 
   const atLeastOneNestedMenu = useMemo(() => {
     return Array.isArray(children)
@@ -240,11 +240,15 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       classes={PopoverClasses}
       onClose={onClose}
       onEnter={() => {
-        setLastEnteredItemIndex(null)
-        setEntering(true)
+        if (atLeastOneNestedMenu) {
+          setEntering(true);
+          setLastEnteredItemIndex(null);
+        }
       }}
       onEntering={handleEntering}
-      onEntered={() => setEntering(false)}
+      onEntered={() => {
+        if (atLeastOneNestedMenu) setEntering(false);
+      }}
       anchorOrigin={theme.direction !== 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       PaperProps={{
