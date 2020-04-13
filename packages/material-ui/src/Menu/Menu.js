@@ -89,10 +89,14 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const getContentAnchorEl = () => contentAnchorRef.current;
 
-  const handleEnter = () => {
+  const handleEnter = (element, isAppearing) => {
     if (atLeastOneNestedMenu) {
       setEntering(true);
       setLastEnteredItemIndex(null);
+    }
+
+    if (onEnter) {
+      onEnter(element, isAppearing);
     }
   };
 
@@ -106,8 +110,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   };
 
-  const handleEntered = () => {
+  const handleEntered = (element, isAppearing) => {
     if (atLeastOneNestedMenu) setEntering(false);
+
+    if (onEntered) {
+      onEntered(element, isAppearing)
+    }
   };
   
   const handleListKeyDown = (event) => {
@@ -253,9 +261,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       })}
       classes={PopoverClasses}
       onClose={onClose}
-      onEnter={createChainedFunction(handleEnter, onEnter)}
+      onEnter={handleEnter}
       onEntering={handleEntering}
-      onEntered={createChainedFunction(handleEntered, onEntered)}
+      onEntered={handleEntered}
       anchorOrigin={theme.direction !== 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       PaperProps={{
