@@ -169,10 +169,6 @@ MenuItem.propTypes = {
   /**
    * An array of MenuItems to render in a nested Menu
    */
-  handleNestedMenuClose: PropTypes.func,
-  /**
-   * @ignore
-   */
   nestedItems: PropTypes.arrayOf(PropTypes.node),
   /**
    * Customize the icon used to indicate a MenuItem has a nested Menu.

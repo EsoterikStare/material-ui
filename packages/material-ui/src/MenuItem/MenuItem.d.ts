@@ -1,6 +1,7 @@
 import { ListItemTypeMap } from '../ListItem';
 import { OverridableComponent, OverrideProps } from '../OverridableComponent';
 import { ExtendButtonBase } from '../ButtonBase';
+import { MenuProps } from '../Menu';
 import { Omit } from '@material-ui/types';
 
 export type MenuItemClassKey = 'root' | 'gutters' | 'selected' | 'dense';
@@ -10,6 +11,43 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Omit<
   'classKey'
 > & {
   classKey: MenuItemClassKey;
+  props: P & {
+    /**
+     * Fires when the right arrow key is pressed
+     * on a MenuItem that contains nested items
+     * and passes focus to the first child of the
+     * nested items array
+     */
+    handleArrowRightKeydown?: React.ReactEventHandler<{}>;
+    /**
+     * An array of MenuItems to render in a nested Menu
+     */
+    nestedItems?: React.ReactNode;
+    /**
+     * Normally `Icon`, `SvgIcon`, or a `@material-ui/icons`
+     * SVG icon element rendered on a ListItem that
+     * contains a nestedItems array
+     */
+    nestedMenuIndicator?: React.ReactNode;
+    /**
+     * Props used to customize this MenuItem's
+     * nested Menu component
+     */
+    NestedMenuProps?: Partial<MenuProps>;
+    onKeyDown?: React.KeyboardEventHandler<any>;
+    onMouseEnter?: React.MouseEventHandler<any>;
+    /**
+     * If `true`, opens the nested Menu
+     * component passing in nestedItems
+     * as the Menu's children
+     */
+    openNestedMenu?: boolean;
+    /**
+     * Function passed to nested menus to maintain the last index of an
+     * entered child to orchestrate menu open/close states.
+     */
+    setParentLastEnteredItemIndex?: (index: number) => void;
+  };
 };
 
 /**

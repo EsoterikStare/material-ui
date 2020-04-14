@@ -34,7 +34,7 @@ export interface MenuProps
    * Props applied to the [`MenuList`](/api/menu-list/) element.
    */
   MenuListProps?: Partial<MenuListProps>;
-    /**
+  /**
    * If `true`, the Menu is a nested menu of a parent menu,
    * giving it additional events and props in addition to those
    * of a normal menu.
@@ -88,7 +88,7 @@ export interface MenuProps
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   PopoverClasses?: PopoverProps['classes'];
-    /**
+  /**
    * Function passed to nested menus to maintain the last index of an
    * entered child to orchestrate menu open/close states.
    */
