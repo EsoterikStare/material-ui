@@ -49,7 +49,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     classes,
     disableAutoFocusItem = false,
     MenuListProps = {},
-    // menuLevel = 1,
     onClose,
     onEnter,
     onEntering,
@@ -69,16 +68,16 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const [entering, setEntering] = useState(false);
 
   const atLeastOneNestedMenu = useMemo(() => {
-    return Array.isArray(children)
-      ? nestedMenu ||
-          children.some(
-            (child) =>
-              React.isValidElement(child) &&
-              child.props &&
-              child.props.nestedItems &&
-              child.props.nestedItems.length > 0,
-          )
-      : false;
+    let someNestedItems = false;
+
+    React.Children.map(children, child => {
+      if (someNestedItems) return;
+      if (nestedMenu || (React.isValidElement(child) && child.props && child.props.nestedItems)) {
+        someNestedItems = true;
+      }
+    });
+
+    return someNestedItems;
   }, [children, nestedMenu]);
 
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
