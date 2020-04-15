@@ -85,11 +85,13 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
 
   const {
     anchorEl, // disallowed
+    handleParentClose: outsideHPC, // disallowed
     MenuListProps, // Needs to be spread into subMenu prop
     isSubMenu, // disallowed
     open, // disallowed
     setParentJustArrowedLeft: outsideSPJAL, // disallowed
-    onClose: subOnClose,
+    setParentLastEnteredItemIndex: outsideSPLEII, // disallowed
+    onClose: subOnClose, // Needs to be combined with parentOnClose on the subMenu
     ...allowedSubMenuProps
   } = subMenu ? subMenu.props : {};
 
