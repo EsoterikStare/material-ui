@@ -124,8 +124,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   }
 
   const handleListKeyDown = (event) => {
-    const closeKeys = ['Tab', 'Escape', 'Esc'];
-    if (closeKeys.includes(event.key)) {
+    if (event.key === 'Tab' || event.key === 'Escape') {
       handleOnClose(event);
     }
 
