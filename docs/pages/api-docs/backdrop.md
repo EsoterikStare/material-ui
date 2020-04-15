@@ -20,6 +20,10 @@ You can learn more about the difference by [reading this guide](/guides/minimizi
 
 
 
+## Component name
+
+The `MuiBackdrop` name can be used for providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) at the theme level.
+
 ## Props
 
 | Name | Type | Default | Description |
@@ -32,12 +36,9 @@ You can learn more about the difference by [reading this guide](/guides/minimizi
 
 The `ref` is forwarded to the root element.
 
-Any other props supplied will be provided to the root element (native element).
+Any other props supplied will be provided to the root element ([Fade](/api/fade/)).
 
 ## CSS
-
-- Style sheet name: `MuiBackdrop`.
-- Style sheet details:
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
@@ -51,6 +52,11 @@ You can override the style of the component thanks to one of these customization
 - With a theme and an [`overrides` property](/customization/globals/#css).
 
 If that's not sufficient, you can check the [implementation of the component](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/Backdrop/Backdrop.js) for more detail.
+
+## Inheritance
+
+The props of the [Fade](/api/fade/) component are also available.
+You can take advantage of this behavior to [target nested components](/guides/api/#spread).
 
 ## Demos
 

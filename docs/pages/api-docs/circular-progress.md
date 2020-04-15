@@ -24,12 +24,16 @@ If the progress bar is describing the loading progress of a particular region of
 you should use `aria-describedby` to point to the progress bar, and set the `aria-busy`
 attribute to `true` on that region until it has finished loading.
 
+## Component name
+
+The `MuiCircularProgress` name can be used for providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) at the theme level.
+
 ## Props
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | <span class="prop-name">classes</span> | <span class="prop-type">object</span> |  | Override or extend the styles applied to the component. See [CSS API](#css) below for more details. |
-| <span class="prop-name">color</span> | <span class="prop-type">'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'inherit'</span> | <span class="prop-default">'primary'</span> | The color of the component. It supports those theme colors that make sense for this component. |
+| <span class="prop-name">color</span> | <span class="prop-type">'inherit'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'</span> | <span class="prop-default">'primary'</span> | The color of the component. It supports those theme colors that make sense for this component. |
 | <span class="prop-name">disableShrink</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the shrink animation is disabled. This only works if variant is `indeterminate`. |
 | <span class="prop-name">size</span> | <span class="prop-type">number<br>&#124;&nbsp;string</span> | <span class="prop-default">40</span> | The size of the circle. If using a number, the pixel unit is assumed. If using a string, you need to provide the CSS unit, e.g '3rem'. |
 | <span class="prop-name">thickness</span> | <span class="prop-type">number</span> | <span class="prop-default">3.6</span> | The thickness of the circle. |
@@ -41,9 +45,6 @@ The `ref` is forwarded to the root element.
 Any other props supplied will be provided to the root element (native element).
 
 ## CSS
-
-- Style sheet name: `MuiCircularProgress`.
-- Style sheet details:
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|

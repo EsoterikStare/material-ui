@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import PopperJS from 'popper.js';
+import PopperJs from 'popper.js';
 import { chainPropTypes, refType } from '@material-ui/utils';
 import { useTheme } from '@material-ui/styles';
 import Portal from '../Portal';
@@ -39,7 +39,7 @@ const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect 
 const defaultPopperOptions = {};
 
 /**
- * Poppers rely on the 3rd party library [Popper.js](https://github.com/FezVrasta/popper.js) for positioning.
+ * Poppers rely on the 3rd party library [Popper.js](https://popper.js.org/docs/v1/) for positioning.
  */
 const Popper = React.forwardRef(function Popper(props, ref) {
   const {
@@ -53,6 +53,7 @@ const Popper = React.forwardRef(function Popper(props, ref) {
     placement: initialPlacement = 'bottom',
     popperOptions = defaultPopperOptions,
     popperRef: popperRefProp,
+    style,
     transition = false,
     ...other
   } = props;
@@ -123,7 +124,7 @@ const Popper = React.forwardRef(function Popper(props, ref) {
       }
     }
 
-    const popper = new PopperJS(getAnchorEl(anchorEl), tooltipRef.current, {
+    const popper = new PopperJs(getAnchorEl(anchorEl), tooltipRef.current, {
       placement: rtlPlacement,
       ...popperOptions,
       modifiers: {
@@ -143,6 +144,7 @@ const Popper = React.forwardRef(function Popper(props, ref) {
       onCreate: createChainedFunction(handlePopperUpdate, popperOptions.onCreate),
       onUpdate: createChainedFunction(handlePopperUpdate, popperOptions.onUpdate),
     });
+
     handlePopperRefRef.current(popper);
   }, [anchorEl, disablePortal, modifiers, open, rtlPlacement, popperOptions]);
 
@@ -216,7 +218,7 @@ const Popper = React.forwardRef(function Popper(props, ref) {
           // Fix Popper.js display issue
           top: 0,
           left: 0,
-          ...other.style,
+          ...style,
         }}
       >
         {typeof children === 'function' ? children(childProps) : children}
@@ -226,14 +228,17 @@ const Popper = React.forwardRef(function Popper(props, ref) {
 });
 
 Popper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
   /**
    * This is the reference element, or a function that returns the reference element,
    * that may be used to set the position of the popover.
    * The return value will passed as the reference object of the Popper
    * instance.
    *
-   * The reference element should be an HTML Element instance or a referenceObject:
-   * https://popper.js.org/popper-documentation.html#referenceObject.
+   * The reference element should be an HTML Element instance or a [referenceObject](https://popper.js.org/docs/v1/#referenceObject).
    */
   anchorEl: chainPropTypes(PropTypes.oneOfType([PropTypes.object, PropTypes.func]), (props) => {
     if (props.open) {
@@ -267,8 +272,8 @@ Popper.propTypes = {
         return new Error(
           [
             'Material-UI: the `anchorEl` prop provided to the component is invalid.',
-            'It should be an HTML Element instance or a referenceObject:',
-            'https://popper.js.org/popper-documentation.html#referenceObject.',
+            'It should be an HTML Element instance or a referenceObject ',
+            '(https://popper.js.org/docs/v1/#referenceObject).',
           ].join('\n'),
         );
       }
@@ -279,14 +284,21 @@ Popper.propTypes = {
   /**
    * Popper render function or node.
    */
-  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  children: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.node,
+    PropTypes.func,
+  ]).isRequired,
   /**
    * A node, component instance, or function that returns either.
    * The `container` will passed to the Modal component.
    * By default, it uses the body of the anchorEl's top-level document object,
    * so it's simply `document.body` most of the time.
    */
-  container: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  container: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.func,
+    PropTypes.instanceOf(React.Component),
+    PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
+  ]),
   /**
    * Disable the portal behavior.
    * The children stay within it's parent DOM hierarchy.
@@ -305,7 +317,7 @@ Popper.propTypes = {
    * A modifier is a function that is called each time Popper.js needs to
    * compute the position of the popper.
    * For this reason, modifiers should be very performant to avoid bottlenecks.
-   * To learn how to create a modifier, [read the modifiers documentation](https://github.com/FezVrasta/popper.js/blob/master/docs/_includes/popper-documentation.md#modifiers--object).
+   * To learn how to create a modifier, [read the modifiers documentation](https://popper.js.org/docs/v1/#modifiers).
    */
   modifiers: PropTypes.object,
   /**
@@ -330,13 +342,17 @@ Popper.propTypes = {
     'top',
   ]),
   /**
-   * Options provided to the [`popper.js`](https://github.com/FezVrasta/popper.js) instance.
+   * Options provided to the [`popper.js`](https://popper.js.org/docs/v1/) instance.
    */
   popperOptions: PropTypes.object,
   /**
    * A ref that points to the used popper instance.
    */
   popperRef: refType,
+  /**
+   * @ignore
+   */
+  style: PropTypes.object,
   /**
    * Help supporting a react-transition-group/Transition component.
    */

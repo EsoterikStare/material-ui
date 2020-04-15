@@ -6,7 +6,7 @@
 
 Add a `ThemeProvider` to the top level of your app to pass a theme down the React component tree. Then, you can access the theme object in style functions.
 
-> This example creates a new theme. See the [theming section](/customization/theming/) for how to customize the default Material-UI theme.
+> Este ejemplo crea un objeto de tema para componentes construidos a medida. Si pretende utilizar algunos de los componentes de Material-UI, necesita proporcionar una estructura de tema más rica utilizando el método `createMuiTheme()`. Dirígete a la sección [temática](/customization/theming/) para aprender cómo construir tu tema personalizado de Material-UI.
 
 ```jsx
 import { ThemeProvider } from '@material-ui/core/styles';

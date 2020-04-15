@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 import { spy } from 'sinon';
 import { createMount, getClasses, findOutermostIntrinsic } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
@@ -137,31 +137,33 @@ describe('<ExpansionPanel />', () => {
     describe('first child', () => {
       beforeEach(() => {
         consoleErrorMock.spy();
+        PropTypes.resetWarningCache();
       });
 
       afterEach(() => {
         consoleErrorMock.reset();
-        PropTypes.resetWarningCache();
       });
 
       it('requires at least one child', () => {
-        if (!/jsdom/.test(window.navigator.userAgent)) {
-          // errors during mount are not caught by try-catch in the browser
-          // can't use skip since this causes multiple errors related to cleanup of the console mock
-          return;
-        }
+        PropTypes.checkPropTypes(
+          ExpansionPanel.Naked.propTypes,
+          { classes: {}, children: [] },
+          'prop',
+          'MockedName',
+        );
 
-        assert.throws(() => mount(<ExpansionPanel>{[]}</ExpansionPanel>));
-        assert.strictEqual(consoleErrorMock.callCount(), 3);
+        assert.strictEqual(consoleErrorMock.callCount(), 1);
         assert.include(consoleErrorMock.messages()[0], 'Material-UI: expected the first child');
       });
 
       it('needs a valid element as the first child', () => {
-        mount(
-          <ExpansionPanel>
-            <React.Fragment />
-          </ExpansionPanel>,
+        PropTypes.checkPropTypes(
+          ExpansionPanel.Naked.propTypes,
+          { classes: {}, children: <React.Fragment /> },
+          'prop',
+          'MockedName',
         );
+
         assert.strictEqual(consoleErrorMock.callCount(), 1);
         assert.include(
           consoleErrorMock.messages()[0],
@@ -193,9 +195,8 @@ describe('<ExpansionPanel />', () => {
       const wrapper = mount(<ExpansionPanel expanded>{minimalChildren}</ExpansionPanel>);
 
       wrapper.setProps({ expanded: undefined });
-      assert.include(
-        consoleErrorMock.messages()[0],
-        'A component is changing a controlled ExpansionPanel to be uncontrolled.',
+      expect(consoleErrorMock.messages()[0]).to.include(
+        'Material-UI: a component is changing the controlled expanded state of ExpansionPanel to be uncontrolled.',
       );
     });
 
@@ -205,7 +206,7 @@ describe('<ExpansionPanel />', () => {
       wrapper.setProps({ expanded: true });
       assert.include(
         consoleErrorMock.messages()[0],
-        'A component is changing an uncontrolled ExpansionPanel to be controlled.',
+        'Material-UI: a component is changing the uncontrolled expanded state of ExpansionPanel to be controlled.',
       );
     });
   });

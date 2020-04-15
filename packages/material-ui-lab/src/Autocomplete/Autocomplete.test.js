@@ -350,13 +350,13 @@ describe('<Autocomplete />', () => {
 
       // listbox is not only inaccessible but not in the DOM
       const listbox = queryByRole('listbox', { hidden: true });
-      expect(listbox).to.be.null;
+      expect(listbox).to.equal(null);
 
       const buttons = getAllByRole('button');
       expect(buttons).to.have.length(2);
-      expect(buttons[0]).to.have.accessibleName('Clear');
+      expect(buttons[0]).toHaveAccessibleName('Clear');
       expect(buttons[0]).to.have.attribute('title', 'Clear');
-      expect(buttons[1]).to.have.accessibleName('Open');
+      expect(buttons[1]).toHaveAccessibleName('Open');
       expect(buttons[1]).to.have.attribute('title', 'Open');
       buttons.forEach((button) => {
         expect(button, 'button is not in tab order').to.have.property('tabIndex', -1);
@@ -396,9 +396,9 @@ describe('<Autocomplete />', () => {
 
       const buttons = getAllByRole('button');
       expect(buttons).to.have.length(2);
-      expect(buttons[0]).to.have.accessibleName('Clear');
+      expect(buttons[0]).toHaveAccessibleName('Clear');
       expect(buttons[0]).to.have.attribute('title', 'Clear');
-      expect(buttons[1]).to.have.accessibleName('Close');
+      expect(buttons[1]).toHaveAccessibleName('Close');
       expect(buttons[1]).to.have.attribute('title', 'Close');
       buttons.forEach((button) => {
         expect(button, 'button is not in tab order').to.have.property('tabIndex', -1);
@@ -595,7 +595,7 @@ describe('<Autocomplete />', () => {
       const combobox = getByRole('combobox');
 
       expect(combobox).to.have.attribute('aria-expanded', 'true');
-      expect(textbox).to.have.focus;
+      expect(textbox).toHaveFocus();
 
       fireEvent.mouseDown(textbox);
       fireEvent.click(textbox);
@@ -603,12 +603,12 @@ describe('<Autocomplete />', () => {
 
       document.activeElement.blur();
       expect(combobox).to.have.attribute('aria-expanded', 'false');
-      expect(textbox).to.not.have.focus;
+      expect(textbox).not.toHaveFocus();
 
       fireEvent.mouseDown(textbox);
       fireEvent.click(textbox);
       expect(combobox).to.have.attribute('aria-expanded', 'true');
-      expect(textbox).to.have.focus;
+      expect(textbox).toHaveFocus();
 
       fireEvent.mouseDown(textbox);
       fireEvent.click(textbox);
@@ -629,7 +629,7 @@ describe('<Autocomplete />', () => {
       fireEvent.keyDown(document.activeElement, { key: 'ArrowUp' });
 
       const options = getAllByRole('option');
-      expect(document.activeElement).to.have.focus;
+      expect(document.activeElement).toHaveFocus();
       expect(document.activeElement).to.have.attribute(
         'aria-activedescendant',
         options[options.length - 1].getAttribute('id'),
@@ -648,7 +648,7 @@ describe('<Autocomplete />', () => {
       fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
 
       const options = getAllByRole('option');
-      expect(document.activeElement).to.have.focus;
+      expect(document.activeElement).toHaveFocus();
       expect(document.activeElement).to.have.attribute(
         'aria-activedescendant',
         options[0].getAttribute('id'),
@@ -668,7 +668,7 @@ describe('<Autocomplete />', () => {
         fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
         fireEvent.keyDown(document.activeElement, { key: 'ArrowUp' });
 
-        expect(document.activeElement).to.have.focus;
+        expect(document.activeElement).toHaveFocus();
         expect(document.activeElement).not.to.have.attribute('aria-activedescendant');
       });
 
@@ -684,7 +684,7 @@ describe('<Autocomplete />', () => {
         fireEvent.keyDown(document.activeElement, { key: 'ArrowUp' });
         fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
 
-        expect(document.activeElement).to.have.focus;
+        expect(document.activeElement).toHaveFocus();
         expect(document.activeElement).not.to.have.attribute('aria-activedescendant');
       });
     });
@@ -702,7 +702,7 @@ describe('<Autocomplete />', () => {
         fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
         fireEvent.keyDown(document.activeElement, { key: 'ArrowUp' });
 
-        expect(document.activeElement).to.have.focus;
+        expect(document.activeElement).toHaveFocus();
         expect(document.activeElement).to.have.attribute(
           'aria-activedescendant',
           getAllByRole('option')[0].getAttribute('id'),
@@ -723,7 +723,7 @@ describe('<Autocomplete />', () => {
 
         const textbox = getByRole('textbox');
         const options = getAllByRole('option');
-        expect(textbox).to.have.focus;
+        expect(textbox).toHaveFocus();
         expect(textbox).to.have.attribute(
           'aria-activedescendant',
           options[options.length - 1].getAttribute('id'),
@@ -745,7 +745,7 @@ describe('<Autocomplete />', () => {
 
         const textbox = getByRole('textbox');
         const options = getAllByRole('option');
-        expect(textbox).to.have.focus;
+        expect(textbox).toHaveFocus();
         expect(textbox).to.have.attribute(
           'aria-activedescendant',
           options[options.length - 1].getAttribute('id'),
@@ -764,7 +764,7 @@ describe('<Autocomplete />', () => {
           />,
         );
         const input = getByRole('textbox');
-        expect(input.disabled).to.be.true;
+        expect(input.disabled).to.equal(true);
       });
 
       it('should disable the popup button', () => {
@@ -776,7 +776,7 @@ describe('<Autocomplete />', () => {
             renderInput={(params) => <TextField {...params} />}
           />,
         );
-        expect(queryByTitle('Open').disabled).to.be.true;
+        expect(queryByTitle('Open').disabled).to.equal(true);
       });
 
       it('should not render the clear button', () => {
@@ -788,7 +788,7 @@ describe('<Autocomplete />', () => {
             renderInput={(params) => <TextField {...params} />}
           />,
         );
-        expect(queryByTitle('Clear')).to.be.null;
+        expect(queryByTitle('Clear')).to.equal(null);
       });
 
       it('should not apply the hasClearIcon class', () => {
@@ -815,7 +815,7 @@ describe('<Autocomplete />', () => {
             renderInput={(params) => <TextField {...params} />}
           />,
         );
-        expect(queryByTitle('Clear')).to.be.null;
+        expect(queryByTitle('Clear')).to.equal(null);
         expect(container.querySelector(`.${classes.root}`)).to.have.class(classes.hasPopupIcon);
         expect(container.querySelector(`.${classes.root}`)).not.to.have.class(classes.hasClearIcon);
       });
@@ -904,6 +904,33 @@ describe('<Autocomplete />', () => {
       expect(consoleWarnMock.messages()[0]).to.include(
         'None of the options match with `"not a good value"`',
       );
+    });
+
+    it('warn if groups options are not sorted', () => {
+      const data = [
+        { group: 1, value: 'A' },
+        { group: 2, value: 'D' },
+        { group: 2, value: 'E' },
+        { group: 1, value: 'B' },
+        { group: 3, value: 'G' },
+        { group: 2, value: 'F' },
+        { group: 1, value: 'C' },
+      ];
+      const { getAllByRole } = render(
+        <Autocomplete
+          {...defaultProps}
+          options={data}
+          getOptionLabel={(option) => option.value}
+          renderInput={(params) => <TextField {...params} autoFocus />}
+          groupBy={(option) => option.group}
+        />,
+      );
+
+      const options = getAllByRole('option').map((el) => el.textContent);
+      expect(options).to.have.length(7);
+      expect(options).to.deep.equal(['A', 'D', 'E', 'B', 'G', 'F', 'C']);
+      expect(consoleWarnMock.callCount()).to.equal(2);
+      expect(consoleWarnMock.messages()[0]).to.include('returns duplicated headers');
     });
   });
 
@@ -1065,11 +1092,11 @@ describe('<Autocomplete />', () => {
 
       const textbox = getByRole('textbox');
       fireEvent.click(textbox);
-      expect(textbox).to.have.focus;
+      expect(textbox).toHaveFocus();
       textbox.blur();
 
       fireEvent.click(queryByTitle('Open'));
-      expect(textbox).to.have.focus;
+      expect(textbox).toHaveFocus();
     });
   });
 
@@ -1395,16 +1422,16 @@ describe('<Autocomplete />', () => {
       );
       const textbox = getByRole('textbox');
       let firstOption = getByRole('option');
-      expect(textbox).to.have.focus;
+      expect(textbox).toHaveFocus();
       fireEvent.click(firstOption);
-      expect(textbox).to.not.have.focus;
+      expect(textbox).not.toHaveFocus();
 
       fireEvent.click(queryByTitle('Open'));
-      expect(textbox).to.have.focus;
+      expect(textbox).toHaveFocus();
       firstOption = getByRole('option');
       fireEvent.touchStart(firstOption);
       fireEvent.click(firstOption);
-      expect(textbox).to.not.have.focus;
+      expect(textbox).not.toHaveFocus();
     });
 
     it('[blurOnSelect="touch"] should only blur the input when an option is touched', () => {
@@ -1421,13 +1448,13 @@ describe('<Autocomplete />', () => {
       const textbox = getByRole('textbox');
       let firstOption = getByRole('option');
       fireEvent.click(firstOption);
-      expect(textbox).to.have.focus;
+      expect(textbox).toHaveFocus();
 
       fireEvent.click(queryByTitle('Open'));
       firstOption = getByRole('option');
       fireEvent.touchStart(firstOption);
       fireEvent.click(firstOption);
-      expect(textbox).to.not.have.focus;
+      expect(textbox).not.toHaveFocus();
     });
 
     it('[blurOnSelect="mouse"] should only blur the input when an option is clicked', () => {
@@ -1445,12 +1472,12 @@ describe('<Autocomplete />', () => {
       let firstOption = getByRole('option');
       fireEvent.touchStart(firstOption);
       fireEvent.click(firstOption);
-      expect(textbox).to.have.focus;
+      expect(textbox).toHaveFocus();
 
       fireEvent.click(queryByTitle('Open'));
       firstOption = getByRole('option');
       fireEvent.click(firstOption);
-      expect(textbox).to.not.have.focus;
+      expect(textbox).not.toHaveFocus();
     });
   });
 
@@ -1486,31 +1513,19 @@ describe('<Autocomplete />', () => {
     });
   });
 
-  describe('prop: groupBy', () => {
-    it('correctly groups options and preserves option order in each group', () => {
-      const data = [
-        { group: 1, value: 'A' },
-        { group: 2, value: 'D' },
-        { group: 2, value: 'E' },
-        { group: 1, value: 'B' },
-        { group: 3, value: 'G' },
-        { group: 2, value: 'F' },
-        { group: 1, value: 'C' },
-      ];
-      const { getAllByRole } = render(
+  describe('prop: fullWidth', () => {
+    it('should have the fullWidth class', () => {
+      const { container } = render(
         <Autocomplete
           {...defaultProps}
-          options={data}
-          getOptionLabel={(option) => option.value}
-          renderInput={(params) => <TextField {...params} autoFocus />}
-          open
-          groupBy={(option) => option.group}
+          fullWidth
+          options={[0, 10, 20]}
+          renderInput={(params) => <TextField {...params} />}
+          value={null}
         />,
       );
 
-      const options = getAllByRole('option').map((el) => el.textContent);
-      expect(options).to.have.length(7);
-      expect(options).to.deep.equal(['A', 'B', 'C', 'D', 'E', 'F', 'G']);
+      expect(container.querySelector(`.${classes.root}`)).to.have.class(classes.fullWidth);
     });
   });
 });

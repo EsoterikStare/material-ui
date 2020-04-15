@@ -113,9 +113,7 @@ function ColorTool(props) {
   };
 
   const handleChangeHue = (name) => (event) => {
-    const {
-      target: { value: hue },
-    } = event;
+    const hue = event.target.value;
     const color = colors[hue][shades[state[`${name}Shade`]]];
 
     setState({
@@ -186,18 +184,10 @@ function ColorTool(props) {
 
     return (
       <Grid item xs={12} sm={6} md={4}>
-        <Typography gutterBottom variant="h6">
+        <Typography component="label" gutterBottom htmlFor={intent} variant="h6">
           {capitalize(intent)}
         </Typography>
-        <Input
-          id={intent}
-          value={intentInput}
-          onChange={handleChangeColor(intent)}
-          inputProps={{
-            'aria-label': `${capitalize(intent)} color`,
-          }}
-          fullWidth
-        />
+        <Input id={intent} value={intentInput} onChange={handleChangeColor(intent)} fullWidth />
         <div className={classes.sliderContainer}>
           <Typography id={`${intent}ShadeSliderLabel`}>Shade:</Typography>
           <Slider

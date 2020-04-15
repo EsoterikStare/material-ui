@@ -60,13 +60,13 @@ describe('<Breadcrumbs />', () => {
 
     expect(listitems).to.have.length(2);
     expect(getByRole('list')).to.have.text('first//ninth');
-    expect(getByRole('button').querySelector('[data-mui-test="MoreHorizIcon"]')).to.be.ok;
+    expect(getByRole('button').querySelector('[data-mui-test="MoreHorizIcon"]')).not.to.equal(null);
   });
 
   it('should expand when `BreadcrumbCollapsed` is clicked', () => {
-    const { getAllByRole, getByRole } = render(
+    const { getAllByRole, getByRole, getByText } = render(
       <Breadcrumbs>
-        <span>first</span>
+        <span tabIndex="-1">first</span>
         <span>second</span>
         <span>third</span>
         <span>fourth</span>
@@ -79,7 +79,7 @@ describe('<Breadcrumbs />', () => {
     );
 
     getByRole('button').click();
-
+    expect(document.activeElement).to.equal(getByText('first'));
     expect(getAllByRole('listitem', { hidden: false })).to.have.length(9);
   });
 

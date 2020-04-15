@@ -115,8 +115,6 @@ module.exports = {
       rules: {
         // does not work with wildcard imports. Mistakes will throw at runtime anyway
         'import/named': 'off',
-        // for expect style assertions
-        'no-unused-expressions': 'off',
 
         // no rationale provided in /recommended
         'mocha/no-mocha-arrows': 'off',
@@ -129,7 +127,10 @@ module.exports = {
         // test to `beforeEach`.
         // `beforeEach`+`afterEach` also means that the `beforeEach`
         // is cleaned up in `afterEach` if the test causes a crash
-        'mocha/no-hooks-for-single-case': 'off'
+        'mocha/no-hooks-for-single-case': 'off',
+
+        // They are accessed to test custom validator implementation with PropTypes.checkPropTypes
+        'react/forbid-foreign-prop-types': 'off',
       },
     },
     {

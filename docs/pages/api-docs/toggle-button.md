@@ -20,6 +20,10 @@ You can learn more about the difference by [reading this guide](/guides/minimizi
 
 
 
+## Component name
+
+The `MuiToggleButton` name can be used for providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) at the theme level.
+
 ## Props
 
 | Name | Type | Default | Description |
@@ -28,7 +32,7 @@ You can learn more about the difference by [reading this guide](/guides/minimizi
 | <span class="prop-name">classes</span> | <span class="prop-type">object</span> |  | Override or extend the styles applied to the component. See [CSS API](#css) below for more details. |
 | <span class="prop-name">disabled</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the button will be disabled. |
 | <span class="prop-name">disableFocusRipple</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the  keyboard focus ripple will be disabled. `disableRipple` must also be true. |
-| <span class="prop-name">disableRipple</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the ripple effect will be disabled. |
+| <span class="prop-name">disableRipple</span> | <span class="prop-type">bool</span> |  | If `true`, the ripple effect will be disabled. |
 | <span class="prop-name">selected</span> | <span class="prop-type">bool</span> |  | If `true`, the button will be rendered in an active state. |
 | <span class="prop-name required">value&nbsp;*</span> | <span class="prop-type">any</span> |  | The value to associate with the button when selected in a ToggleButtonGroup. |
 
@@ -37,9 +41,6 @@ The `ref` is forwarded to the root element.
 Any other props supplied will be provided to the root element ([ButtonBase](/api/button-base/)).
 
 ## CSS
-
-- Style sheet name: `MuiToggleButton`.
-- Style sheet details:
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|

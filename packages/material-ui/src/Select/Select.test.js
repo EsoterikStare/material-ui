@@ -112,7 +112,7 @@ describe('<Select />', () => {
     fireEvent.mouseDown(trigger);
 
     expect(handleBlur.callCount).to.equal(0);
-    expect(getByRole('listbox')).to.be.ok;
+    expect(getByRole('listbox')).not.to.equal(null);
 
     act(() => {
       const options = getAllByRole('option');
@@ -121,7 +121,7 @@ describe('<Select />', () => {
     });
 
     expect(handleBlur.callCount).to.equal(0);
-    expect(queryByRole('listbox', { hidden: false })).to.be.null;
+    expect(queryByRole('listbox', { hidden: false })).to.equal(null);
   });
 
   it('options should have a data-value attribute', () => {
@@ -148,10 +148,10 @@ describe('<Select />', () => {
       getByRole('button').focus();
 
       fireEvent.keyDown(document.activeElement, { key });
-      expect(getByRole('listbox', { hidden: false })).to.be.ok;
+      expect(getByRole('listbox', { hidden: false })).not.to.equal(null);
 
       fireEvent.keyUp(document.activeElement, { key });
-      expect(getByRole('listbox', { hidden: false })).to.be.ok;
+      expect(getByRole('listbox', { hidden: false })).not.to.equal(null);
     });
   });
 
@@ -197,7 +197,7 @@ describe('<Select />', () => {
     fireEvent.mouseDown(getByRole('button'));
 
     // TODO not matching WAI-ARIA authoring practices. It should focus the first (or selected) item.
-    expect(getByRole('listbox')).to.have.focus;
+    expect(getByRole('listbox')).toHaveFocus();
   });
 
   describe('prop: onChange', () => {
@@ -214,6 +214,23 @@ describe('<Select />', () => {
     it('should get selected element from arguments', () => {
       const onChangeHandler = spy();
       const { getAllByRole, getByRole } = render(
+        <Select onChange={onChangeHandler} value="0">
+          <MenuItem value="0" />
+          <MenuItem value="1" />
+          <MenuItem value="2" />
+        </Select>,
+      );
+      fireEvent.mouseDown(getByRole('button'));
+      getAllByRole('option')[1].click();
+
+      expect(onChangeHandler.calledOnce).to.equal(true);
+      const selected = onChangeHandler.args[0][1];
+      expect(React.isValidElement(selected)).to.equal(true);
+    });
+
+    it('should not be called if selected element has the current value (value did not change)', () => {
+      const onChangeHandler = spy();
+      const { getAllByRole, getByRole } = render(
         <Select onChange={onChangeHandler} value="1">
           <MenuItem value="0" />
           <MenuItem value="1" />
@@ -223,9 +240,7 @@ describe('<Select />', () => {
       fireEvent.mouseDown(getByRole('button'));
       getAllByRole('option')[1].click();
 
-      expect(onChangeHandler.calledOnce).to.be.true;
-      const selected = onChangeHandler.args[0][1];
-      expect(React.isValidElement(selected)).to.equal(true);
+      expect(onChangeHandler.callCount).to.equal(0);
     });
   });
 
@@ -331,7 +346,7 @@ describe('<Select />', () => {
           <option value={2}>Two</option>
         </Select>,
       );
-      expect(container.querySelector('svg')).to.be.null;
+      expect(container.querySelector('svg')).to.equal(null);
     });
 
     it('should present an SVG icon', () => {
@@ -342,7 +357,7 @@ describe('<Select />', () => {
           <option value={2}>Two</option>
         </Select>,
       );
-      expect(container.querySelector('svg')).to.be.visible;
+      expect(container.querySelector('svg')).toBeVisible();
     });
   });
 
@@ -361,6 +376,18 @@ describe('<Select />', () => {
       expect(getByRole('button')).not.to.have.attribute('aria-expanded');
     });
 
+    it('sets aria-disabled="true" when component is disabled', () => {
+      const { getByRole } = render(<Select disabled value="" />);
+
+      expect(getByRole('button')).to.have.attribute('aria-disabled', 'true');
+    });
+
+    specify('aria-disabled is not present if component is not disabled', () => {
+      const { getByRole } = render(<Select disabled={false} value="" />);
+
+      expect(getByRole('button')).not.to.have.attribute('aria-disabled');
+    });
+
     it('indicates that activating the button displays a listbox', () => {
       const { getByRole } = render(<Select value="" />);
 
@@ -370,7 +397,7 @@ describe('<Select />', () => {
     it('renders an element with listbox behavior', () => {
       const { getByRole } = render(<Select open value="" />);
 
-      expect(getByRole('listbox')).to.be.visible;
+      expect(getByRole('listbox')).toBeVisible();
     });
 
     specify('the listbox is focusable', () => {
@@ -378,7 +405,7 @@ describe('<Select />', () => {
 
       getByRole('listbox').focus();
 
-      expect(getByRole('listbox')).to.have.focus;
+      expect(getByRole('listbox')).toHaveFocus();
     });
 
     it('identifies each selectable element containing an option', () => {
@@ -409,7 +436,7 @@ describe('<Select />', () => {
       const { getByRole } = render(<Select value="" />);
 
       // TODO what is the accessible name actually?
-      expect(getByRole('button')).to.have.attribute('aria-labelledby', ' ');
+      expect(getByRole('button')).to.not.have.attribute('aria-labelledby');
     });
 
     it('is labelled by itself when it has a name', () => {
@@ -417,7 +444,7 @@ describe('<Select />', () => {
 
       expect(getByRole('button')).to.have.attribute(
         'aria-labelledby',
-        ` ${getByRole('button').getAttribute('id')}`,
+        getByRole('button').getAttribute('id'),
       );
     });
 
@@ -487,10 +514,10 @@ describe('<Select />', () => {
       getByRole('button').focus();
 
       fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
-      expect(queryByRole('listbox')).not.to.be.ok;
+      expect(queryByRole('listbox')).to.equal(null);
 
       fireEvent.keyUp(document.activeElement, { key: 'ArrowDown' });
-      expect(queryByRole('listbox')).not.to.be.ok;
+      expect(queryByRole('listbox')).to.equal(null);
     });
   });
 
@@ -619,11 +646,11 @@ describe('<Select />', () => {
       fireEvent.click(openSelect);
 
       const option = getByRole('option');
-      expect(option).to.have.focus;
+      expect(option).toHaveFocus();
       fireEvent.click(option);
 
       expect(container.querySelectorAll('.Mui-focused').length).to.equal(0);
-      expect(openSelect).to.have.focus;
+      expect(openSelect).toHaveFocus();
     });
 
     it('should allow to control closing by passing onClose props', () => {
@@ -645,7 +672,7 @@ describe('<Select />', () => {
       const { getByRole, queryByRole } = render(<ControlledWrapper />);
 
       fireEvent.mouseDown(getByRole('button'));
-      expect(getByRole('listbox')).to.be.ok;
+      expect(getByRole('listbox')).not.to.equal(null);
 
       act(() => {
         getByRole('option').click();
@@ -654,12 +681,12 @@ describe('<Select />', () => {
       // it from the DOM. but it's at least immediately inaccessible.
       // It's desired that this fails one day. The additional tick required to remove
       // this from the DOM is not a feature
-      expect(getByRole('listbox', { hidden: true })).to.be.inaccessible;
+      expect(getByRole('listbox', { hidden: true })).toBeInaccessible();
       act(() => {
         clock.tick(0);
       });
 
-      expect(queryByRole('listbox', { hidden: true })).to.be.null;
+      expect(queryByRole('listbox', { hidden: true })).to.equal(null);
     });
 
     it('should be open when initially true', () => {
@@ -669,7 +696,7 @@ describe('<Select />', () => {
         </Select>,
       );
 
-      expect(getByRole('listbox')).to.be.ok;
+      expect(getByRole('listbox')).not.to.equal(null);
     });
 
     it('open only with the left mouse button click', () => {
@@ -690,10 +717,10 @@ describe('<Select />', () => {
 
       // If clicked by the right/middle mouse button, no options list should be opened
       fireEvent.mouseDown(trigger, { button: 1 });
-      expect(queryByRole('listbox')).to.not.exist;
+      expect(queryByRole('listbox')).to.equal(null);
 
       fireEvent.mouseDown(trigger, { button: 2 });
-      expect(queryByRole('listbox')).to.not.exist;
+      expect(queryByRole('listbox')).to.equal(null);
     });
   });
 
@@ -859,7 +886,7 @@ describe('<Select />', () => {
     it('should focus select after Select did mount', () => {
       const { getByRole } = render(<Select value="" autoFocus />);
 
-      expect(getByRole('button')).to.have.focus;
+      expect(getByRole('button')).toHaveFocus();
     });
   });
 
@@ -893,7 +920,7 @@ describe('<Select />', () => {
         ref.current.focus();
       });
 
-      expect(getByRole('button')).to.have.focus;
+      expect(getByRole('button')).toHaveFocus();
     });
   });
 
@@ -915,7 +942,7 @@ describe('<Select />', () => {
     it('renders a <select />', () => {
       const { container } = render(<Select native />);
 
-      expect(container.querySelector('select')).not.to.be.null;
+      expect(container.querySelector('select')).not.to.equal(null);
     });
 
     it('can be labelled with a <label />', () => {

@@ -27,6 +27,7 @@ export type GetTagProps = ({ index }: { index: number }) => {};
 
 export interface RenderGroupParams {
   key: string;
+  group: string;
   children: React.ReactNode;
 }
 
@@ -83,6 +84,10 @@ export interface AutocompleteProps<T>
    * Force the visibility display of the popup icon.
    */
   forcePopupIcon?: true | false | 'auto';
+  /**
+   * If `true`, the input will take up the full width of its container.
+   */
+  fullWidth?: boolean;
   /**
    * The label to display when the tags are truncated (`limitTags`).
    *
@@ -207,5 +212,5 @@ export type AutocompleteClassKey =
  * - [Autocomplete API](https://material-ui.com/api/autocomplete/)
  */
 export default function Autocomplete<T>(
-  props: AutocompleteProps<T> & UseAutocompleteProps<T>,
+  props: AutocompleteProps<T> & UseAutocompleteProps<T>
 ): JSX.Element;

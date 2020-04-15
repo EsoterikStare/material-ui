@@ -58,6 +58,7 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
     controlled: checkedProp,
     default: Boolean(defaultChecked),
     name: 'SwitchBase',
+    state: 'checked',
   });
 
   const muiFormControl = useFormControl();
@@ -88,6 +89,7 @@ const SwitchBase = React.forwardRef(function SwitchBase(props, ref) {
     setCheckedState(newChecked);
 
     if (onChange) {
+      // TODO v5: remove the second argument.
       onChange(event, newChecked);
     }
   };

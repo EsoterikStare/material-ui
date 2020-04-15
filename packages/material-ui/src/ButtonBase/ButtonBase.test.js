@@ -656,7 +656,7 @@ describe('<ButtonBase />', () => {
       // so we need to check if we're resilient against it
       const { getByText } = render(<ButtonBase autoFocus>Hello</ButtonBase>);
 
-      expect(getByText('Hello')).to.have.focus;
+      expect(getByText('Hello')).toHaveFocus();
     });
   });
 
@@ -723,7 +723,7 @@ describe('<ButtonBase />', () => {
           </ButtonBase>,
         );
 
-        expect(getByText('Hello').querySelector('.touch-ripple')).to.be.null;
+        expect(getByText('Hello').querySelector('.touch-ripple')).to.equal(null);
       });
     });
 
@@ -900,7 +900,7 @@ describe('<ButtonBase />', () => {
       expect(typeof buttonActionsRef.current.focusVisible).to.equal('function');
       // @ts-ignore
       buttonActionsRef.current.focusVisible();
-      expect(getByText('Hello')).to.have.focus;
+      expect(getByText('Hello')).toHaveFocus();
       expect(getByText('Hello')).to.match('.focusVisible');
     });
   });
@@ -908,14 +908,14 @@ describe('<ButtonBase />', () => {
   describe('warnings', () => {
     beforeEach(() => {
       consoleErrorMock.spy();
+      PropTypes.resetWarningCache();
     });
 
     afterEach(() => {
       consoleErrorMock.reset();
-      PropTypes.resetWarningCache();
     });
 
-    it('warns on invalid `component` prop', () => {
+    it('warns on invalid `component` prop: ref forward', () => {
       // Only run the test on node. On the browser the thrown error is not caught
       if (!/jsdom/.test(window.navigator.userAgent)) {
         return;
@@ -929,11 +929,30 @@ describe('<ButtonBase />', () => {
         return <button type="button" {...props} />;
       }
 
-      // cant match the error message here because flakiness with mocha watchmode
-      render(<ButtonBase component={Component} />);
+      PropTypes.checkPropTypes(
+        // @ts-ignore `Naked` is internal
+        ButtonBase.Naked.propTypes,
+        { classes: {}, component: Component },
+        'prop',
+        'MockedName',
+      );
 
       expect(consoleErrorMock.messages()[0]).to.include(
-        'Invalid prop `component` supplied to `ForwardRef(ButtonBase)`. Expected an element type that can hold a ref',
+        'Invalid prop `component` supplied to `MockedName`. Expected an element type that can hold a ref',
+      );
+    });
+
+    it('warns on invalid `component` prop: prop forward', () => {
+      const Component = React.forwardRef((props, ref) => (
+        <button type="button" ref={ref} {...props}>
+          Hello
+        </button>
+      ));
+
+      // cant match the error message here because flakiness with mocha watchmode
+      render(<ButtonBase component={Component} />);
+      expect(consoleErrorMock.messages()[0]).to.include(
+        'Please make sure the children prop is rendered in this custom component.',
       );
     });
   });

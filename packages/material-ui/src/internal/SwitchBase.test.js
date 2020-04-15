@@ -69,7 +69,7 @@ describe('<SwitchBase />', () => {
       />,
     );
 
-    expect(getByTestId('TouchRipple')).to.be.ok;
+    expect(getByTestId('TouchRipple')).not.to.equal(null);
   });
 
   it('can disable the ripple ', () => {
@@ -83,7 +83,7 @@ describe('<SwitchBase />', () => {
       />,
     );
 
-    expect(queryByTestId('TouchRipple')).to.be.null;
+    expect(queryByTestId('TouchRipple')).to.equal(null);
   });
 
   it('should pass tabIndex to the input so it can be taken out of focus rotation', () => {
@@ -136,7 +136,7 @@ describe('<SwitchBase />', () => {
 
       expect(container.firstChild).to.have.class(classes.checked);
       expect(getByRole('checkbox')).to.have.property('checked', true);
-      expect(getByTestId('checked-icon')).to.be.ok;
+      expect(getByTestId('checked-icon')).not.to.equal(null);
     });
 
     it('should uncheck the checkbox', () => {
@@ -152,7 +152,7 @@ describe('<SwitchBase />', () => {
 
       expect(container.firstChild).not.to.have.class(classes.checked);
       expect(getByRole('checkbox')).to.have.property('checked', false);
-      expect(getByTestId('unchecked-icon')).to.be.ok;
+      expect(getByTestId('unchecked-icon')).not.to.equal(null);
     });
   });
 
@@ -169,19 +169,19 @@ describe('<SwitchBase />', () => {
 
     expect(container.firstChild).to.have.class(classes.checked);
     expect(checkbox).to.have.property('checked', true);
-    expect(getByTestId('checked-icon')).to.be.ok;
+    expect(getByTestId('checked-icon')).not.to.equal(null);
 
     checkbox.click();
 
     expect(container.firstChild).not.to.have.class(classes.checked);
     expect(checkbox).to.have.property('checked', false);
-    expect(getByTestId('unchecked-icon')).to.be.ok;
+    expect(getByTestId('unchecked-icon')).not.to.equal(null);
 
     checkbox.click();
 
     expect(container.firstChild).to.have.class(classes.checked);
     expect(checkbox).to.have.property('checked', true);
-    expect(getByTestId('checked-icon')).to.be.ok;
+    expect(getByTestId('checked-icon')).not.to.equal(null);
   });
 
   describe('handleInputChange()', () => {
@@ -374,10 +374,10 @@ describe('<SwitchBase />', () => {
         wrapper.setProps({ checked: true });
         expect(consoleErrorMock.callCount()).to.equal(2);
         expect(consoleErrorMock.messages()[0]).to.include(
-          'A component is changing an uncontrolled input of type checkbox to be controlled.',
+          'Warning: A component is changing an uncontrolled input of type checkbox to be controlled.',
         );
         expect(consoleErrorMock.messages()[1]).to.include(
-          'A component is changing an uncontrolled SwitchBase to be controlled.',
+          'Material-UI: a component is changing the uncontrolled checked state of SwitchBase to be controlled.',
         );
       }),
     );
@@ -393,10 +393,10 @@ describe('<SwitchBase />', () => {
         setProps({ checked: undefined });
         expect(consoleErrorMock.callCount()).to.equal(2);
         expect(consoleErrorMock.messages()[0]).to.include(
-          'A component is changing a controlled input of type checkbox to be uncontrolled.',
+          'Warning: A component is changing a controlled input of type checkbox to be uncontrolled.',
         );
         expect(consoleErrorMock.messages()[1]).to.include(
-          'A component is changing a controlled SwitchBase to be uncontrolled.',
+          'Material-UI: a component is changing the controlled checked state of SwitchBase to be uncontrolled.',
         );
       }),
     );

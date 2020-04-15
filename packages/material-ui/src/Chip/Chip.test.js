@@ -75,7 +75,7 @@ describe('<Chip />', () => {
 
       const button = getByRole('button');
       expect(button).to.have.property('tabIndex', 0);
-      expect(button).to.have.accessibleName('My Chip');
+      expect(button).toHaveAccessibleName('My Chip');
     });
 
     it('should apply user value of tabIndex', () => {
@@ -141,7 +141,7 @@ describe('<Chip />', () => {
       );
 
       expect(getByRole('button')).to.have.property('tabIndex', 0);
-      expect(container.querySelector('#avatar')).to.be.ok;
+      expect(container.querySelector('#avatar')).not.to.equal(null);
     });
 
     it('should apply user value of tabIndex', () => {
@@ -333,7 +333,7 @@ describe('<Chip />', () => {
       fireEvent.keyUp(document.activeElement, { key: 'Escape' });
 
       expect(handleBlur.callCount).to.equal(1);
-      expect(chip).not.to.to.have.focus;
+      expect(chip).not.toHaveFocus();
     });
 
     it('should call onClick when `space` is released ', () => {
@@ -362,9 +362,7 @@ describe('<Chip />', () => {
       ['Backspace', 'Delete'].forEach((key) => {
         it(`should call onDelete '${key}' is released`, () => {
           const handleDelete = spy();
-          const handleKeyDown = spy((event) => {
-            return event.defaultPrevented;
-          });
+          const handleKeyDown = spy((event) => event.defaultPrevented);
           const { getAllByRole } = render(
             <Chip onClick={() => {}} onKeyDown={handleKeyDown} onDelete={handleDelete} />,
           );
@@ -381,6 +379,17 @@ describe('<Chip />', () => {
 
           expect(handleDelete.callCount).to.equal(1);
         });
+      });
+
+      it('should not prevent default on input', () => {
+        const handleKeyDown = spy((event) => event.defaultPrevented);
+        const { container } = render(<Chip label={<input />} onKeyDown={handleKeyDown} />);
+        const input = container.querySelector('input');
+        input.focus();
+        fireEvent.keyDown(document.activeElement, { key: 'Backspace' });
+
+        // defaultPrevented?
+        expect(handleKeyDown.returnValues[0]).to.equal(false);
       });
     });
 

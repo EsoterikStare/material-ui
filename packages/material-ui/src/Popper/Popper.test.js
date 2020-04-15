@@ -7,7 +7,7 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import describeConformance from '@material-ui/core/test-utils/describeConformance';
 import { createClientRender } from 'test/utils/createClientRender';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
-import PopperJS from 'popper.js';
+import PopperJs from 'popper.js';
 import Grow from '../Grow';
 import Popper from './Popper';
 
@@ -238,12 +238,12 @@ describe('<Popper />', () => {
       const ref1 = React.createRef();
       const ref2 = React.createRef();
       const wrapper = mount(<Popper {...defaultProps} popperRef={ref1} />);
-      assert.strictEqual(ref1.current instanceof PopperJS, true);
+      assert.strictEqual(ref1.current instanceof PopperJs, true);
       wrapper.setProps({
         popperRef: ref2,
       });
       assert.strictEqual(ref1.current, null);
-      assert.strictEqual(ref2.current instanceof PopperJS, true);
+      assert.strictEqual(ref2.current instanceof PopperJs, true);
     });
   });
 
@@ -284,15 +284,19 @@ describe('<Popper />', () => {
     });
 
     it('should warn if anchorEl is not valid', () => {
-      mount(<Popper {...defaultProps} open anchorEl={null} />);
+      PropTypes.checkPropTypes(
+        Popper.propTypes,
+        {
+          ...defaultProps,
+          open: true,
+          anchorEl: null,
+        },
+        'prop',
+        'MockedPopper',
+      );
+
       assert.strictEqual(consoleErrorMock.callCount(), 1);
       assert.include(consoleErrorMock.messages()[0], 'It should be an HTML Element instance');
     });
-
-    // it('should warn if anchorEl is not visible', () => {
-    //   mount(<Popper {...defaultProps} open anchorEl={document.createElement('div')} />);
-    //   assert.strictEqual(consoleErrorMock.callCount(), 1);
-    //   assert.include(consoleErrorMock.messages()[0], 'The node element should be visible');
-    // });
   });
 });

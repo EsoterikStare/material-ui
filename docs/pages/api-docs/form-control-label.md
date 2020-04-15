@@ -21,18 +21,21 @@ You can learn more about the difference by [reading this guide](/guides/minimizi
 Drop in replacement of the `Radio`, `Switch` and `Checkbox` component.
 Use this component if you want to display an extra label.
 
+## Component name
+
+The `MuiFormControlLabel` name can be used for providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) at the theme level.
+
 ## Props
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | <span class="prop-name">checked</span> | <span class="prop-type">bool</span> |  | If `true`, the component appears selected. |
 | <span class="prop-name">classes</span> | <span class="prop-type">object</span> |  | Override or extend the styles applied to the component. See [CSS API](#css) below for more details. |
-| <span class="prop-name">control</span> | <span class="prop-type">element</span> |  | A control element. For instance, it can be be a `Radio`, a `Switch` or a `Checkbox`. |
+| <span class="prop-name required">control&nbsp;*</span> | <span class="prop-type">element</span> |  | A control element. For instance, it can be be a `Radio`, a `Switch` or a `Checkbox`. |
 | <span class="prop-name">disabled</span> | <span class="prop-type">bool</span> |  | If `true`, the control will be disabled. |
 | <span class="prop-name">inputRef</span> | <span class="prop-type">ref</span> |  | Pass a ref to the `input` element. |
 | <span class="prop-name">label</span> | <span class="prop-type">node</span> |  | The text to be used in an enclosing label element. |
-| <span class="prop-name">labelPlacement</span> | <span class="prop-type">'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'top'<br>&#124;&nbsp;'bottom'</span> | <span class="prop-default">'end'</span> | The position of the label. |
-| <span class="prop-name">name</span> | <span class="prop-type">string</span> |  |  |
+| <span class="prop-name">labelPlacement</span> | <span class="prop-type">'bottom'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;'top'</span> | <span class="prop-default">'end'</span> | The position of the label. |
 | <span class="prop-name">onChange</span> | <span class="prop-type">func</span> |  | Callback fired when the state is changed.<br><br>**Signature:**<br>`function(event: object) => void`<br>*event:* The event source of the callback. You can pull out the new checked state by accessing `event.target.checked` (boolean). |
 | <span class="prop-name">value</span> | <span class="prop-type">any</span> |  | The value of the component. |
 
@@ -41,9 +44,6 @@ The `ref` is forwarded to the root element.
 Any other props supplied will be provided to the root element (native element).
 
 ## CSS
-
-- Style sheet name: `MuiFormControlLabel`.
-- Style sheet details:
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|

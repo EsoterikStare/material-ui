@@ -6,7 +6,11 @@ export interface AvatarGroupProps
   /**
    * The avatars to stack.
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  /**
+   * Max avatars to show before +x.
+   */
+  max?: number;
   /**
    * Max avatars to show before +x.
    */

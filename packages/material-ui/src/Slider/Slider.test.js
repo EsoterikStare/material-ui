@@ -400,8 +400,8 @@ describe('<Slider />', () => {
 
   describe('markActive state', () => {
     function getActives(container) {
-      return Array.from(container.querySelectorAll(`.${classes.markLabel}`)).map((node) =>
-        node.classList.contains(classes.markLabelActive),
+      return Array.from(container.querySelectorAll(`.${classes.mark}`)).map((node) =>
+        node.classList.contains(classes.markActive),
       );
     }
 
@@ -489,22 +489,36 @@ describe('<Slider />', () => {
   describe('warnings', () => {
     beforeEach(() => {
       consoleErrorMock.spy();
+      PropTypes.resetWarningCache();
     });
 
     afterEach(() => {
       consoleErrorMock.reset();
-      PropTypes.resetWarningCache();
     });
 
     it('should warn if aria-valuetext is provided', () => {
-      render(<Slider value={[20, 50]} aria-valuetext="hot" />);
+      PropTypes.checkPropTypes(
+        Slider.Naked.propTypes,
+        { classes: {}, value: [20, 50], 'aria-valuetext': 'hot' },
+        'prop',
+        'MockedSlider',
+      );
+
+      expect(consoleErrorMock.callCount()).to.equal(1);
       expect(consoleErrorMock.messages()[0]).to.include(
         'you need to use the `getAriaValueText` prop instead of',
       );
     });
 
     it('should warn if aria-label is provided', () => {
-      render(<Slider value={[20, 50]} aria-label="hot" />);
+      PropTypes.checkPropTypes(
+        Slider.Naked.propTypes,
+        { classes: {}, value: [20, 50], 'aria-label': 'hot' },
+        'prop',
+        'MockedSlider',
+      );
+
+      expect(consoleErrorMock.callCount()).to.equal(1);
       expect(consoleErrorMock.messages()[0]).to.include(
         'you need to use the `getAriaLabel` prop instead of',
       );
@@ -515,7 +529,7 @@ describe('<Slider />', () => {
 
       setProps({ value: undefined });
       expect(consoleErrorMock.messages()[0]).to.include(
-        'A component is changing a controlled Slider to be uncontrolled.',
+        'Material-UI: a component is changing the controlled value state of Slider to be uncontrolled.',
       );
     });
 
@@ -524,7 +538,7 @@ describe('<Slider />', () => {
 
       setProps({ value: [20, 50] });
       expect(consoleErrorMock.messages()[0]).to.include(
-        'A component is changing an uncontrolled Slider to be controlled.',
+        'Material-UI: a component is changing the uncontrolled value state of Slider to be controlled.',
       );
     });
   });
@@ -547,6 +561,23 @@ describe('<Slider />', () => {
 
     expect(sliders[0]).to.have.attribute('aria-label', 'Label 0');
     expect(sliders[1]).to.have.attribute('aria-label', 'Label 1');
+  });
+
+  it('should allow customization of the marks', () => {
+    const { container } = render(
+      <Slider
+        marks={[
+          { value: 0, label: 0 },
+          { value: 20, label: 20 },
+          { value: 30, label: 30 },
+        ]}
+        defaultValue={0}
+      />,
+    );
+    expect(container.querySelectorAll(`.${classes.markLabel}`).length).to.equal(3);
+    expect(container.querySelectorAll(`.${classes.mark}`).length).to.equal(3);
+    expect(container.querySelectorAll(`.${classes.markLabel}[data-index="2"]`).length).to.equal(1);
+    expect(container.querySelectorAll(`.${classes.mark}[data-index="2"]`).length).to.equal(1);
   });
 
   describe('prop: ValueLabelComponent', () => {

@@ -20,13 +20,17 @@ You can learn more about the difference by [reading this guide](/guides/minimizi
 
 
 
+## Component name
+
+The `MuiStepper` name can be used for providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) at the theme level.
+
 ## Props
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | <span class="prop-name">activeStep</span> | <span class="prop-type">number</span> | <span class="prop-default">0</span> | Set the active step (zero based index). Set to -1 to disable all the steps. |
 | <span class="prop-name">alternativeLabel</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If set to 'true' and orientation is horizontal, then the step label will be positioned under the icon. |
-| <span class="prop-name required">children&nbsp;*</span> | <span class="prop-type">node</span> |  | Two or more `<Step />` components. |
+| <span class="prop-name">children</span> | <span class="prop-type">node</span> |  | Two or more `<Step />` components. |
 | <span class="prop-name">classes</span> | <span class="prop-type">object</span> |  | Override or extend the styles applied to the component. See [CSS API](#css) below for more details. |
 | <span class="prop-name">connector</span> | <span class="prop-type">element</span> | <span class="prop-default">&lt;StepConnector /></span> | An element to be placed between each step. |
 | <span class="prop-name">nonLinear</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If set the `Stepper` will not assist in controlling steps for linear flow. |
@@ -37,9 +41,6 @@ The `ref` is forwarded to the root element.
 Any other props supplied will be provided to the root element ([Paper](/api/paper/)).
 
 ## CSS
-
-- Style sheet name: `MuiStepper`.
-- Style sheet details:
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|

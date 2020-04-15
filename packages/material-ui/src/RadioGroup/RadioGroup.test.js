@@ -93,8 +93,8 @@ describe('<RadioGroup />', () => {
       </RadioGroup>,
     );
 
-    assert.match(findRadio(wrapper, 'zero').props().name, /^mui-radiogroup-[0-9]+/);
-    assert.match(findRadio(wrapper, 'one').props().name, /^mui-radiogroup-[0-9]+/);
+    assert.match(findRadio(wrapper, 'zero').props().name, /^mui-[0-9]+/);
+    assert.match(findRadio(wrapper, 'one').props().name, /^mui-[0-9]+/);
   });
 
   describe('imperative focus()', () => {
@@ -306,7 +306,7 @@ describe('<RadioGroup />', () => {
         const radioGroupRef = React.createRef();
         const { setProps } = render(<RadioGroupControlled ref={radioGroupRef} />);
 
-        expect(radioGroupRef.current.name).to.match(/^mui-radiogroup-[0-9]+/);
+        expect(radioGroupRef.current.name).to.match(/^mui-[0-9]+/);
 
         setProps({ name: 'anotherGroup' });
         expect(radioGroupRef.current).to.have.property('name', 'anotherGroup');
@@ -348,9 +348,8 @@ describe('<RadioGroup />', () => {
       );
 
       wrapper.setProps({ value: undefined });
-      assert.include(
-        consoleErrorMock.messages()[0],
-        'A component is changing a controlled RadioGroup to be uncontrolled.',
+      expect(consoleErrorMock.messages()[0]).to.include(
+        'Material-UI: a component is changing the controlled value state of RadioGroup to be uncontrolled.',
       );
     });
 
@@ -362,9 +361,8 @@ describe('<RadioGroup />', () => {
       );
 
       wrapper.setProps({ value: 'foo' });
-      assert.include(
-        consoleErrorMock.messages()[0],
-        'A component is changing an uncontrolled RadioGroup to be controlled.',
+      expect(consoleErrorMock.messages()[0]).to.include(
+        'Material-UI: a component is changing the uncontrolled value state of RadioGroup to be controlled.',
       );
     });
   });

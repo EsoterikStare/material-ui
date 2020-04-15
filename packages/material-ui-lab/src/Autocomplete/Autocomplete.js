@@ -20,6 +20,10 @@ export const styles = (theme) => ({
       visibility: 'visible',
     },
   },
+  /* Styles applied to the root element if `fullWidth={true}`. */
+  fullWidth: {
+    width: '100%',
+  },
   /* Pseudo-class applied to the root element if focused. */
   focused: {},
   /* Styles applied to the tag elements, e.g. the chips. */
@@ -256,6 +260,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
     filterSelectedOptions = false,
     forcePopupIcon = 'auto',
     freeSolo = false,
+    fullWidth = false,
     getLimitTagsText = (more) => `+${more}`,
     getOptionDisabled,
     getOptionLabel = (x) => x,
@@ -356,7 +361,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
   const defaultRenderGroup = (params) => (
     <li key={params.key}>
       <ListSubheader className={classes.groupLabel} component="div">
-        {params.key}
+        {params.group}
       </ListSubheader>
       <ul className={classes.groupUl}>{params.children}</ul>
     </li>
@@ -389,6 +394,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
           classes.root,
           {
             [classes.focused]: focused,
+            [classes.fullWidth]: fullWidth,
             [classes.hasClearIcon]: hasClearIcon,
             [classes.hasPopupIcon]: hasPopupIcon,
           },
@@ -475,6 +481,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
                   if (groupBy) {
                     return renderGroup({
                       key: option.key,
+                      group: option.group,
                       children: option.options.map((option2, index2) =>
                         renderListOption(option2, option.index + index2),
                       ),
@@ -609,6 +616,10 @@ Autocomplete.propTypes = {
    * If `true`, the Autocomplete is free solo, meaning that the user input is not bound to provided options.
    */
   freeSolo: PropTypes.bool,
+  /**
+   * If `true`, the input will take up the full width of its container.
+   */
+  fullWidth: PropTypes.bool,
   /**
    * The label to display when the tags are truncated (`limitTags`).
    *

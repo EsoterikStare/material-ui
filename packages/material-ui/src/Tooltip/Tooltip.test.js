@@ -403,7 +403,7 @@ describe('<Tooltip />', () => {
         <Tooltip {...defaultProps} open PopperProps={{ 'data-testid': 'popper' }} />,
       );
 
-      expect(getByTestId('popper')).to.be.ok;
+      expect(getByTestId('popper')).not.to.equal(null);
     });
 
     it('should merge popperOptions with arrow modifier', () => {
@@ -522,9 +522,8 @@ describe('<Tooltip />', () => {
       const wrapper = mount(<Tooltip {...defaultProps} />);
 
       wrapper.setProps({ open: true });
-      assert.include(
-        consoleErrorMock.messages()[0],
-        'A component is changing an uncontrolled Tooltip to be controlled.',
+      expect(consoleErrorMock.messages()[0]).to.include(
+        'Material-UI: a component is changing the uncontrolled open state of Tooltip to be controlled.',
       );
     });
   });

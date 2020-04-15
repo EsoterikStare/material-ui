@@ -20,6 +20,10 @@ You can learn more about the difference by [reading this guide](/guides/minimizi
 
 
 
+## Component name
+
+The `MuiStepIcon` name can be used for providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) at the theme level.
+
 ## Props
 
 | Name | Type | Default | Description |
@@ -28,16 +32,13 @@ You can learn more about the difference by [reading this guide](/guides/minimizi
 | <span class="prop-name">classes</span> | <span class="prop-type">object</span> |  | Override or extend the styles applied to the component. See [CSS API](#css) below for more details. |
 | <span class="prop-name">completed</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | Mark the step as completed. Is passed to child components. |
 | <span class="prop-name">error</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | Mark the step as failed. |
-| <span class="prop-name required">icon&nbsp;*</span> | <span class="prop-type">node</span> |  | The label displayed in the step icon. |
+| <span class="prop-name">icon</span> | <span class="prop-type">node</span> |  | The label displayed in the step icon. |
 
 The `ref` is forwarded to the root element.
 
 Any other props supplied will be provided to the root element (native element).
 
 ## CSS
-
-- Style sheet name: `MuiStepIcon`.
-- Style sheet details:
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|

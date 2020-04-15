@@ -2,7 +2,6 @@
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import React from 'react';
-import App from 'next/app';
 import find from 'lodash/find';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
@@ -199,16 +198,6 @@ async function registerServiceWorker() {
   }
 }
 
-// Add the strict mode back once the number of warnings is manageable.
-// We might miss important warnings by keeping the strict mode 🌊🌊🌊.
-const ReactMode =
-  {
-    // createSyncRoot compatible
-    sync: React.StrictMode,
-    // partial createRoot, ConcurrentMode is deprecated
-    concurrent: React.unstable_ConcurrentMode,
-  }[process.env.REACT_MODE] || React.Fragment;
-
 let dependenciesLoaded = false;
 
 function loadDependencies() {
@@ -303,7 +292,7 @@ function AppWrapper(props) {
   }
 
   return (
-    <ReactMode>
+    <React.Fragment>
       <NextHead>
         {fonts.map((font) => (
           <link rel="stylesheet" href={font} key={font} />
@@ -319,7 +308,7 @@ function AppWrapper(props) {
         <LanguageNegotiation />
       </ReduxProvider>
       <GoogleAnalytics key={router.route} />
-    </ReactMode>
+    </React.Fragment>
   );
 }
 
@@ -328,17 +317,20 @@ AppWrapper.propTypes = {
   pageProps: PropTypes.object.isRequired,
 };
 
-export default class MyApp extends App {
-  render() {
-    const { Component, pageProps } = this.props;
+export default function MyApp(props) {
+  const { Component, pageProps } = props;
 
-    return (
-      <AppWrapper pageProps={pageProps}>
-        <Component {...pageProps} />
-      </AppWrapper>
-    );
-  }
+  return (
+    <AppWrapper pageProps={pageProps}>
+      <Component {...pageProps} />
+    </AppWrapper>
+  );
 }
+
+MyApp.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+  pageProps: PropTypes.object.isRequired,
+};
 
 MyApp.getInitialProps = async ({ ctx, Component }) => {
   let pageProps = {};

@@ -21,7 +21,7 @@ components: Alert, AlertTitle
 
 {{"demo": "pages/components/alert/DescriptionAlerts.js"}}
 
-## Actions（行为）
+## 行为
 
 一个「提醒」可以有一个行为，例如「关闭」或「撤销」按钮。 它在消息之后，「提醒」结束时被渲染。
 
@@ -61,7 +61,7 @@ components: Alert, AlertTitle
 
 你可以使用「消息条」来显示[ 带确认按钮的Toast 提示](/components/snackbars/#customized-snackbars) 。
 
-## 颜色
+## Color 颜色
 
 `color` 属性用来改变不同程度「提醒」的默认颜色。
 
