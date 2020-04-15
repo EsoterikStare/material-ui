@@ -265,7 +265,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       onEnter={handleEnter}
       onEntering={handleEntering}
       onEntered={handleEntered}
-      anchorOrigin={theme.direction !== 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
+      anchorOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       PaperProps={{
         ...PaperProps,
