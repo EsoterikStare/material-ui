@@ -265,7 +265,7 @@ describe('<Menu />', () => {
     });
 
     beforeEach(() => {
-      wrapper = cascadeMount(<NestedMenu />);
+      wrapper = cascadeMount(<CascadingMenu />);
     });
 
     afterEach(() => {
@@ -277,7 +277,7 @@ describe('<Menu />', () => {
       cascadeMount.cleanUp();
     });
 
-    const NestedMenu = (props) => {
+    const CascadingMenu = (props) => {
       const [anchorEl, setAnchorEl] = React.useState(null);
 
       const handleButtonClick = event => {
@@ -315,7 +315,7 @@ describe('<Menu />', () => {
       );
     }
     
-    it('displays a nested menu level 1', () => {
+    it('displays a sub menu level 1', () => {
       wrapper.find(Button).simulate('click');
       wrapper.find("#settings-item").last().simulate('mousemove');
 
@@ -325,7 +325,7 @@ describe('<Menu />', () => {
       assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
     });
 
-    it('displays a nested menu level 2', () => {
+    it('displays a sub menu level 2', () => {
       wrapper.find(Button).simulate('click');
       wrapper.find("#settings-item").last().simulate('mousemove');
 
@@ -340,7 +340,7 @@ describe('<Menu />', () => {
       assert.strictEqual(wrapper.find('#go-deeper-2').exists(), true);
     });
 
-    it('nested menus collapse when parent menu is changed', () => {
+    it('sub menus collapse when parent menu is changed', () => {
       wrapper.find(Button).simulate('click');
       wrapper.find("#settings-item").last().simulate('mousemove');
 
@@ -361,7 +361,7 @@ describe('<Menu />', () => {
       assert.strictEqual(wrapper.find('#change-username').exists(), false);
     });
 
-    it('nested menu stays open when mouse is outside of menu', () => {
+    it('sub menu stays open when mouse is outside of menu', () => {
       wrapper.find(Button).simulate('click');
       wrapper.find("#settings-item").last().simulate('mousemove');
 
@@ -377,7 +377,7 @@ describe('<Menu />', () => {
       assert.strictEqual(wrapper.find("#dark-mode").last().exists(), true);
     })
 
-    it('opens a nested Menu on RightArrow keydown', () => {
+    it('opens a sub Menu on RightArrow keydown', () => {
       wrapper.find(Button).simulate('click');
 
       clock.tick(200);
@@ -395,7 +395,7 @@ describe('<Menu />', () => {
       assert.strictEqual(actual, expected);
     });
 
-    it('closes current nested Menu on LeftArrow keydown', () => {
+    it('closes current sub Menu on LeftArrow keydown', () => {
       wrapper.find(Button).simulate('click');
 
       clock.tick(0);
