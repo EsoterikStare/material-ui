@@ -116,11 +116,11 @@ describe('<Menu />', () => {
     assert.strictEqual(wrapper.find(Popover).props().getContentAnchorEl != null, true);
   });
 
-  // it('should pass onClose prop to Popover', () => {
-  //   const fn = () => {};
-  //   const wrapper = mount(<Menu {...defaultProps} onClose={fn} />);
-  //   assert.strictEqual(wrapper.find(Popover).props().onClose, fn);
-  // });
+  it('should pass onClose prop to Popover', () => {
+    const fn = () => {};
+    const wrapper = mount(<Menu {...defaultProps} onClose={fn} />);
+    assert.strictEqual(wrapper.find(Popover).props().onClose, fn);
+  });
 
   it('should pass anchorEl prop to Popover', () => {
     const el = document.createElement('div');
