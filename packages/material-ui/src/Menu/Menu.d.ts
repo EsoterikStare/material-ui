@@ -35,12 +35,6 @@ export interface MenuProps
    */
   MenuListProps?: Partial<MenuListProps>;
   /**
-   * If `true`, the Menu is a nested menu of a parent menu,
-   * giving it additional events and props in addition to those
-   * of a normal menu.
-   */
-  nestedMenu?: boolean;
-  /**
    * Callback fired when the component requests to be closed.
    *
    * @param {object} event The event source of the callback.

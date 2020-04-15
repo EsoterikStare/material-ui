@@ -33,12 +33,12 @@ export const styles = (theme) => ({
     ...theme.typography.body2,
     minHeight: 'auto',
   },
-  indicatorWrapper: {
+  subMenuItemWrapper: {
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
   },
-  indicator: {
+  subMenuIcon: {
     marginLeft: theme.spacing(2),
   },
   focusAfterSubMenuClose: {
@@ -62,7 +62,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     role = 'menuitem',
     selected,
     subMenu,
-    SubMenuIcon = KeyboardArrowRight,
+    subMenuIcon: SubMenuIcon = KeyboardArrowRight,
     setParentJustArrowedLeft,
     setParentLastEnteredItemIndex,
     tabIndex: tabIndexProp,
@@ -121,9 +121,9 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       {...other}
     >
       {subMenu ? (
-        <div className={classes.indicatorWrapper}>
+        <div className={classes.subMenuItemWrapper}>
           {children}
-          <SubMenuIcon className={classes.indicator} />
+          <SubMenuIcon className={classes.subMenuIcon} />
         </div>
       ) : (
         children
@@ -134,7 +134,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           key: 'subMenu',
           anchorEl: listItemRef.current,
           anchorOrigin: { vertical: 'top', horizontal: 'right' },
-          isSubMenu: true,
           MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
           onClose: createChainedFunction(handleParentClose, subOnClose),
@@ -227,7 +226,7 @@ MenuItem.propTypes = {
   /**
    * The icon used to indicate a Menu item has a sub-Menu.
    */
-  SubMenuIcon: PropTypes.node,
+  subMenuIcon: PropTypes.node,
   /**
    * @ignore
    */

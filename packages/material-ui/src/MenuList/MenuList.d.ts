@@ -29,7 +29,7 @@ export interface MenuListProps extends StandardProps<ListProps, MenuListClassKey
    * menu of a parent Menu, causing it to stop
    * event propogation through the component
    */
-  nestedMenu?: boolean;
+  isSubMenu?: boolean;
   /**
    * The variant to use. Use `menu` to prevent selected items from impacting the initial focus
    * and the vertical alignment relative to the anchor element.

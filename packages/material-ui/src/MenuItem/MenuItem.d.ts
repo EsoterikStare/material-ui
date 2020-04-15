@@ -24,16 +24,6 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Omit<
      */
     handleArrowRightKeydown?: React.ReactEventHandler<{}>;
     /**
-     * Menu contents, normally `MenuItem`s, for the nested Menu
-     */
-    nestedItems?: React.ReactNode;
-    /**
-     * Normally `Icon`, `SvgIcon`, or a `@material-ui/icons`
-     * SVG icon element rendered on a ListItem that
-     * contains a nestedItems array
-     */
-    nestedMenuIndicator?: React.ReactNode;
-    /**
      * Props used to customize this MenuItem's
      * nested Menu component
      */
@@ -51,6 +41,16 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Omit<
      * entered child to orchestrate menu open/close states.
      */
     setParentLastEnteredItemIndex?: (index: number) => void;
+    /**
+     * Menu to display as a sub-menu.
+     */
+    subMenu?: React.ReactNode;
+    /**
+     * Normally `Icon`, `SvgIcon`, or a `@material-ui/icons`
+     * SVG icon element rendered on a MenuItem that
+     * contains a subMenu
+     */
+    subMenuIcon?: React.ReactNode;
   };
 };
 

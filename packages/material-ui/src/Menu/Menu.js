@@ -59,7 +59,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     setParentJustArrowedLeft,
     setParentLastEnteredItemIndex,
     transitionDuration = 'auto',
-    isSubMenu = false,
     variant = 'selectedMenu',
     ...other
   } = props;
@@ -68,6 +67,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const [lastEnteredItemIndex, setLastEnteredItemIndex] = React.useState(null);
   const [entering, setEntering] = React.useState(false);
   const [justArrowedLeft, setJustArrowedLeft] = React.useState(false);
+  const isSubMenu = typeof setParentLastEnteredItemIndex !== 'undefined';
 
   const atLeastOneSubMenu = React.useMemo(() => {
     return (
@@ -129,8 +129,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
 
     if (event.key === 'ArrowLeft' && isSubMenu) {
-      // Tell the parent Menu to close the nested Menu that you're in, but
-      // don't trigger the nested Menu onClose cascade.
+      // Tell the parent Menu to close the sub Menu that you're in, but
+      // don't trigger the sub Menu onClose cascade.
       event.stopPropagation();
       event.preventDefault();
       setParentLastEnteredItemIndex(null);
@@ -332,11 +332,6 @@ Menu.propTypes = {
    * accessibility implications.
    */
   disableAutoFocusItem: PropTypes.bool,
-  /**
-   * @ignore
-   * Whether or not the menu is a nested menu.
-   */
-  isSubMenu: PropTypes.bool,
   /**
    * Props applied to the [`MenuList`](/api/menu-list/) element.
    */
