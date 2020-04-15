@@ -309,6 +309,7 @@ describe('<Menu />', () => {
       const actual = wrapper.find('#dark-mode').exists();
       assert.strictEqual(actual, expected);
     });
+    it('closes current nested Menu on LeftArrow keydown', () => {
 
     it('displays a nested menu level 2', () => {
       const wrapper = mount(<NestedMenu />);
@@ -327,6 +328,7 @@ describe('<Menu />', () => {
       const actual = wrapper.find('#go-deeper-2').exists();
       assert.strictEqual(actual, expected);
     });
+    it('moves focus to the previous item on ArrowUp keydown', () => {
 
     it('nested menus collapse when parent menu is changed', () => {
       const wrapper = mount(<NestedMenu />);
@@ -349,6 +351,7 @@ describe('<Menu />', () => {
 
       assert.strictEqual(wrapper.find('#change-username').exists(), false);
     });
+    it('closes all menus on Escape keydown', () => {
 
     it('nested menu stays open when mouse is outside of menu', () => {
       const wrapper = mount(<NestedMenu />);
@@ -366,6 +369,124 @@ describe('<Menu />', () => {
 
       assert.strictEqual(wrapper.find("#dark-mode").at(0).exists(), true);
     })
+
+    it('opens a nested Menu on RightArrow keydown', () => {
+      const wrapper = mount(<NestedMenu />);
+      wrapper.find(Button).simulate('click');
+
+      clock.tick(200);
+      wrapper.update();
+
+      wrapper.find("#settings-item").at(0).simulate('keyDown', {
+        key: 'ArrowRight'
+      });
+
+      clock.tick(200);
+      wrapper.update();
+
+      const expected = true;
+      const actual = wrapper.find('#dark-mode').exists();
+      assert.strictEqual(actual, expected);
+    });
+    it('triggers the onClick of the current item on Enter keydown', () => {
+
+    it('closes current nested Menu on LeftArrow keydown', () => {
+      const wrapper = mount(<NestedMenu />);
+      wrapper.find(Button).simulate('click');
+
+      clock.tick(0);
+      wrapper.update();
+
+      wrapper.find("#settings-item").at(0).simulate('keyDown', {
+        key: 'ArrowRight'
+      });
+
+      clock.tick(0);
+      wrapper.update();
+
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
+
+      wrapper.find("#dark-mode").at(0).simulate('keyDown', {
+        key: 'ArrowLeft'
+      });
+
+      clock.tick(0);
+      wrapper.update();
+
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
+    });
+  //   it('focuses on the last focused item in parent Menu when closing a nested Menu', () => {
+
+  //   });
+  //   it('moves focus to the next Item on ArrowDown keydown', () => {
+
+  //   });
+  //   it('moves focus to the previous item on ArrowUp keydown', () => {
+
+  //   });
+    it('closes all menus on Tab keydown', () => {
+      const wrapper = mount(<NestedMenu />);
+      wrapper.find(Button).simulate('click');
+
+      clock.tick(0);
+      wrapper.update();
+
+      wrapper.find("#settings-item").at(0).simulate('keyDown', {
+        key: 'ArrowRight'
+      });
+
+      clock.tick(0);
+      wrapper.update();
+
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
+
+      wrapper.find("#dark-mode").at(0).simulate('keyDown', {
+        key: 'Tab'
+      });
+
+      clock.tick(0);
+      wrapper.update();
+
+      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
+    });
+
+    it('closes all menus on Escape keydown', () => {
+      const wrapper = mount(<NestedMenu />);
+      wrapper.find(Button).simulate('click');
+
+      clock.tick(0);
+      wrapper.update();
+
+      wrapper.find("#settings-item").at(0).simulate('keyDown', {
+        key: 'ArrowRight'
+      });
+
+      clock.tick(0);
+      wrapper.update();
+
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
+
+      wrapper.find("#dark-mode").at(0).simulate('keyDown', {
+        key: 'Escape'
+      });
+
+      clock.tick(0);
+      wrapper.update();
+
+      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
+    });
+  //   it('triggers the onClick of the current item on Space keydown', () => {
+
+  //   });
+  //   it('triggers the onClick of the current item on Enter keydown', () => {
+
+  //   });
+  //   it('prevents keyboad events from escaping the current nested Menu', () => {
+
+  //   });
+  // });
   });
 
   describe('warnings', () => {
@@ -390,40 +511,6 @@ describe('<Menu />', () => {
         consoleErrorMock.messages()[0],
         "Material-UI: the Menu component doesn't accept a Fragment as a child.",
       );
-    });
-
-  });
-
-  describe('keyboard navigation', () => {
-    it('opens a nested Menu on RightArrow keydown', () => {
-
-    });
-    it('closes current nested Menu on LeftArrow keydown', () => {
-
-    });
-    it('focuses on the last focused item in parent Menu when closing a nested Menu', () => {
-
-    });
-    it('moves focus to the next Item on ArrowDown keydown', () => {
-
-    });
-    it('moves focus to the previous item on ArrowUp keydown', () => {
-
-    });
-    it('closes all menus on Tab keydown', () => {
-
-    });
-    it('closes all menus on Escape keydown', () => {
-
-    });
-    it('triggers the onClick of the current item on Space keydown', () => {
-
-    });
-    it('triggers the onClick of the current item on Enter keydown', () => {
-
-    });
-    it('prevents keyboad events from escaping the current nested Menu', () => {
-
     });
   });
 });
