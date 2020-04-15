@@ -122,7 +122,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           anchorEl: listItemRef.current,
           anchorOrigin: { vertical: 'top', horizontal: 'right' },
           isSubMenu: true,
-          MenuListProps: { ...MenuListProps, nestedMenu: true },
+          MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
           setParentLastEnteredItemIndex,
           transformOrigin: { vertical: 'top', horizontal: 'left' },

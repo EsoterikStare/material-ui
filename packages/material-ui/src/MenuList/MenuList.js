@@ -104,7 +104,7 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
     className,
     disabledItemsFocusable = false,
     disableListWrap = false,
-    nestedMenu,
+    isSubMenu,
     onKeyDown,
     variant = 'selectedMenu',
     ...other
@@ -154,7 +154,15 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
      */
     const currentFocus = ownerDocument(list).activeElement;
     
-    if (nestedMenu) event.stopPropagation();
+    const capturedKeys = [
+      'ArrowDown',
+      'ArrowUp',
+      'Home',
+      'End'
+    ];
+
+    if (isSubMenu && capturedKeys.includes(key)) event.stopPropagation();
+
     if (key === 'ArrowDown') {
       // Prevent scroll of the page
       event.preventDefault();
@@ -305,7 +313,7 @@ MenuList.propTypes = {
    /**
    * @ignore
    */
-  nestedMenu: PropTypes.bool,
+  isSubMenu: PropTypes.bool,
   /**
    * @ignore
    */
