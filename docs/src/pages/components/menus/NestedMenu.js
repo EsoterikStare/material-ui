@@ -49,7 +49,7 @@ export default function SimpleMenu() {
       <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
       <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
       <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
-      <MenuItem onClick={handleItemClick} subMenu={deeper3}>Go deeper</MenuItem>
+      <MenuItem subMenu={deeper3}>Go deeper</MenuItem>
       <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
       <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
     </Menu>
@@ -57,7 +57,7 @@ export default function SimpleMenu() {
 
   const deeper1 = (
     <Menu>
-      <MenuItem onClick={handleItemClick} subMenu={deeper2}>Go deeper</MenuItem>
+      <MenuItem subMenu={deeper2}>Go deeper</MenuItem>
       <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
       <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
     </Menu>
@@ -87,8 +87,8 @@ export default function SimpleMenu() {
         </Grid>
       </MenuItem>
       <MenuItem onClick={handleItemClick}>Verbose Logging</MenuItem>
-      <MenuItem onClick={handleItemClick} subMenu={autoSaveItems}>Auto-save</MenuItem>
-      <MenuItem onClick={handleItemClick} subMenu={deeper1}>Go Deeper</MenuItem>
+      <MenuItem subMenu={autoSaveItems}>Auto-save</MenuItem>
+      <MenuItem subMenu={deeper1}>Go Deeper</MenuItem>
     </Menu>
   );
 
@@ -110,8 +110,8 @@ export default function SimpleMenu() {
         open={Boolean(anchorEl)}
         onClose={handleItemClick}
       >
-        <MenuItem onClick={handleItemClick} subMenu={settingsSubMenu}>Settings</MenuItem>
-        <MenuItem onClick={handleItemClick} subMenu={myAccountItems}>My Account</MenuItem>
+        <MenuItem subMenu={settingsSubMenu}>Settings</MenuItem>
+        <MenuItem subMenu={myAccountItems}>My Account</MenuItem>
         <MenuItem onClick={handleItemClick}>Logout</MenuItem>
         <MenuItem onClick={handleItemClick}>Thing</MenuItem>
         <MenuItem onClick={handleItemClick}>Other thing</MenuItem>
