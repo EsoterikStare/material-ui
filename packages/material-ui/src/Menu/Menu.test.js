@@ -420,57 +420,57 @@ describe('<Menu />', () => {
       assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
     });
 
-    // it('closes all menus on Tab keydown', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('closes all menus on Tab keydown', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find("#settings-item").last().simulate('keyDown', {
-    //     key: 'ArrowRight'
-    //   });
+      wrapper.find("#settings-item").last().simulate('keyDown', {
+        key: 'ArrowRight'
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-    //   wrapper.find("#dark-mode").last().simulate('keyDown', {
-    //     key: 'Tab'
-    //   });
+      wrapper.find("#dark-mode").last().simulate('keyDown', {
+        key: 'Tab'
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#settings-item').exists(), false);
-    //   assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
-    // });
+      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
+    });
 
-    // it('closes all menus on Escape keydown', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('closes all menus on Escape keydown', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find("#settings-item").last().simulate('keyDown', {
-    //     key: 'ArrowRight'
-    //   });
+      wrapper.find("#settings-item").last().simulate('keyDown', {
+        key: 'ArrowRight'
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-    //   wrapper.find("#dark-mode").last().simulate('keyDown', {
-    //     key: 'Escape'
-    //   });
+      wrapper.find("#dark-mode").last().simulate('keyDown', {
+        key: 'Escape'
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#settings-item').exists(), false);
-    //   assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
-    // });
+      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
+    });
 
     it('changes focus with up and down arrow buttons', () => {
       wrapper.find(Button).simulate('click');
