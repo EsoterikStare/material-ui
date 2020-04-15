@@ -1,5 +1,5 @@
 
-/* eslint-disable no-console */
+
 import * as React from 'react';
 import { spy, useFakeTimers } from 'sinon';
 import { assert } from 'chai';
@@ -272,8 +272,8 @@ describe('<Menu />', () => {
       ];
 
       const mainMenuItems = [
-        <MenuItem key="settingsitem" id="settings-item" nestedItems={settingItems}>Settings</MenuItem>,
-        <MenuItem key="accountitem" id="account-item" nestedItems={myAccountItems}>My account</MenuItem>,
+        <MenuItem id="settings-item" nestedItems={settingItems}>Settings</MenuItem>,
+        <MenuItem id="account-item" nestedItems={myAccountItems}>My account</MenuItem>,
         // <MenuItem id="logout" onClick={handleItemClick}>Logout</MenuItem>,
         // <MenuItem onClick={handleItemClick}>Thing</MenuItem>,
         // <MenuItem onClick={handleItemClick}>Other thing</MenuItem>
@@ -309,7 +309,6 @@ describe('<Menu />', () => {
       const actual = wrapper.find('#dark-mode').exists();
       assert.strictEqual(actual, expected);
     });
-    it('closes current nested Menu on LeftArrow keydown', () => {
 
     it('displays a nested menu level 2', () => {
       const wrapper = mount(<NestedMenu />);
@@ -328,7 +327,6 @@ describe('<Menu />', () => {
       const actual = wrapper.find('#go-deeper-2').exists();
       assert.strictEqual(actual, expected);
     });
-    it('moves focus to the previous item on ArrowUp keydown', () => {
 
     it('nested menus collapse when parent menu is changed', () => {
       const wrapper = mount(<NestedMenu />);
@@ -351,7 +349,6 @@ describe('<Menu />', () => {
 
       assert.strictEqual(wrapper.find('#change-username').exists(), false);
     });
-    it('closes all menus on Escape keydown', () => {
 
     it('nested menu stays open when mouse is outside of menu', () => {
       const wrapper = mount(<NestedMenu />);
@@ -388,7 +385,6 @@ describe('<Menu />', () => {
       const actual = wrapper.find('#dark-mode').exists();
       assert.strictEqual(actual, expected);
     });
-    it('triggers the onClick of the current item on Enter keydown', () => {
 
     it('closes current nested Menu on LeftArrow keydown', () => {
       const wrapper = mount(<NestedMenu />);
@@ -477,16 +473,6 @@ describe('<Menu />', () => {
       assert.strictEqual(wrapper.find('#settings-item').exists(), false);
       assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
     });
-  //   it('triggers the onClick of the current item on Space keydown', () => {
-
-  //   });
-  //   it('triggers the onClick of the current item on Enter keydown', () => {
-
-  //   });
-  //   it('prevents keyboad events from escaping the current nested Menu', () => {
-
-  //   });
-  // });
   });
 
   describe('warnings', () => {
