@@ -60,6 +60,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     handleArrowRightKeydown,
     setParentLastEnteredItemIndex,
     tabIndex: tabIndexProp,
+    handleParentClose,
     ...other
   } = props;
 
@@ -81,6 +82,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     isSubMenu, // disallowed
     open, // disallowed
     setParentLastItemEnteredIndex, // disallowed
+    onClose: subOnClose,
     ...allowedSubMenuProps
   } = subMenu ? subMenu.props : {};
 
@@ -125,6 +127,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           isSubMenu: true,
           MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
+          onClose: createChainedFunction(handleParentClose, subOnClose),
           setParentLastEnteredItemIndex,
           transformOrigin: { vertical: 'top', horizontal: 'left' },
           ...allowedSubMenuProps,
@@ -170,6 +173,10 @@ MenuItem.propTypes = {
    * @ignore
    */
   handleArrowRightKeydown: PropTypes.func,
+    /**
+   * @ignore
+   */
+  handleParentClose: PropTypes.func,
   /**
    * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
    */

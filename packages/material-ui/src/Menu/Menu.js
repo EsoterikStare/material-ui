@@ -112,15 +112,19 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   };
 
+  const handleOnClose = event => 
+  {
+    event.preventDefault();
+    setLastEnteredItemIndex(null);
+    if (onClose) {
+      onClose(event, `${event.key.toLowerCase()}KeyDown`);
+    }
+  }
+
   const handleListKeyDown = (event) => {
     const closeKeys = ['Tab', 'Escape', 'Esc'];
     if (closeKeys.includes(event.key)) {
-      event.preventDefault();
-      setLastEnteredItemIndex(null);
-
-      if (onClose) {
-        onClose(event, `${event.key.toLowerCase()}KeyDown`);
-      }
+      handleOnClose(event);
     }
 
     if (event.key === 'ArrowLeft' && isSubMenu) {
@@ -225,6 +229,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
             onMouseMoveChildProp(e);
           }
         },
+        handleParentClose: handleOnClose
       });
     }
 
