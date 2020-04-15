@@ -113,7 +113,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   };
 
   const handleListKeyDown = (event) => {
-    if (event.key === 'Tab' || event.key === 'Escape') {
+    const closeKeys = ['Tab', 'Escape', 'Esc'];
+    if (closeKeys.includes(event.key)) {
       event.preventDefault();
       setLastEnteredItemIndex(null);
 
