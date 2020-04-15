@@ -1,5 +1,3 @@
-
-/* eslint-disable no-console */
 import * as React from 'react';
 import { spy, useFakeTimers } from 'sinon';
 import { assert } from 'chai';
@@ -232,14 +230,53 @@ describe('<Menu />', () => {
     assert.lengthOf(wrapper.find('span[role="menuitem"]'), 1);
   });
 
+  describe('warnings', () => {
+    before(() => {
+      consoleErrorMock.spy();
+    });
+
+    after(() => {
+      consoleErrorMock.reset();
+      PropTypes.resetWarningCache();
+    });
+
+    it('warns a Fragment is passed as a child', () => {
+      mount(
+        <Menu anchorEl={document.createElement('div')} open>
+          <React.Fragment />
+        </Menu>,
+      );
+
+      assert.strictEqual(consoleErrorMock.callCount(), 2);
+      assert.include(
+        consoleErrorMock.messages()[0],
+        "Material-UI: the Menu component doesn't accept a Fragment as a child.",
+      );
+    });
+  });
+
   describe('cascading menu', () => {
     let clock;
+    let cascadeMount;
+    let wrapper;
+
     before(() => {
       clock = useFakeTimers();
+      // StrictModeViolation: uses Popover
+      cascadeMount = createMount({ strict: false });
+    });
+
+    beforeEach(() => {
+      wrapper = cascadeMount(<NestedMenu />);
+    });
+
+    afterEach(() => {
+      wrapper.unmount();
     });
   
     after(() => {
       clock.restore();
+      cascadeMount.cleanUp();
     });
 
     const NestedMenu = (props) => {
@@ -281,20 +318,16 @@ describe('<Menu />', () => {
     }
     
     it('displays a nested menu level 1', () => {
-      const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
       wrapper.find("#settings-item").last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
-      const expected = true;
-      const actual = wrapper.find('#dark-mode').exists();
-      assert.strictEqual(actual, expected);
+      assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
     });
 
     it('displays a nested menu level 2', () => {
-      const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
       wrapper.find("#settings-item").last().simulate('mousemove');
 
@@ -306,13 +339,10 @@ describe('<Menu />', () => {
       clock.tick(1);
       wrapper.update();
 
-      const expected = true;
-      const actual = wrapper.find('#go-deeper-2').exists();
-      assert.strictEqual(actual, expected);
+      assert.strictEqual(wrapper.find('#go-deeper-2').exists(), true);
     });
 
     it('nested menus collapse when parent menu is changed', () => {
-      const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
       wrapper.find("#settings-item").last().simulate('mousemove');
 
@@ -334,7 +364,6 @@ describe('<Menu />', () => {
     });
 
     it('nested menu stays open when mouse is outside of menu', () => {
-      const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
       wrapper.find("#settings-item").last().simulate('mousemove');
 
@@ -351,7 +380,6 @@ describe('<Menu />', () => {
     })
 
     it('opens a nested Menu on RightArrow keydown', () => {
-      const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
 
       clock.tick(200);
@@ -370,7 +398,6 @@ describe('<Menu />', () => {
     });
 
     it('closes current nested Menu on LeftArrow keydown', () => {
-      const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
 
       clock.tick(0);
@@ -396,7 +423,6 @@ describe('<Menu />', () => {
     });
 
     // it('closes all menus on Tab keydown', () => {
-    //   const wrapper = mount(<NestedMenu />);
     //   wrapper.find(Button).simulate('click');
 
     //   clock.tick(0);
@@ -423,7 +449,6 @@ describe('<Menu />', () => {
     // });
 
     // it('closes all menus on Escape keydown', () => {
-    //   const wrapper = mount(<NestedMenu />);
     //   wrapper.find(Button).simulate('click');
 
     //   clock.tick(0);
@@ -450,8 +475,6 @@ describe('<Menu />', () => {
     // });
 
     // it('changes focus with up and down arrow buttons', () => {
-
-    //   const wrapper = mount(<NestedMenu />);
     //   wrapper.find(Button).simulate('click');
 
     //   clock.tick(0);
@@ -478,8 +501,6 @@ describe('<Menu />', () => {
     // });
 
     // it('changes focus with left and right arrow buttons', () => {
-
-    //   const wrapper = mount(<NestedMenu />);
     //   wrapper.find(Button).simulate('click');
 
     //   clock.tick(0);
@@ -505,30 +526,5 @@ describe('<Menu />', () => {
 
     //   assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
     // });
-  });
-
-  describe('warnings', () => {
-    before(() => {
-      consoleErrorMock.spy();
-    });
-
-    after(() => {
-      consoleErrorMock.reset();
-      PropTypes.resetWarningCache();
-    });
-
-    it('warns a Fragment is passed as a child', () => {
-      mount(
-        <Menu anchorEl={document.createElement('div')} open>
-          <React.Fragment />
-        </Menu>,
-      );
-
-      assert.strictEqual(consoleErrorMock.callCount(), 2);
-      assert.include(
-        consoleErrorMock.messages()[0],
-        "Material-UI: the Menu component doesn't accept a Fragment as a child.",
-      );
-    });
   });
 });
