@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import Popover from '../Popover';
 import MenuList from '../MenuList';
-import * as ReactDOM from 'react-dom';
 import setRef from '../utils/setRef';
 import useTheme from '../styles/useTheme';
 
@@ -64,10 +64,10 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   } = props;
   const theme = useTheme();
 
-  const [lastEnteredItemIndex, setLastEnteredItemIndex] = useState(null);
-  const [entering, setEntering] = useState(false);
+  const [lastEnteredItemIndex, setLastEnteredItemIndex] = React.useState(null);
+  const [entering, setEntering] = React.useState(false);
 
-  const atLeastOneSubMenu = useMemo(() => {
+  const atLeastOneSubMenu = React.useMemo(() => {
     let someSubMenus = false;
 
     React.Children.map(children, child => {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -6,7 +7,6 @@ import ListItem from '../ListItem';
 import KeyboardArrowRight from '../internal/svg-icons/KeyboardArrowRight';
 import createChainedFunction from '../utils/createChainedFunction';
 import useForkRef from '../utils/useForkRef';
-import * as ReactDOM from 'react-dom';
 
 export const styles = (theme) => ({
   /* Styles applied to the root element. */
