@@ -61,7 +61,7 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 
 {{"demo": "pages/components/text-fields/TextFieldSizes.js"}}
 
-## Layout 布局
+## 布局
 
 通过使用 `margin` 属性，你可以改变输入框的垂直间距。 若您使用 `none` （默认选项），将不会在 `FormControl` 上添加间距， 相对来说，使用 `dense` 和 `normal` 会添加间距。 使用 ` dense ` 和 `normal` 会更改其他的样式，以符合规范。
 
