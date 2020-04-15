@@ -68,16 +68,12 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const [entering, setEntering] = React.useState(false);
 
   const atLeastOneSubMenu = React.useMemo(() => {
-    let someSubMenus = false;
-
-    React.Children.map(children, child => {
-      if (someSubMenus) return;
-      if (isSubMenu || (React.isValidElement(child) && child.props && child.props.subMenu)) {
-        someSubMenus = true;
-      }
-    });
-
-    return someSubMenus;
+    return (
+      isSubMenu ||
+      React.Children.toArray(children).some(
+        (child) => React.isValidElement(child) && child.props && child.props.subMenu,
+      )
+    );
   }, [children, isSubMenu]);
 
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
@@ -112,10 +108,10 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (atLeastOneSubMenu) setEntering(false);
 
     if (onEntered) {
-      onEntered(element, isAppearing)
+      onEntered(element, isAppearing);
     }
   };
-  
+
   const handleListKeyDown = (event) => {
     if (event.key === 'Tab' || event.key === 'Escape') {
       event.preventDefault();
@@ -174,10 +170,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       return;
     }
 
-    const {
-      subMenu,
-      onMouseMove: onMouseMoveChildProp,
-    } = child.props;
+    const { subMenu, onMouseMove: onMouseMoveChildProp } = child.props;
     const { anchorEl } = other;
 
     const hasSubMenu = Boolean(subMenu);
@@ -210,7 +203,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
           setLastEnteredItemIndex(index);
         }
       };
-      
+
       Object.assign(additionalProps, {
         handleArrowRightKeydown,
         openSubMenu: index === lastEnteredItemIndex && !entering,
@@ -223,7 +216,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     // and reset the state that controls which subMenu is open.
     if (atLeastOneSubMenu) {
       additionalPropsAdded = true;
-
 
       Object.assign(additionalProps, {
         onMouseMove: (e) => {
@@ -254,7 +246,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     <Popover
       getContentAnchorEl={getContentAnchorEl}
       className={clsx({
-        [classes.disablePointerEvents]: isSubMenu
+        [classes.disablePointerEvents]: isSubMenu,
       })}
       classes={PopoverClasses}
       onClose={onClose}
@@ -284,7 +276,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         variant={variant}
         {...MenuListProps}
         className={clsx(classes.list, MenuListProps.className, {
-          [classes.enablePointerEvents]: isSubMenu
+          [classes.enablePointerEvents]: isSubMenu,
         })}
       >
         {items}
@@ -381,8 +373,8 @@ Menu.propTypes = {
    */
   PopoverClasses: PropTypes.object,
   /**
-  * @ignore
-  */
+   * @ignore
+   */
   setParentLastEnteredItemIndex: PropTypes.func,
   /**
    * The length of the transition in `ms`, or 'auto'
