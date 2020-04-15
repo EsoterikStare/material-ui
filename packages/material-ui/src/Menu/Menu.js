@@ -55,8 +55,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     onEntered,
     open,
     PaperProps = {},
-    setParentLastEnteredItemIndex,
     PopoverClasses,
+    setParentJustArrowedLeft,
+    setParentLastEnteredItemIndex,
     transitionDuration = 'auto',
     isSubMenu = false,
     variant = 'selectedMenu',
@@ -66,6 +67,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const [lastEnteredItemIndex, setLastEnteredItemIndex] = React.useState(null);
   const [entering, setEntering] = React.useState(false);
+  const [justArrowedLeft, setJustArrowedLeft] = React.useState(false);
 
   const atLeastOneSubMenu = React.useMemo(() => {
     return (
@@ -133,6 +135,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       event.stopPropagation();
       event.preventDefault();
       setParentLastEnteredItemIndex(null);
+      setParentJustArrowedLeft(true);
+    } else {
+      setJustArrowedLeft(false);
     }
   };
 
@@ -213,6 +218,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         handleArrowRightKeydown,
         openSubMenu: index === lastEnteredItemIndex && !entering,
         setParentLastEnteredItemIndex: setLastEnteredItemIndex,
+        setParentJustArrowedLeft: setJustArrowedLeft,
+        tempFocus: justArrowedLeft
       });
     }
 
@@ -378,6 +385,10 @@ Menu.propTypes = {
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   PopoverClasses: PropTypes.object,
+  /**
+   * @ignore
+   */
+  setParentJustArrowedLeft: PropTypes.func,
   /**
    * @ignore
    */

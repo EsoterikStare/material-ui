@@ -41,6 +41,11 @@ export const styles = (theme) => ({
   indicator: {
     marginLeft: theme.spacing(2),
   },
+  focusAfterSubMenuClose: {
+    '&:focus': {
+      backgroundColor: theme.palette.action.selected
+    }
+  }
 });
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
@@ -50,6 +55,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     className,
     component = 'li',
     disableGutters = false,
+    handleArrowRightKeydown,
     ListItemClasses,
     openSubMenu = false,
     onKeyDown,
@@ -57,9 +63,10 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     selected,
     subMenu,
     SubMenuIcon = KeyboardArrowRight,
-    handleArrowRightKeydown,
+    setParentJustArrowedLeft,
     setParentLastEnteredItemIndex,
     tabIndex: tabIndexProp,
+    tempFocus,
     handleParentClose,
     ...other
   } = props;
@@ -81,7 +88,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     MenuListProps, // Needs to be spread into subMenu prop
     isSubMenu, // disallowed
     open, // disallowed
-    setParentLastItemEnteredIndex, // disallowed
+    setParentJustArrowedLeft: outsideSPJAL, // disallowed
     onClose: subOnClose,
     ...allowedSubMenuProps
   } = subMenu ? subMenu.props : {};
@@ -101,6 +108,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         {
           [classes.selected]: selected,
           [classes.gutters]: !disableGutters,
+          [classes.focusAfterSubMenuClose]: tempFocus
         },
         className,
       )}
@@ -128,6 +136,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
           onClose: createChainedFunction(handleParentClose, subOnClose),
+          setParentJustArrowedLeft,
           setParentLastEnteredItemIndex,
           transformOrigin: { vertical: 'top', horizontal: 'left' },
           ...allowedSubMenuProps,
@@ -204,6 +213,10 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
+  setParentJustArrowedLeft: PropTypes.func,
+  /**
+   * @ignore
+   */
   setParentLastEnteredItemIndex: PropTypes.func,
   /**
    * The sub-Menu that a Menu item will render
@@ -217,6 +230,10 @@ MenuItem.propTypes = {
    * @ignore
    */
   tabIndex: PropTypes.number,
+  /**
+   * @ignore
+   */
+  tempFocus: PropTypes.bool,
 };
 
 export default withStyles(styles, { name: 'MuiMenuItem' })(MenuItem);
