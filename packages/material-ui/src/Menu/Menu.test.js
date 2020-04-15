@@ -1,5 +1,5 @@
 
-
+/* eslint-disable no-console */
 import * as React from 'react';
 import { spy, useFakeTimers } from 'sinon';
 import { assert } from 'chai';
@@ -253,32 +253,6 @@ describe('<Menu />', () => {
         setAnchorEl(null);
       };
 
-      const deeper1= [
-        <MenuItem key="deeper2" id="go-deeper-2">Go deeper</MenuItem>,
-        // <MenuItem onClick={handleItemClick}>Not this one</MenuItem>,
-        // <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
-      ];
-
-      const settingItems = [
-        <MenuItem key="darkmode" id="dark-mode" onClick={handleItemClick}>Dark Mode</MenuItem>,
-        // <MenuItem onClick={handleItemClick}>Verbos Logging</MenuItem>,
-        // <MenuItem nestedItems={autoSaveItems}>Auto-save</MenuItem>,
-        <MenuItem key="godeeper1" id="go-deeper-1" nestedItems={deeper1}>Go deeper</MenuItem>
-      ];
-
-      const myAccountItems = [
-        // <MenuItem key="resetpassword" id="reset-password" onClick={handleItemClick}>Reset password</MenuItem>,
-        <MenuItem key="changeusername" id="change-username" onClick={handleItemClick}>Change username</MenuItem>,
-      ];
-
-      const mainMenuItems = [
-        <MenuItem id="settings-item" nestedItems={settingItems}>Settings</MenuItem>,
-        <MenuItem id="account-item" nestedItems={myAccountItems}>My account</MenuItem>,
-        // <MenuItem id="logout" onClick={handleItemClick}>Logout</MenuItem>,
-        // <MenuItem onClick={handleItemClick}>Thing</MenuItem>,
-        // <MenuItem onClick={handleItemClick}>Other thing</MenuItem>
-      ];
-
       return (
         <div>
           <Button onClick={handleButtonClick}>
@@ -291,7 +265,16 @@ describe('<Menu />', () => {
             transitionDuration={0}
             {...props}
           >
-            {mainMenuItems}
+            <MenuItem id="settings-item" subMenu={<Menu>
+              <MenuItem id="dark-mode" onClick={handleItemClick}>Dark Mode</MenuItem>
+              <MenuItem id="go-deeper-1" subMenu={<Menu>
+                <MenuItem key="deeper2" id="go-deeper-2">Go deeper</MenuItem>
+              </Menu>}>Go deeper</MenuItem>
+            </Menu>}>Settings</MenuItem>
+            <MenuItem id="account-item" subMenu={<Menu>
+              <MenuItem id="reset-password" onClick={handleItemClick}>Reset password</MenuItem>
+              <MenuItem id="change-username" onClick={handleItemClick}>Change username</MenuItem>
+            </Menu>}>My account</MenuItem>
           </Menu>
         </div>
       );
@@ -300,7 +283,7 @@ describe('<Menu />', () => {
     it('displays a nested menu level 1', () => {
       const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
-      wrapper.find("#settings-item").at(0).simulate('mousemove');
+      wrapper.find("#settings-item").last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
@@ -313,12 +296,12 @@ describe('<Menu />', () => {
     it('displays a nested menu level 2', () => {
       const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
-      wrapper.find("#settings-item").at(0).simulate('mousemove');
+      wrapper.find("#settings-item").last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#go-deeper-1").at(0).simulate('mousemove');
+      wrapper.find("#go-deeper-1").last().simulate('mousemove');
 
       clock.tick(1);
       wrapper.update();
@@ -331,18 +314,18 @@ describe('<Menu />', () => {
     it('nested menus collapse when parent menu is changed', () => {
       const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
-      wrapper.find("#settings-item").at(0).simulate('mousemove');
+      wrapper.find("#settings-item").last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#account-item").at(0).simulate('mousemove');
+      wrapper.find("#account-item").last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
       assert.strictEqual(wrapper.find('#change-username').exists(), true);
-      wrapper.find("#settings-item").at(0).simulate('mousemove');
+      wrapper.find("#settings-item").last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
@@ -353,18 +336,18 @@ describe('<Menu />', () => {
     it('nested menu stays open when mouse is outside of menu', () => {
       const wrapper = mount(<NestedMenu />);
       wrapper.find(Button).simulate('click');
-      wrapper.find("#settings-item").at(0).simulate('mousemove');
+      wrapper.find("#settings-item").last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
       assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-      wrapper.find("#dark-mode").at(0).simulate('mousemove');
-      wrapper.find("#dark-mode").at(0).simulate('mouseout');
+      wrapper.find("#dark-mode").last().simulate('mousemove');
+      wrapper.find("#dark-mode").last().simulate('mouseout');
       wrapper.find(Button).simulate('mouseenter');
 
-      assert.strictEqual(wrapper.find("#dark-mode").at(0).exists(), true);
+      assert.strictEqual(wrapper.find("#dark-mode").last().exists(), true);
     })
 
     it('opens a nested Menu on RightArrow keydown', () => {
@@ -374,7 +357,7 @@ describe('<Menu />', () => {
       clock.tick(200);
       wrapper.update();
 
-      wrapper.find("#settings-item").at(0).simulate('keyDown', {
+      wrapper.find("#settings-item").last().simulate('keyDown', {
         key: 'ArrowRight'
       });
 
@@ -393,7 +376,7 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#settings-item").at(0).simulate('keyDown', {
+      wrapper.find("#settings-item").last().simulate('keyDown', {
         key: 'ArrowRight'
       });
 
@@ -402,7 +385,7 @@ describe('<Menu />', () => {
 
       assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-      wrapper.find("#dark-mode").at(0).simulate('keyDown', {
+      wrapper.find("#dark-mode").last().simulate('keyDown', {
         key: 'ArrowLeft'
       });
 
@@ -411,68 +394,117 @@ describe('<Menu />', () => {
 
       assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
     });
-  //   it('focuses on the last focused item in parent Menu when closing a nested Menu', () => {
 
-  //   });
-  //   it('moves focus to the next Item on ArrowDown keydown', () => {
+    // it('closes all menus on Tab keydown', () => {
+    //   const wrapper = mount(<NestedMenu />);
+    //   wrapper.find(Button).simulate('click');
 
-  //   });
-  //   it('moves focus to the previous item on ArrowUp keydown', () => {
+    //   clock.tick(0);
+    //   wrapper.update();
 
-  //   });
-    it('closes all menus on Tab keydown', () => {
-      const wrapper = mount(<NestedMenu />);
-      wrapper.find(Button).simulate('click');
+    //   wrapper.find("#settings-item").last().simulate('keyDown', {
+    //     key: 'ArrowRight'
+    //   });
 
-      clock.tick(0);
-      wrapper.update();
+    //   clock.tick(0);
+    //   wrapper.update();
 
-      wrapper.find("#settings-item").at(0).simulate('keyDown', {
-        key: 'ArrowRight'
-      });
+    //   assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-      clock.tick(0);
-      wrapper.update();
+    //   wrapper.find("#dark-mode").last().simulate('keyDown', {
+    //     key: 'Tab'
+    //   });
 
-      assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
+    //   clock.tick(0);
+    //   wrapper.update();
 
-      wrapper.find("#dark-mode").at(0).simulate('keyDown', {
-        key: 'Tab'
-      });
+    //   assert.strictEqual(wrapper.find('#settings-item').exists(), false);
+    //   assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
+    // });
 
-      clock.tick(0);
-      wrapper.update();
+    // it('closes all menus on Escape keydown', () => {
+    //   const wrapper = mount(<NestedMenu />);
+    //   wrapper.find(Button).simulate('click');
 
-      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
-      assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
-    });
+    //   clock.tick(0);
+    //   wrapper.update();
 
-    it('closes all menus on Escape keydown', () => {
-      const wrapper = mount(<NestedMenu />);
-      wrapper.find(Button).simulate('click');
+    //   wrapper.find("#settings-item").last().simulate('keyDown', {
+    //     key: 'ArrowRight'
+    //   });
 
-      clock.tick(0);
-      wrapper.update();
+    //   clock.tick(0);
+    //   wrapper.update();
 
-      wrapper.find("#settings-item").at(0).simulate('keyDown', {
-        key: 'ArrowRight'
-      });
+    //   assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-      clock.tick(0);
-      wrapper.update();
+    //   wrapper.find("#dark-mode").last().simulate('keyDown', {
+    //     key: 'Escape'
+    //   });
 
-      assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
+    //   clock.tick(0);
+    //   wrapper.update();
 
-      wrapper.find("#dark-mode").at(0).simulate('keyDown', {
-        key: 'Escape'
-      });
+    //   assert.strictEqual(wrapper.find('#settings-item').exists(), false);
+    //   assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
+    // });
 
-      clock.tick(0);
-      wrapper.update();
+    // it('changes focus with up and down arrow buttons', () => {
 
-      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
-      assert.strictEqual(wrapper.find('#dark-mode').exists(), false);
-    });
+    //   const wrapper = mount(<NestedMenu />);
+    //   wrapper.find(Button).simulate('click');
+
+    //   clock.tick(0);
+    //   wrapper.update();
+
+    //   wrapper.find("#settings-item").last().simulate('keyDown', {
+    //     key: 'ArrowRight'
+    //   });
+
+    //   clock.tick(0);
+    //   wrapper.update();
+
+    //   assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+
+    //   wrapper.find("#dark-mode").last().simulate('keyDown', {
+    //     key: 'ArrowDown'
+    //   });
+    //   assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), false);
+
+    //   wrapper.find("#dark-mode").last().simulate('keyDown', {
+    //     key: 'ArrowUp'
+    //   });
+    //   assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+    // });
+
+    // it('changes focus with left and right arrow buttons', () => {
+
+    //   const wrapper = mount(<NestedMenu />);
+    //   wrapper.find(Button).simulate('click');
+
+    //   clock.tick(0);
+    //   wrapper.update();
+
+    //   wrapper.find("#settings-item").last().simulate('keyDown', {
+    //     key: 'ArrowRight'
+    //   });
+
+    //   clock.tick(0);
+    //   wrapper.update();
+
+    //   assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+
+    //   wrapper.find("#dark-mode").last().simulate('keyDown', {
+    //     key: 'ArrowLeft'
+    //   });
+    //   assert.strictEqual(wrapper.find('#settings-item').last().hasClass("Mui-focusVisible"), true);
+
+    //   wrapper.find("#settings-item").last().simulate('keyDown', {
+    //     key: 'ArrowRight'
+    //   });
+
+    //   assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+    // });
   });
 
   describe('warnings', () => {
