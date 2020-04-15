@@ -83,8 +83,9 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     ...allowedSubMenuProps
   } = subMenu ? subMenu.props : {};
 
-  return (
+  const listItemAndSubMenu = [
     <ListItem
+      key="MenuItem"
       button
       role={role}
       tabIndex={tabIndex}
@@ -110,24 +111,27 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         <div className={classes.indicatorWrapper}>
           {childrenProp}
           <SubMenuIcon className={classes.indicator} />
-          {openSubMenu
-            ? React.cloneElement(subMenu, {
-                anchorEl: listItemRef.current,
-                anchorOrigin: { vertical: 'top', horizontal: 'right' },
-                isSubMenu: true,
-                MenuListProps: { ...MenuListProps, nestedMenu: true },
-                open: openSubMenu,
-                setParentLastEnteredItemIndex,
-                transformOrigin: { vertical: 'top', horizontal: 'left' },
-                ...allowedSubMenuProps
-              })
-            : null}
         </div>
       ) : (
         childrenProp
       )}
-    </ListItem>
-  );
+    </ListItem>,
+    openSubMenu
+      ? React.cloneElement(subMenu, {
+          key: 'subMenu',
+          anchorEl: listItemRef.current,
+          anchorOrigin: { vertical: 'top', horizontal: 'right' },
+          isSubMenu: true,
+          MenuListProps: { ...MenuListProps, nestedMenu: true },
+          open: openSubMenu,
+          setParentLastEnteredItemIndex,
+          transformOrigin: { vertical: 'top', horizontal: 'left' },
+          ...allowedSubMenuProps,
+        })
+      : null,
+  ];
+
+  return listItemAndSubMenu;
 });
 
 MenuItem.propTypes = {
