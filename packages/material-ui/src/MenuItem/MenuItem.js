@@ -50,7 +50,7 @@ export const styles = (theme) => ({
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   const {
-    children: childrenProp,
+    children,
     classes,
     className,
     component = 'li',
@@ -122,11 +122,11 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     >
       {subMenu ? (
         <div className={classes.indicatorWrapper}>
-          {childrenProp}
+          {children}
           <SubMenuIcon className={classes.indicator} />
         </div>
       ) : (
-        childrenProp
+        children
       )}
     </ListItem>,
     openSubMenu
