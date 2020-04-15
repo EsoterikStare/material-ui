@@ -23,11 +23,6 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Omit<
      * nested items array
      */
     handleArrowRightKeydown?: React.ReactEventHandler<{}>;
-    /**
-     * Props used to customize this MenuItem's
-     * nested Menu component
-     */
-    NestedMenuProps?: Partial<MenuProps>;
     onKeyDown?: React.KeyboardEventHandler<any>;
     onMouseEnter?: React.MouseEventHandler<any>;
     /**

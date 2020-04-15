@@ -8,7 +8,6 @@ import ListItemSecondaryAction from '../ListItemSecondaryAction';
 import MenuItem from './MenuItem';
 
 describe('<MenuItem />', () => {
-  // eslint-disable-next-line no-unused-vars
   let shallow;
   let classes;
   let mount;
