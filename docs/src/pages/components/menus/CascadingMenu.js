@@ -31,10 +31,10 @@ export default function CascadingMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem disableRipple subMenu={
+        <MenuItem subMenu={
           <Menu>
-            <MenuItem onClick={swapDarkMode} disableRipple>Dark Mode <Switch checked={darkMode} /></MenuItem>
-            <MenuItem disableRipple onClick={handleClose} subMenu={
+            <MenuItem onClick={swapDarkMode}>Dark Mode <Switch checked={darkMode} /></MenuItem>
+            <MenuItem onClick={handleClose} subMenu={
               <Menu>
                 <MenuItem onClick={handleClose}>75%</MenuItem>
                 <MenuItem onClick={handleClose}>100%</MenuItem>
