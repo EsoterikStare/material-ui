@@ -6,7 +6,6 @@ import ListItem from '../ListItem';
 import KeyboardArrowRight from '../internal/svg-icons/KeyboardArrowRight';
 import createChainedFunction from '../utils/createChainedFunction';
 import useForkRef from '../utils/useForkRef';
-import Menu from '../Menu';
 import * as ReactDOM from 'react-dom';
 
 export const styles = (theme) => ({
@@ -37,11 +36,11 @@ export const styles = (theme) => ({
   indicatorWrapper: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   indicator: {
-    marginLeft: theme.spacing(2)
-  }
+    marginLeft: theme.spacing(2),
+  },
 });
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
@@ -51,10 +50,9 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     className,
     component = 'li',
     disableGutters = false,
-    nestedItems,
-    NestedMenuIndicator = KeyboardArrowRight,
-    NestedMenuProps = {},
-    openNestedMenu = false,
+    subMenu,
+    SubMenuIcon = KeyboardArrowRight,
+    openSubMenu = false,
     onKeyDown,
     role = 'menuitem',
     selected,
@@ -76,9 +74,17 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
 
-  const ListItemAndNestedMenu = [
+  const {
+    anchorEl, // disallowed
+    MenuListProps, // Needs to be spread into subMenu prop
+    isSubMenu, // disallowed
+    open, // disallowed
+    setParentLastItemEnteredIndex, // disallowed
+    ...allowedSubMenuProps
+  } = subMenu ? subMenu.props : {};
+
+  return (
     <ListItem
-      key="ListItem"
       button
       role={role}
       tabIndex={tabIndex}
@@ -96,39 +102,32 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       )}
       onKeyDown={createChainedFunction(handleArrowRightKeydown, onKeyDown)}
       ref={handleRef}
-      aria-expanded={nestedItems ? openNestedMenu : undefined}
-      aria-haspopup={nestedItems ? true : undefined}
+      aria-expanded={subMenu ? openSubMenu : undefined}
+      aria-haspopup={subMenu ? true : undefined}
       {...other}
     >
-      {nestedItems ? (
+      {subMenu ? (
         <div className={classes.indicatorWrapper}>
           {childrenProp}
-          <NestedMenuIndicator className={classes.indicator} />
+          <SubMenuIcon className={classes.indicator} />
+          {openSubMenu
+            ? React.cloneElement(subMenu, {
+                anchorEl: listItemRef.current,
+                anchorOrigin: { vertical: 'top', horizontal: 'right' },
+                isSubMenu: true,
+                MenuListProps: { ...MenuListProps, nestedMenu: true },
+                open: openSubMenu,
+                setParentLastEnteredItemIndex,
+                transformOrigin: { vertical: 'top', horizontal: 'left' },
+                ...allowedSubMenuProps
+              })
+            : null}
         </div>
       ) : (
         childrenProp
       )}
-    </ListItem>,
-    openNestedMenu ? (
-      <Menu
-        key='nestedMenu'
-        anchorEl={listItemRef.current}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        nestedMenu
-        MenuListProps={{ nestedMenu: true }}
-        open={openNestedMenu}
-        setParentLastEnteredItemIndex={setParentLastEnteredItemIndex}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        variant="menu"
-        {...NestedMenuProps}
-      >
-        {nestedItems}
-      </Menu>
-    ) : null
-  ]
-
-  return ListItemAndNestedMenu;
-
+    </ListItem>
+  );
 });
 
 MenuItem.propTypes = {
@@ -167,18 +166,6 @@ MenuItem.propTypes = {
    */
   handleArrowRightKeydown: PropTypes.func,
   /**
-   * An array of MenuItems to render in a nested Menu
-   */
-  nestedItems: PropTypes.arrayOf(PropTypes.node),
-  /**
-   * Customize the icon used to indicate a MenuItem has a nested Menu.
-   */
-  NestedMenuIndicator: PropTypes.node,
-  /**
-   * Customize the nested Menu that will render the nestedItems.
-   */
-  NestedMenuProps: PropTypes.object,
-  /**
    * @ignore
    */
   onKeyDown: PropTypes.func,
@@ -189,7 +176,7 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
-  openNestedMenu: PropTypes.bool,
+  openSubMenu: PropTypes.bool,
   /**
    * @ignore
    */
@@ -202,6 +189,14 @@ MenuItem.propTypes = {
    * @ignore
    */
   setParentLastEnteredItemIndex: PropTypes.func,
+  /**
+   * The sub-Menu that a Menu item will render
+   */
+  subMenu: PropTypes.node,
+  /**
+   * The icon used to indicate a Menu item has a sub-Menu.
+   */
+  SubMenuIcon: PropTypes.node,
   /**
    * @ignore
    */

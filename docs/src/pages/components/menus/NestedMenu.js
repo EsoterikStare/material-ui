@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {string} from 'prop-types'
+import { string } from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -8,21 +8,21 @@ import Switch from '@material-ui/core/Switch';
 
 export default function SimpleMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(false);
 
   const handleButtonClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const specialItemClick = (event) => {
-    console.log(event.target)
+    console.log(event.target);
     // window.alert(event.target.innerHtml)
-  }
+  };
 
   const handleItemClick = (event) => {
     event.preventDefault();
-    event.stopPropagation();  
-    console.log('Item clicked!')
+    event.stopPropagation();
+    console.log('Item clicked!');
     setAnchorEl(null);
   };
 
@@ -33,81 +33,71 @@ export default function SimpleMenu() {
   );
 
   renderMenuItem.propTypes = {
-    children: string
-  }
+    children: string,
+  };
 
-  const deeper3 = [
-    { onClick: handleItemClick, children: 'You did it!' },
-    { onClick: handleItemClick, children: 'You did it!' },
-    { onClick: specialItemClick, children: 'This one is special!' },
-  ];
+  const deeper3 = (
+    <Menu>
+      <MenuItem onClick={handleItemClick}>You did it!</MenuItem>
+      <MenuItem onClick={handleItemClick}>You did it!</MenuItem>
+      <MenuItem onClick={specialItemClick}>This one is special!</MenuItem>
+    </Menu>
+  );
 
-  const deeper2 = [
-    { onClick: handleItemClick, children: 'Not this one' },
-    { onClick: handleItemClick, children: 'Not this one' },
-    { onClick: handleItemClick, children: 'Not this one' },
-    {
-      nestedItems: deeper3.map(renderMenuItem),
-      children: 'Go deeper',
-    },
-    { onClick: handleItemClick, children: 'Not this one' },
-    { onClick: handleItemClick, children: 'Not this one' },
-  ];
+  const deeper2 = (
+    <Menu>
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+      <MenuItem onClick={handleItemClick} subMenu={deeper3}>Go deeper</MenuItem>
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+    </Menu>
+  );
 
-  const deeper1 = [
-    {
-      nestedItems: deeper2.map(renderMenuItem),
-      children: 'Go deeper',
-    },
-    { onClick: handleItemClick, children: 'Not this one' },
-    { onClick: handleItemClick, children: 'Not this one' },
-  ];
+  const deeper1 = (
+    <Menu>
+      <MenuItem onClick={handleItemClick} subMenu={deeper2}>Go deeper</MenuItem>
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+      <MenuItem onClick={handleItemClick}>Not this one</MenuItem>
+    </Menu>
+  );
 
-  const autoSaveItems = [
-    { onClick: handleItemClick, children: 'On Exit' },
-    { onClick: handleItemClick, children: 'On Change' },
-  ];
+  const autoSaveItems = (
+    <Menu>
+      <MenuItem onClick={handleItemClick}>On Exit</MenuItem>
+      <MenuItem onClick={handleItemClick}>On Change</MenuItem>
+    </Menu>
+  );
 
-  const settingItems = [
-    { onClick: event => {
-      event.stopPropagation();
-      event.preventDefault();
-      setDarkMode(!darkMode);
-    }, children: (
-      <Grid alignItems="center" container justify="space-between">
-        <Grid item>{'Dark Mode'}</Grid>
-        <Grid item><Switch checked={darkMode}/></Grid>
-      </Grid>
-    )},
-    { onClick: handleItemClick, children: 'Verbos Logging' },
-    {
-      nestedItems: autoSaveItems.map(renderMenuItem),
-      children: 'Auto-save',
-    },
-    {
-      nestedItems: deeper1.map(renderMenuItem),
-      children: 'Go deeper',
-    },
-  ];
+  const settingsSubMenu = (
+    <Menu>
+      <MenuItem
+        onClick={(event) => {
+          event.stopPropagation();
+          event.preventDefault();
+          setDarkMode(!darkMode);
+        }}
+      >
+        <Grid alignItems="center" container justify="space-between">
+          <Grid item>Dark Mode</Grid>
+          <Grid item>
+            <Switch checked={darkMode} />
+          </Grid>
+        </Grid>
+      </MenuItem>
+      <MenuItem onClick={handleItemClick}>Verbose Logging</MenuItem>
+      <MenuItem onClick={handleItemClick} subMenu={autoSaveItems}>Auto-save</MenuItem>
+      <MenuItem onClick={handleItemClick} subMenu={deeper1}>Go Deeper</MenuItem>
+    </Menu>
+  );
 
-  const myAccountItems = [
-    { onClick: handleItemClick, children: 'Reset password' },
-    { onClick: handleItemClick, children: 'Change username' },
-  ];
-
-  const mainMenuItems = [
-    {
-      nestedItems: settingItems.map(renderMenuItem),
-      children: 'Settings',
-    },
-    {
-      nestedItems: myAccountItems.map(renderMenuItem),
-      children: 'My account',
-    },
-    { onClick: handleItemClick, children: 'Logout' },
-    { onClick: handleItemClick, children: 'Thing' },
-    { onClick: handleItemClick, children: 'Other thing' },
-  ];
+  const myAccountItems = (
+    <Menu>
+      <MenuItem onClick={handleItemClick}>Reset password</MenuItem>
+      <MenuItem onClick={handleItemClick}>Change username</MenuItem>
+    </Menu>
+  );
 
   return (
     <div>
@@ -117,12 +107,14 @@ export default function SimpleMenu() {
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
-        // keepMounted
         open={Boolean(anchorEl)}
         onClose={handleItemClick}
-        // variant="selectedMenu"
       >
-        {mainMenuItems.map(renderMenuItem)}
+        <MenuItem onClick={handleItemClick} subMenu={settingsSubMenu}>Settings</MenuItem>
+        <MenuItem onClick={handleItemClick} subMenu={myAccountItems}>My Account</MenuItem>
+        <MenuItem onClick={handleItemClick}>Logout</MenuItem>
+        <MenuItem onClick={handleItemClick}>Thing</MenuItem>
+        <MenuItem onClick={handleItemClick}>Other thing</MenuItem>
       </Menu>
     </div>
   );

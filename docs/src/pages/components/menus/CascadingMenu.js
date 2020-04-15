@@ -31,14 +31,18 @@ export default function CascadingMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem disableRipple nestedItems={[
-          <MenuItem onClick={swapDarkMode} disableRipple>Dark Mode <Switch checked={darkMode} /></MenuItem>,
-          <MenuItem disableRipple onClick={handleClose} nestedItems={[
-            <MenuItem onClick={handleClose}>75%</MenuItem>,
-            <MenuItem onClick={handleClose}>100%</MenuItem>,
-            <MenuItem onClick={handleClose}>125%</MenuItem>]}
-          >Zoom</MenuItem>,
-          <MenuItem onClick={handleClose}>Help</MenuItem>]
+        <MenuItem disableRipple subMenu={
+          <Menu>
+            <MenuItem onClick={swapDarkMode} disableRipple>Dark Mode <Switch checked={darkMode} /></MenuItem>
+            <MenuItem disableRipple onClick={handleClose} subMenu={
+              <Menu>
+                <MenuItem onClick={handleClose}>75%</MenuItem>
+                <MenuItem onClick={handleClose}>100%</MenuItem>
+                <MenuItem onClick={handleClose}>125%</MenuItem>
+              </Menu>
+            }>Zoom</MenuItem>
+            <MenuItem onClick={handleClose}>Help</MenuItem>
+          </Menu>
         }>Options</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <MenuItem onClick={handleClose}>Logout</MenuItem>
