@@ -12,10 +12,6 @@ export interface AvatarGroupProps
    */
   max?: number;
   /**
-   * Max avatars to show before +x.
-   */
-  max?: number;
-  /**
    * Spacing between avatars.
    */
   spacing?: 'small' | 'medium' | number;

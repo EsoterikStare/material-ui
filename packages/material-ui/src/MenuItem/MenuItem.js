@@ -167,13 +167,13 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
-   * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
-   */
-  ListItemClasses: PropTypes.object,
-  /**
    * @ignore
    */
   handleArrowRightKeydown: PropTypes.func,
+  /**
+   * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
+   */
+  ListItemClasses: PropTypes.object,
   /**
    * @ignore
    */

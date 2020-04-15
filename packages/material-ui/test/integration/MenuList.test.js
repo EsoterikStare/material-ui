@@ -414,30 +414,6 @@ describe('<MenuList> integration', () => {
     expect(menuitems[2]).toHaveFocus();
   });
 
-  it('should allow focus on disabled items when disabledItemsFocusable=true', () => {
-    const { getAllByRole } = render(
-      <MenuList autoFocus disabledItemsFocusable>
-        <MenuItem disabled>Menu Item 1</MenuItem>
-        <MenuItem disabled>Menu Item 2</MenuItem>
-        <MenuItem disabled>Menu Item 3</MenuItem>
-        <MenuItem disabled>Menu Item 4</MenuItem>
-      </MenuList>,
-    );
-
-    const menuitems = getAllByRole('menuitem');
-
-    fireEvent.keyDown(document.activeElement, { key: 'Home' });
-    expect(menuitems[0]).to.have.focus;
-    fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
-    expect(menuitems[1]).to.have.focus;
-    fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
-    expect(menuitems[2]).to.have.focus;
-    fireEvent.keyDown(document.activeElement, { key: 'End' });
-    expect(menuitems[3]).to.have.focus;
-    fireEvent.keyDown(document.activeElement, { key: 'ArrowUp' });
-    expect(menuitems[2]).to.have.focus;
-  });
-
   describe('MenuList text-based keyboard controls', () => {
     let innerTextSupported;
 
