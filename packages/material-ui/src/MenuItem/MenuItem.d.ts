@@ -26,11 +26,9 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Omit<
     onKeyDown?: React.KeyboardEventHandler<any>;
     onMouseEnter?: React.MouseEventHandler<any>;
     /**
-     * If `true`, opens the nested Menu
-     * component passing in nestedItems
-     * as the Menu's children
+     * When `true`, opens the subMenu, if provided.
      */
-    openNestedMenu?: boolean;
+    openSubMenu?: boolean;
     /**
      * Function passed to nested menus to maintain the last index of an
      * entered child to orchestrate menu open/close states.
