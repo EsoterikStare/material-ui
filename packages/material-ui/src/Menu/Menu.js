@@ -34,9 +34,11 @@ export const styles = {
     // We disable the focus ring for mouse, touch and keyboard users.
     outline: 0,
   },
+  /* Styles applied to sub`Menu`s to prevent the Modal from capturing mouse events */
   disablePointerEvents: {
-    pointerEvents: 'none', // To stop Modal from capturing hover events
+    pointerEvents: 'none',
   },
+  /* Styles applied to sub`MenuItems` to re-enable mouse events */
   enablePointerEvents: {
     pointerEvents: 'auto', // To enable capturing hover events on MenuList
   },
@@ -112,14 +114,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   };
 
-  const handleOnClose = event => 
-  {
+  const handleOnClose = (event) => {
     event.preventDefault();
     setLastEnteredItemIndex(null);
     if (onClose) {
       onClose(event, `${event.key.toLowerCase()}KeyDown`);
     }
-  }
+  };
 
   const handleListKeyDown = (event) => {
     if (event.key === 'Tab' || event.key === 'Escape') {
@@ -173,8 +174,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (value === null) {
       contentAnchorRef.current.focus();
     }
-    setLastEnteredItemIndex(value)
-  }
+    setLastEnteredItemIndex(value);
+  };
 
   const items = React.Children.map(children, (child, index) => {
     if (!React.isValidElement(child)) {
@@ -218,7 +219,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       Object.assign(additionalProps, {
         handleArrowRightKeydown,
         openSubMenu: index === lastEnteredItemIndex && !entering,
-        setParentLastEnteredItemIndex: handleSetLastEnteredItemIndex
+        setParentLastEnteredItemIndex: handleSetLastEnteredItemIndex,
       });
     }
 
@@ -235,7 +236,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
             onMouseMoveChildProp(e);
           }
         },
-        handleParentClose: handleOnClose
+        handleParentClose: handleOnClose,
       });
     }
 

@@ -54,19 +54,17 @@ export const styles = (theme) => ({
     ...theme.typography.body2,
     minHeight: 'auto',
   },
+  /* Styles applied to a Menu Item's children when a subMenu is present */
   subMenuItemWrapper: {
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
   },
+  /* Styles applied to the subMenuIcon when it is present */
   subMenuIcon: {
     marginLeft: theme.spacing(2),
   },
-  focusAfterSubMenuClose: {
-    '&:focus': {
-      backgroundColor: theme.palette.action.selected,
-    },
-  },
+  /* Styles applied to subMenuIcon when dirction is 'rtl' */
   rtlSubMenuIcon: {
     transform: 'rotate(-180deg)',
   },
@@ -123,7 +121,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
 
   const listItem = (
     <ListItem
-      key={key || subMenu && "MenuItem"}
+      key={key || (subMenu && 'MenuItem')}
       button
       role={role}
       tabIndex={tabIndex}
@@ -165,17 +163,19 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
 
   return [
     listItem,
-    openSubMenu ? React.cloneElement(subMenu, {
-      key: 'subMenu',
-      anchorEl: listItemRef.current,
-      anchorOrigin: theme.direction === 'rtl' ? RTL_ANCHOR_ORIGIN : LTR_ANCHOR_ORIGIN,
-      MenuListProps: { ...MenuListProps, isSubMenu: true },
-      open: openSubMenu,
-      onClose: createChainedFunction(handleParentClose, subOnClose),
-      setParentLastEnteredItemIndex,
-      transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
-      ...allowedSubMenuProps,
-    }) : undefined,
+    openSubMenu
+      ? React.cloneElement(subMenu, {
+          key: 'subMenu',
+          anchorEl: listItemRef.current,
+          anchorOrigin: theme.direction === 'rtl' ? RTL_ANCHOR_ORIGIN : LTR_ANCHOR_ORIGIN,
+          MenuListProps: { ...MenuListProps, isSubMenu: true },
+          open: openSubMenu,
+          onClose: createChainedFunction(handleParentClose, subOnClose),
+          setParentLastEnteredItemIndex,
+          transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
+          ...allowedSubMenuProps,
+        })
+      : undefined,
   ];
 });
 
