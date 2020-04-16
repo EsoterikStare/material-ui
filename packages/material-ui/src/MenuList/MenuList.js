@@ -306,7 +306,9 @@ MenuList.propTypes = {
    */
   disableListWrap: PropTypes.bool,
   /**
-   * @ignore
+   * If `true`, the MenuList is within a nested
+   * menu of a parent Menu, causing it to stop
+   * event propogation through the component
    */
   isSubMenu: PropTypes.bool,
   /**
