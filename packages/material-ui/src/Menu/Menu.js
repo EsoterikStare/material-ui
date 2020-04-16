@@ -172,7 +172,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const handleSetLastEnteredItemIndex = (value) => {
     if (value === null) {
-      contentAnchorRef.current.focus();
+      contentAnchorRef.current.offsetParent.children[lastEnteredItemIndex].focus();
     }
     setLastEnteredItemIndex(value);
   };
