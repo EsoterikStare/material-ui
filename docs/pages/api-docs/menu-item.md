@@ -34,6 +34,8 @@ The `MuiMenuItem` name can be used for providing [default props](/customization/
 | <span class="prop-name">dense</span> | <span class="prop-type">bool</span> |  | If `true`, compact vertical padding designed for keyboard and mouse input will be used. |
 | <span class="prop-name">disableGutters</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the left and right padding is removed. |
 | <span class="prop-name">ListItemClasses</span> | <span class="prop-type">object</span> |  | `classes` prop applied to the [`ListItem`](/api/list-item/) element. |
+| <span class="prop-name">subMenu</span> | <span class="prop-type">node</span> |  | The sub-Menu that a Menu item will render |
+| <span class="prop-name">subMenuIcon</span> | <span class="prop-type">node</span> | <span class="prop-default">KeyboardArrowRight</span> | The icon used to indicate a Menu item has a sub-Menu. |
 
 The `ref` is forwarded to the root element.
 
@@ -47,6 +49,9 @@ Any other props supplied will be provided to the root element ([ListItem](/api/l
 | <span class="prop-name">gutters</span> | <span class="prop-name">.MuiMenuItem-gutters</span> | Styles applied to the root element if `disableGutters={false}`.
 | <span class="prop-name">selected</span> | <span class="prop-name">.Mui-selected</span> | Styles applied to the root element if `selected={true}`.
 | <span class="prop-name">dense</span> | <span class="prop-name">.MuiMenuItem-dense</span> | Styles applied to the root element if dense.
+| <span class="prop-name">subMenuItemWrapper</span> | <span class="prop-name">.MuiMenuItem-subMenuItemWrapper</span> | Styles applied to a Menu Item's children when a subMenu is present
+| <span class="prop-name">subMenuIcon</span> | <span class="prop-name">.MuiMenuItem-subMenuIcon</span> | Styles applied to the subMenuIcon when it is present
+| <span class="prop-name">rtlSubMenuIcon</span> | <span class="prop-name">.MuiMenuItem-rtlSubMenuIcon</span> | Styles applied to subMenuIcon when dirction is 'rtl'
 
 You can override the style of the component thanks to one of these customization points:
 
