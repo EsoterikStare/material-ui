@@ -116,7 +116,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     MenuListProps, // Needs to be spread into subMenu prop
     isSubMenu, // disallowed
     open, // disallowed
-    setParentJustArrowedLeft: setParentJustArrowedLeftProp, // disallowed
     setParentLastEnteredItemIndex: setParentLastEnteredItemIndexProp, // disallowed
     onClose: subOnClose, // Needs to be combined with parentOnClose on the subMenu
     ...allowedSubMenuProps
@@ -173,7 +172,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       MenuListProps: { ...MenuListProps, isSubMenu: true },
       open: openSubMenu,
       onClose: createChainedFunction(handleParentClose, subOnClose),
-      setParentJustArrowedLeft,
       setParentLastEnteredItemIndex,
       transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
       ...allowedSubMenuProps,

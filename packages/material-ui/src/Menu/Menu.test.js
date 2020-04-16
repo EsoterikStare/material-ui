@@ -498,31 +498,31 @@ describe('<Menu />', () => {
       assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
     });
 
-    // it('changes focus with left and right arrow buttons', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('changes focus with left and right arrow buttons', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find("#settings-item").last().simulate('keyDown', {
-    //     key: 'ArrowRight'
-    //   });
+      wrapper.find("#settings-item").last().simulate('keyDown', {
+        key: 'ArrowRight'
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
 
-    //   wrapper.find("#dark-mode").last().simulate('keyDown', {
-    //     key: 'ArrowLeft'
-    //   });
-    //   assert.strictEqual(wrapper.find('#settings-item').last().hasClass("Mui-focusVisible"), true);
+      wrapper.find("#dark-mode").last().simulate('keyDown', {
+        key: 'ArrowLeft'
+      });
+      assert.strictEqual(wrapper.find('#settings-item').last().hasClass("Mui-focusVisible"), true);
 
-    //   wrapper.find("#settings-item").last().simulate('keyDown', {
-    //     key: 'ArrowRight'
-    //   });
+      wrapper.find("#settings-item").last().simulate('keyDown', {
+        key: 'ArrowRight'
+      });
 
-    //   assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
-    // });
+      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+    });
   });
 });

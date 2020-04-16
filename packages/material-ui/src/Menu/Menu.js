@@ -56,7 +56,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     open,
     PaperProps = {},
     PopoverClasses,
-    setParentJustArrowedLeft,
     setParentLastEnteredItemIndex,
     transitionDuration = 'auto',
     variant = 'selectedMenu',
@@ -66,7 +65,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const [lastEnteredItemIndex, setLastEnteredItemIndex] = React.useState(null);
   const [entering, setEntering] = React.useState(false);
-  const [justArrowedLeft, setJustArrowedLeft] = React.useState(false);
   const isSubMenu = typeof setParentLastEnteredItemIndex !== 'undefined';
 
   const atLeastOneSubMenu = React.useMemo(() => {
@@ -134,9 +132,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       event.stopPropagation();
       event.preventDefault();
       setParentLastEnteredItemIndex(null);
-      setParentJustArrowedLeft(true);
-    } else {
-      setJustArrowedLeft(false);
     }
   };
 
@@ -173,6 +168,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       }
     }
   });
+
+  const handleSetLastEnteredItemIndex = (value) => {
+    if (value === null) {
+      contentAnchorRef.current.focus();
+    }
+    setLastEnteredItemIndex(value)
+  }
 
   const items = React.Children.map(children, (child, index) => {
     if (!React.isValidElement(child)) {
@@ -216,9 +218,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       Object.assign(additionalProps, {
         handleArrowRightKeydown,
         openSubMenu: index === lastEnteredItemIndex && !entering,
-        setParentLastEnteredItemIndex: setLastEnteredItemIndex,
-        setParentJustArrowedLeft: setJustArrowedLeft,
-        tempFocus: justArrowedLeft
+        setParentLastEnteredItemIndex: handleSetLastEnteredItemIndex
       });
     }
 
@@ -379,10 +379,6 @@ Menu.propTypes = {
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   PopoverClasses: PropTypes.object,
-  /**
-   * @ignore
-   */
-  setParentJustArrowedLeft: PropTypes.func,
   /**
    * @ignore
    */
