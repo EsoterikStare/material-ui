@@ -4,8 +4,10 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
 import Box from '@material-ui/core/Box';
+import useTheme from '@material-ui/styles/useTheme';
 
 export default function CascadingMenu() {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -29,7 +31,7 @@ export default function CascadingMenu() {
       <Menu
         id="cascading-menu"
         anchorEl={anchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: theme.direction === 'rtl' ? 'left' : 'right' }}
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
@@ -43,7 +45,6 @@ export default function CascadingMenu() {
                 </Box>
               </MenuItem>
               <MenuItem
-                onClick={handleClose}
                 subMenu={
                   <Menu>
                     <MenuItem onClick={handleClose}>75%</MenuItem>

@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ListItem from '../ListItem';
 import KeyboardArrowRight from '../internal/svg-icons/KeyboardArrowRight';
-import KeyboardArrowLeft from '../internal/svg-icons/KeyboardArrowLeft';
 import createChainedFunction from '../utils/createChainedFunction';
 import useForkRef from '../utils/useForkRef';
 import useTheme from '../styles/useTheme';
@@ -65,14 +64,17 @@ export const styles = (theme) => ({
   },
   focusAfterSubMenuClose: {
     '&:focus': {
-      backgroundColor: theme.palette.action.selected
-    }
-  }
+      backgroundColor: theme.palette.action.selected,
+    },
+  },
+  rtlSubMenuIcon: {
+    transform: 'rotate(-180deg)',
+  },
 });
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   const theme = useTheme();
-  
+
   const {
     children,
     classes,
@@ -80,13 +82,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     component = 'li',
     disableGutters = false,
     handleArrowRightKeydown,
+    key,
     ListItemClasses,
     openSubMenu = false,
     onKeyDown,
     role = 'menuitem',
     selected,
     subMenu,
-    subMenuIcon: SubMenuIcon = theme.direction === 'rtl' ? KeyboardArrowLeft : KeyboardArrowRight,
+    subMenuIcon: SubMenuIcon = KeyboardArrowRight,
     setParentJustArrowedLeft,
     setParentLastEnteredItemIndex,
     tabIndex: tabIndexProp,
@@ -119,9 +122,9 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     ...allowedSubMenuProps
   } = subMenu ? subMenu.props : {};
 
-  const listItemAndSubMenu = [
+  const listItem = (
     <ListItem
-      key="MenuItem"
+      key={key || subMenu && "MenuItem"}
       button
       role={role}
       tabIndex={tabIndex}
@@ -134,7 +137,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         {
           [classes.selected]: selected,
           [classes.gutters]: !disableGutters,
-          [classes.focusAfterSubMenuClose]: tempFocus
+          [classes.focusAfterSubMenuClose]: tempFocus,
         },
         className,
       )}
@@ -147,29 +150,35 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       {subMenu ? (
         <div className={classes.subMenuItemWrapper}>
           {children}
-          <SubMenuIcon className={classes.subMenuIcon} />
+          <SubMenuIcon
+            className={clsx(classes.subMenuIcon, {
+              [classes.rtlSubMenuIcon]: theme.direction === 'rtl',
+            })}
+          />
         </div>
       ) : (
         children
       )}
-    </ListItem>,
-    openSubMenu
-      ? React.cloneElement(subMenu, {
-          key: 'subMenu',
-          anchorEl: listItemRef.current,
-          anchorOrigin: theme.direction === 'rtl' ? RTL_ANCHOR_ORIGIN : LTR_ANCHOR_ORIGIN,
-          MenuListProps: { ...MenuListProps, isSubMenu: true },
-          open: openSubMenu,
-          onClose: createChainedFunction(handleParentClose, subOnClose),
-          setParentJustArrowedLeft,
-          setParentLastEnteredItemIndex,
-          transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
-          ...allowedSubMenuProps,
-        })
-      : null,
-  ];
+    </ListItem>
+  );
 
-  return listItemAndSubMenu;
+  if (!subMenu) return listItem;
+
+  return [
+    listItem,
+    openSubMenu ? React.cloneElement(subMenu, {
+      key: 'subMenu',
+      anchorEl: listItemRef.current,
+      anchorOrigin: theme.direction === 'rtl' ? RTL_ANCHOR_ORIGIN : LTR_ANCHOR_ORIGIN,
+      MenuListProps: { ...MenuListProps, isSubMenu: true },
+      open: openSubMenu,
+      onClose: createChainedFunction(handleParentClose, subOnClose),
+      setParentJustArrowedLeft,
+      setParentLastEnteredItemIndex,
+      transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
+      ...allowedSubMenuProps,
+    }) : undefined,
+  ];
 });
 
 MenuItem.propTypes = {
@@ -207,10 +216,14 @@ MenuItem.propTypes = {
    * @ignore
    */
   handleArrowRightKeydown: PropTypes.func,
-    /**
+  /**
    * @ignore
    */
   handleParentClose: PropTypes.func,
+  /**
+   * @ignore
+   */
+  key: PropTypes.any,
   /**
    * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
    */
