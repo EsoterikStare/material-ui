@@ -3,19 +3,13 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
-import { makeStyles } from '@material-ui/styles';
+import Box from '@material-ui/core/Box';
 
-const useStyles = makeStyles((theme) => ({
-  switchWrapper: {
-    marginLeft: theme.spacing(2),
-  },
-}));
 
 export default function CascadingMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
-  const classes = useStyles();
 
   const handleButtonClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -46,9 +40,9 @@ export default function CascadingMenu() {
             <Menu>
               <MenuItem onClick={swapDarkMode}>
                 Dark Mode
-                <div className={classes.switchWrapper}>
+                <Box ml={1}>
                   <Switch size="small" checked={darkMode} />
-                </div>
+                </Box>
               </MenuItem>
               <MenuItem
                 onClick={handleClose}
