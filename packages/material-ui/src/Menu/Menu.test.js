@@ -334,7 +334,7 @@ describe('<Menu />', () => {
 
       wrapper.find("#go-deeper-1").last().simulate('mousemove');
 
-      clock.tick(300);
+      clock.tick(1000);
       wrapper.update();
 
       assert.strictEqual(wrapper.find('#go-deeper-2').exists(), true);
