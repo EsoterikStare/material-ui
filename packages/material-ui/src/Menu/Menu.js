@@ -383,8 +383,7 @@ Menu.propTypes = {
    */
   PopoverClasses: PropTypes.object,
   /**
-   * Function passed to nested menus to maintain the last index of an
-   * entered child to orchestrate menu open/close states.
+   * @ignore
    */
   setParentLastEnteredItemIndex: PropTypes.func,
   /**

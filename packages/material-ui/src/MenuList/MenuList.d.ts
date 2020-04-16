@@ -24,11 +24,6 @@ export interface MenuListProps extends StandardProps<ListProps, MenuListClassKey
    * If `true`, the menu items will not wrap focus.
    */
   disableListWrap?: boolean;
-  /**
-   * If `true`, the MenuList is within a nested
-   * menu of a parent Menu, causing it to stop
-   * event propogation through the component
-   */
   isSubMenu?: boolean;
   /**
    * The variant to use. Use `menu` to prevent selected items from impacting the initial focus
