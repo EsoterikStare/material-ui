@@ -5,11 +5,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
 import Box from '@material-ui/core/Box';
 
-
 export default function CascadingMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
-
 
   const handleButtonClick = (event) => {
     setAnchorEl(event.currentTarget);
