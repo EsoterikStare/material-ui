@@ -1,8 +1,33 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ListItem from '../ListItem';
+import KeyboardArrowRight from '../internal/svg-icons/KeyboardArrowRight';
+import createChainedFunction from '../utils/createChainedFunction';
+import useForkRef from '../utils/useForkRef';
+import useTheme from '../styles/useTheme';
+
+const RTL_ANCHOR_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'left',
+};
+
+const LTR_ANCHOR_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'right',
+};
+
+const RTL_TRANSFORM_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'right',
+};
+
+const LTR_TRANSFORM_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'left',
+};
 
 export const styles = (theme) => ({
   /* Styles applied to the root element. */
@@ -29,28 +54,76 @@ export const styles = (theme) => ({
     ...theme.typography.body2,
     minHeight: 'auto',
   },
+  subMenuItemWrapper: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  subMenuIcon: {
+    marginLeft: theme.spacing(2),
+  },
+  focusAfterSubMenuClose: {
+    '&:focus': {
+      backgroundColor: theme.palette.action.selected,
+    },
+  },
+  rtlSubMenuIcon: {
+    transform: 'rotate(-180deg)',
+  },
 });
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
+  const theme = useTheme();
+
   const {
+    children,
     classes,
     className,
     component = 'li',
     disableGutters = false,
+    handleArrowRightKeydown,
+    key,
     ListItemClasses,
+    openSubMenu = false,
+    onKeyDown,
     role = 'menuitem',
     selected,
+    subMenu,
+    subMenuIcon: SubMenuIcon = KeyboardArrowRight,
+    setParentJustArrowedLeft,
+    setParentLastEnteredItemIndex,
     tabIndex: tabIndexProp,
+    tempFocus,
+    handleParentClose,
     ...other
   } = props;
+
+  const listItemRef = React.useRef(null);
+  const handleOwnRef = React.useCallback((instance) => {
+    // #StrictMode ready
+    listItemRef.current = ReactDOM.findDOMNode(instance);
+  }, []);
+  const handleRef = useForkRef(handleOwnRef, ref);
 
   let tabIndex;
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
 
-  return (
+  const {
+    anchorEl, // disallowed
+    handleParentClose: handleParentCloseProp, // disallowed
+    MenuListProps, // Needs to be spread into subMenu prop
+    isSubMenu, // disallowed
+    open, // disallowed
+    setParentLastEnteredItemIndex: setParentLastEnteredItemIndexProp, // disallowed
+    onClose: subOnClose, // Needs to be combined with parentOnClose on the subMenu
+    ...allowedSubMenuProps
+  } = subMenu ? subMenu.props : {};
+
+  const listItem = (
     <ListItem
+      key={key || subMenu && "MenuItem"}
       button
       role={role}
       tabIndex={tabIndex}
@@ -63,13 +136,47 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         {
           [classes.selected]: selected,
           [classes.gutters]: !disableGutters,
+          [classes.focusAfterSubMenuClose]: tempFocus,
         },
         className,
       )}
-      ref={ref}
+      onKeyDown={createChainedFunction(handleArrowRightKeydown, onKeyDown)}
+      ref={handleRef}
+      aria-expanded={subMenu ? openSubMenu : undefined}
+      aria-haspopup={subMenu ? true : undefined}
       {...other}
-    />
+    >
+      {subMenu ? (
+        <div className={classes.subMenuItemWrapper}>
+          {children}
+          <SubMenuIcon
+            className={clsx(classes.subMenuIcon, {
+              [classes.rtlSubMenuIcon]: theme.direction === 'rtl',
+            })}
+          />
+        </div>
+      ) : (
+        children
+      )}
+    </ListItem>
   );
+
+  if (!subMenu) return listItem;
+
+  return [
+    listItem,
+    openSubMenu ? React.cloneElement(subMenu, {
+      key: 'subMenu',
+      anchorEl: listItemRef.current,
+      anchorOrigin: theme.direction === 'rtl' ? RTL_ANCHOR_ORIGIN : LTR_ANCHOR_ORIGIN,
+      MenuListProps: { ...MenuListProps, isSubMenu: true },
+      open: openSubMenu,
+      onClose: createChainedFunction(handleParentClose, subOnClose),
+      setParentLastEnteredItemIndex,
+      transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
+      ...allowedSubMenuProps,
+    }) : undefined,
+  ];
 });
 
 MenuItem.propTypes = {
@@ -104,9 +211,33 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
+   * @ignore
+   */
+  handleArrowRightKeydown: PropTypes.func,
+  /**
+   * @ignore
+   */
+  handleParentClose: PropTypes.func,
+  /**
+   * @ignore
+   */
+  key: PropTypes.any,
+  /**
    * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
    */
   ListItemClasses: PropTypes.object,
+  /**
+   * @ignore
+   */
+  onKeyDown: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onMouseEnter: PropTypes.func,
+  /**
+   * @ignore
+   */
+  openSubMenu: PropTypes.bool,
   /**
    * @ignore
    */
@@ -118,7 +249,27 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
+  setParentJustArrowedLeft: PropTypes.func,
+  /**
+   * @ignore
+   */
+  setParentLastEnteredItemIndex: PropTypes.func,
+  /**
+   * The sub-Menu that a Menu item will render
+   */
+  subMenu: PropTypes.node,
+  /**
+   * The icon used to indicate a Menu item has a sub-Menu.
+   */
+  subMenuIcon: PropTypes.node,
+  /**
+   * @ignore
+   */
   tabIndex: PropTypes.number,
+  /**
+   * @ignore
+   */
+  tempFocus: PropTypes.bool,
 };
 
 export default withStyles(styles, { name: 'MuiMenuItem' })(MenuItem);

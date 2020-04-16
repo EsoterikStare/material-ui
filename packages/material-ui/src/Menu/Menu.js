@@ -1,11 +1,11 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { isFragment } from 'react-is';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import Popover from '../Popover';
 import MenuList from '../MenuList';
-import * as ReactDOM from 'react-dom';
 import setRef from '../utils/setRef';
 import useTheme from '../styles/useTheme';
 
@@ -34,6 +34,12 @@ export const styles = {
     // We disable the focus ring for mouse, touch and keyboard users.
     outline: 0,
   },
+  disablePointerEvents: {
+    pointerEvents: 'none', // To stop Modal from capturing hover events
+  },
+  enablePointerEvents: {
+    pointerEvents: 'auto', // To enable capturing hover events on MenuList
+  },
 };
 
 const Menu = React.forwardRef(function Menu(props, ref) {
@@ -44,15 +50,31 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     disableAutoFocusItem = false,
     MenuListProps = {},
     onClose,
+    onEnter,
     onEntering,
+    onEntered,
     open,
     PaperProps = {},
     PopoverClasses,
+    setParentLastEnteredItemIndex,
     transitionDuration = 'auto',
     variant = 'selectedMenu',
     ...other
   } = props;
   const theme = useTheme();
+
+  const [lastEnteredItemIndex, setLastEnteredItemIndex] = React.useState(null);
+  const [entering, setEntering] = React.useState(false);
+  const isSubMenu = typeof setParentLastEnteredItemIndex !== 'undefined';
+
+  const atLeastOneSubMenu = React.useMemo(() => {
+    return (
+      isSubMenu ||
+      React.Children.toArray(children).some(
+        (child) => React.isValidElement(child) && child.props && child.props.subMenu,
+      )
+    );
+  }, [children, isSubMenu]);
 
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
 
@@ -60,6 +82,17 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const contentAnchorRef = React.useRef(null);
 
   const getContentAnchorEl = () => contentAnchorRef.current;
+
+  const handleEnter = (element, isAppearing) => {
+    if (atLeastOneSubMenu) {
+      setEntering(true);
+      setLastEnteredItemIndex(null);
+    }
+
+    if (onEnter) {
+      onEnter(element, isAppearing);
+    }
+  };
 
   const handleEntering = (element, isAppearing) => {
     if (menuListActionsRef.current) {
@@ -71,13 +104,34 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   };
 
-  const handleListKeyDown = (event) => {
-    if (event.key === 'Tab') {
-      event.preventDefault();
+  const handleEntered = (element, isAppearing) => {
+    if (atLeastOneSubMenu) setEntering(false);
 
-      if (onClose) {
-        onClose(event, 'tabKeyDown');
-      }
+    if (onEntered) {
+      onEntered(element, isAppearing);
+    }
+  };
+
+  const handleOnClose = event => 
+  {
+    event.preventDefault();
+    setLastEnteredItemIndex(null);
+    if (onClose) {
+      onClose(event, `${event.key.toLowerCase()}KeyDown`);
+    }
+  }
+
+  const handleListKeyDown = (event) => {
+    if (event.key === 'Tab' || event.key === 'Escape') {
+      handleOnClose(event);
+    }
+
+    if (event.key === 'ArrowLeft' && isSubMenu) {
+      // Tell the parent Menu to close the sub Menu that you're in, but
+      // don't trigger the sub Menu onClose cascade.
+      event.stopPropagation();
+      event.preventDefault();
+      setParentLastEnteredItemIndex(null);
     }
   };
 
@@ -115,9 +169,32 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   });
 
+  const handleSetLastEnteredItemIndex = (value) => {
+    if (value === null) {
+      contentAnchorRef.current.focus();
+    }
+    setLastEnteredItemIndex(value)
+  }
+
   const items = React.Children.map(children, (child, index) => {
+    if (!React.isValidElement(child)) {
+      return;
+    }
+
+    const { subMenu, onMouseMove: onMouseMoveChildProp } = child.props;
+    const { anchorEl } = other;
+
+    const hasSubMenu = Boolean(subMenu);
+    const parentMenuOpen = Boolean(anchorEl);
+
+    let additionalPropsAdded = false;
+    const additionalProps = {};
+
+    // This is the original purpose of this React.Children.map and is basically unchanged.
     if (index === activeItemIndex) {
-      return React.cloneElement(child, {
+      additionalPropsAdded = true;
+
+      Object.assign(additionalProps, {
         ref: (instance) => {
           // #StrictMode ready
           contentAnchorRef.current = ReactDOM.findDOMNode(instance);
@@ -126,15 +203,68 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       });
     }
 
+    // If the current Menu item in this map has a subMenu,
+    // we need the parent Menu to orchestrate its subMenu
+    if (hasSubMenu && parentMenuOpen) {
+      additionalPropsAdded = true;
+
+      const handleArrowRightKeydown = (event) => {
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          setLastEnteredItemIndex(index);
+        }
+      };
+
+      Object.assign(additionalProps, {
+        handleArrowRightKeydown,
+        openSubMenu: index === lastEnteredItemIndex && !entering,
+        setParentLastEnteredItemIndex: handleSetLastEnteredItemIndex
+      });
+    }
+
+    // If there are ANY children with subMenus, then ALL
+    // of the children need to know how to close any open subMenus
+    // and reset the state that controls which subMenu is open.
+    if (atLeastOneSubMenu) {
+      additionalPropsAdded = true;
+
+      Object.assign(additionalProps, {
+        onMouseMove: (e) => {
+          setLastEnteredItemIndex(index);
+          if (onMouseMoveChildProp) {
+            onMouseMoveChildProp(e);
+          }
+        },
+        handleParentClose: handleOnClose
+      });
+    }
+
+    // Using a semaphore instead of inspecting addtionalProps
+    // directly to avoid performance hits at scale. Might be
+    // fine to just do Object.keys(additionalProps).length > 0,
+    // but that seems like iterations we can avoid.
+    if (additionalPropsAdded) {
+      // eslint-disable-next-line consistent-return
+      return React.cloneElement(child, {
+        ...additionalProps,
+      });
+    }
+
+    // eslint-disable-next-line consistent-return
     return child;
   });
 
   return (
     <Popover
       getContentAnchorEl={getContentAnchorEl}
+      className={clsx({
+        [classes.disablePointerEvents]: isSubMenu,
+      })}
       classes={PopoverClasses}
       onClose={onClose}
+      onEnter={handleEnter}
       onEntering={handleEntering}
+      onEntered={handleEntered}
       anchorOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       PaperProps={{
@@ -157,7 +287,9 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         autoFocusItem={autoFocusItem}
         variant={variant}
         {...MenuListProps}
-        className={clsx(classes.list, MenuListProps.className)}
+        className={clsx(classes.list, MenuListProps.className, {
+          [classes.enablePointerEvents]: isSubMenu,
+        })}
       >
         {items}
       </MenuList>
@@ -247,6 +379,10 @@ Menu.propTypes = {
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   PopoverClasses: PropTypes.object,
+  /**
+   * @ignore
+   */
+  setParentLastEnteredItemIndex: PropTypes.func,
   /**
    * The length of the transition in `ms`, or 'auto'
    */

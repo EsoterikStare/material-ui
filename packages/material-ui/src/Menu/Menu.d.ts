@@ -80,6 +80,11 @@ export interface MenuProps
    */
   PopoverClasses?: PopoverProps['classes'];
   /**
+   * Function passed to nested menus to maintain the last index of an
+   * entered child to orchestrate menu open/close states.
+   */
+  setParentLastEnteredItemIndex?: (index: number) => void;
+  /**
    * The length of the transition in `ms`, or 'auto'
    */
   transitionDuration?: TransitionProps['timeout'] | 'auto';
