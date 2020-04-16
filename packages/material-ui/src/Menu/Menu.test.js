@@ -271,7 +271,7 @@ describe('<Menu />', () => {
     afterEach(() => {
       wrapper.unmount();
     });
-  
+
     after(() => {
       clock.restore();
       cascadeMount.cleanUp();
@@ -280,7 +280,7 @@ describe('<Menu />', () => {
     const CascadingMenu = (props) => {
       const [anchorEl, setAnchorEl] = React.useState(null);
 
-      const handleButtonClick = event => {
+      const handleButtonClick = (event) => {
         setAnchorEl(event.currentTarget);
       };
 
@@ -290,9 +290,7 @@ describe('<Menu />', () => {
 
       return (
         <div>
-          <Button onClick={handleButtonClick}>
-            Open Menu
-          </Button>
+          <Button onClick={handleButtonClick}>Open Menu</Button>
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -300,24 +298,53 @@ describe('<Menu />', () => {
             transitionDuration={0}
             {...props}
           >
-            <MenuItem id="settings-item" subMenu={<Menu>
-              <MenuItem id="dark-mode" onClick={handleItemClick}>Dark Mode</MenuItem>
-              <MenuItem id="go-deeper-1" subMenu={<Menu>
-                <MenuItem key="deeper2" id="go-deeper-2">Go deeper</MenuItem>
-              </Menu>}>Go deeper</MenuItem>
-            </Menu>}>Settings</MenuItem>
-            <MenuItem id="account-item" subMenu={<Menu>
-              <MenuItem id="reset-password" onClick={handleItemClick}>Reset password</MenuItem>
-              <MenuItem id="change-username" onClick={handleItemClick}>Change username</MenuItem>
-            </Menu>}>My account</MenuItem>
+            <MenuItem
+              id="settings-item"
+              subMenu={
+                <Menu>
+                  <MenuItem id="dark-mode" onClick={handleItemClick}>
+                    Dark Mode
+                  </MenuItem>
+                  <MenuItem
+                    id="go-deeper-1"
+                    subMenu={
+                      <Menu>
+                        <MenuItem key="deeper2" id="go-deeper-2">
+                          Go deeper
+                        </MenuItem>
+                      </Menu>
+                    }
+                  >
+                    Go deeper
+                  </MenuItem>
+                </Menu>
+              }
+            >
+              Settings
+            </MenuItem>
+            <MenuItem
+              id="account-item"
+              subMenu={
+                <Menu>
+                  <MenuItem id="reset-password" onClick={handleItemClick}>
+                    Reset password
+                  </MenuItem>
+                  <MenuItem id="change-username" onClick={handleItemClick}>
+                    Change username
+                  </MenuItem>
+                </Menu>
+              }
+            >
+              My account
+            </MenuItem>
           </Menu>
         </div>
       );
-    }
-    
+    };
+
     it('displays a sub menu level 1', () => {
       wrapper.find(Button).simulate('click');
-      wrapper.find("#settings-item").last().simulate('mousemove');
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
@@ -327,14 +354,14 @@ describe('<Menu />', () => {
 
     it('displays a sub menu level 2', () => {
       wrapper.find(Button).simulate('click');
-      wrapper.find("#settings-item").last().simulate('mousemove');
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#go-deeper-1").last().simulate('mousemove');
+      wrapper.find('#go-deeper-1').last().simulate('mousemove');
 
-      clock.tick(1000);
+      clock.tick(500);
       wrapper.update();
 
       assert.strictEqual(wrapper.find('#go-deeper-2').exists(), true);
@@ -342,18 +369,18 @@ describe('<Menu />', () => {
 
     it('sub menus collapse when parent menu is changed', () => {
       wrapper.find(Button).simulate('click');
-      wrapper.find("#settings-item").last().simulate('mousemove');
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#account-item").last().simulate('mousemove');
+      wrapper.find('#account-item').last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
       assert.strictEqual(wrapper.find('#change-username').exists(), true);
-      wrapper.find("#settings-item").last().simulate('mousemove');
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
@@ -363,19 +390,19 @@ describe('<Menu />', () => {
 
     it('sub menu stays open when mouse is outside of menu', () => {
       wrapper.find(Button).simulate('click');
-      wrapper.find("#settings-item").last().simulate('mousemove');
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
       assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-      wrapper.find("#dark-mode").last().simulate('mousemove');
-      wrapper.find("#dark-mode").last().simulate('mouseout');
+      wrapper.find('#dark-mode').last().simulate('mousemove');
+      wrapper.find('#dark-mode').last().simulate('mouseout');
       wrapper.find(Button).simulate('mouseenter');
 
-      assert.strictEqual(wrapper.find("#dark-mode").last().exists(), true);
-    })
+      assert.strictEqual(wrapper.find('#dark-mode').last().exists(), true);
+    });
 
     it('opens a sub Menu on RightArrow keydown', () => {
       wrapper.find(Button).simulate('click');
@@ -383,8 +410,8 @@ describe('<Menu />', () => {
       clock.tick(200);
       wrapper.update();
 
-      wrapper.find("#settings-item").last().simulate('keyDown', {
-        key: 'ArrowRight'
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
       });
 
       clock.tick(200);
@@ -401,8 +428,8 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#settings-item").last().simulate('keyDown', {
-        key: 'ArrowRight'
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
       });
 
       clock.tick(0);
@@ -410,8 +437,8 @@ describe('<Menu />', () => {
 
       assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-      wrapper.find("#dark-mode").last().simulate('keyDown', {
-        key: 'ArrowLeft'
+      wrapper.find('#dark-mode').last().simulate('keyDown', {
+        key: 'ArrowLeft',
       });
 
       clock.tick(0);
@@ -426,8 +453,8 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#settings-item").last().simulate('keyDown', {
-        key: 'ArrowRight'
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
       });
 
       clock.tick(0);
@@ -435,8 +462,8 @@ describe('<Menu />', () => {
 
       assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-      wrapper.find("#dark-mode").last().simulate('keyDown', {
-        key: 'Tab'
+      wrapper.find('#dark-mode').last().simulate('keyDown', {
+        key: 'Tab',
       });
 
       clock.tick(0);
@@ -452,8 +479,8 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#settings-item").last().simulate('keyDown', {
-        key: 'ArrowRight'
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
       });
 
       clock.tick(0);
@@ -461,8 +488,8 @@ describe('<Menu />', () => {
 
       assert.strictEqual(wrapper.find('#dark-mode').exists(), true);
 
-      wrapper.find("#dark-mode").last().simulate('keyDown', {
-        key: 'Escape'
+      wrapper.find('#dark-mode').last().simulate('keyDown', {
+        key: 'Escape',
       });
 
       clock.tick(0);
@@ -478,24 +505,24 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#settings-item").last().simulate('keyDown', {
-        key: 'ArrowRight'
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
       });
 
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass('Mui-focusVisible'), true);
 
-      wrapper.find("#dark-mode").last().simulate('keyDown', {
-        key: 'ArrowDown'
+      wrapper.find('#dark-mode').last().simulate('keyDown', {
+        key: 'ArrowDown',
       });
-      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), false);
+      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass('Mui-focusVisible'), false);
 
-      wrapper.find("#dark-mode").last().simulate('keyDown', {
-        key: 'ArrowUp'
+      wrapper.find('#dark-mode').last().simulate('keyDown', {
+        key: 'ArrowUp',
       });
-      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass('Mui-focusVisible'), true);
     });
 
     it('changes focus with left and right arrow buttons', () => {
@@ -504,25 +531,25 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      wrapper.find("#settings-item").last().simulate('keyDown', {
-        key: 'ArrowRight'
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
       });
 
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass('Mui-focusVisible'), true);
 
-      wrapper.find("#dark-mode").last().simulate('keyDown', {
-        key: 'ArrowLeft'
+      wrapper.find('#dark-mode').last().simulate('keyDown', {
+        key: 'ArrowLeft',
       });
-      assert.strictEqual(wrapper.find('#settings-item').last().hasClass("Mui-focusVisible"), true);
+      assert.strictEqual(wrapper.find('#settings-item').last().hasClass('Mui-focusVisible'), true);
 
-      wrapper.find("#settings-item").last().simulate('keyDown', {
-        key: 'ArrowRight'
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
       });
 
-      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass("Mui-focusVisible"), true);
+      assert.strictEqual(wrapper.find('#dark-mode').last().hasClass('Mui-focusVisible'), true);
     });
   });
 });

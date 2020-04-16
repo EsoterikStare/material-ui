@@ -153,13 +153,8 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
      * trigger this specific handler.
      */
     const currentFocus = ownerDocument(list).activeElement;
-    
-    const capturedKeys = [
-      'ArrowDown',
-      'ArrowUp',
-      'Home',
-      'End'
-    ];
+
+    const capturedKeys = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
 
     if (isSubMenu && capturedKeys.includes(key)) event.stopPropagation();
 
@@ -310,7 +305,7 @@ MenuList.propTypes = {
    * If `true`, the menu items will not wrap focus.
    */
   disableListWrap: PropTypes.bool,
-   /**
+  /**
    * @ignore
    */
   isSubMenu: PropTypes.bool,
