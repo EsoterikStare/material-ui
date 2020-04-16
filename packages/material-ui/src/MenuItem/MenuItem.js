@@ -5,8 +5,30 @@ import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import ListItem from '../ListItem';
 import KeyboardArrowRight from '../internal/svg-icons/KeyboardArrowRight';
+import KeyboardArrowLeft from '../internal/svg-icons/KeyboardArrowLeft';
 import createChainedFunction from '../utils/createChainedFunction';
 import useForkRef from '../utils/useForkRef';
+import useTheme from '../styles/useTheme';
+
+const RTL_ANCHOR_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'left',
+};
+
+const LTR_ANCHOR_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'right',
+};
+
+const RTL_TRANSFORM_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'right',
+};
+
+const LTR_TRANSFORM_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'left',
+};
 
 export const styles = (theme) => ({
   /* Styles applied to the root element. */
@@ -49,6 +71,8 @@ export const styles = (theme) => ({
 });
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
+  const theme = useTheme();
+  
   const {
     children,
     classes,
@@ -62,7 +86,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     role = 'menuitem',
     selected,
     subMenu,
-    subMenuIcon: SubMenuIcon = KeyboardArrowRight,
+    subMenuIcon: SubMenuIcon = theme.direction === 'rtl' ? KeyboardArrowLeft : KeyboardArrowRight,
     setParentJustArrowedLeft,
     setParentLastEnteredItemIndex,
     tabIndex: tabIndexProp,
@@ -133,13 +157,13 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       ? React.cloneElement(subMenu, {
           key: 'subMenu',
           anchorEl: listItemRef.current,
-          anchorOrigin: { vertical: 'top', horizontal: 'right' },
+          anchorOrigin: theme.direction === 'rtl' ? RTL_ANCHOR_ORIGIN : LTR_ANCHOR_ORIGIN,
           MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
           onClose: createChainedFunction(handleParentClose, subOnClose),
           setParentJustArrowedLeft,
           setParentLastEnteredItemIndex,
-          transformOrigin: { vertical: 'top', horizontal: 'left' },
+          transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
           ...allowedSubMenuProps,
         })
       : null,
