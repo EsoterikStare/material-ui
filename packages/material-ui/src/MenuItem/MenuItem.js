@@ -91,7 +91,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     setParentJustArrowedLeft,
     setParentLastEnteredItemIndex,
     tabIndex: tabIndexProp,
-    tempFocus,
     handleParentClose,
     ...other
   } = props;
@@ -134,7 +133,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         {
           [classes.selected]: selected,
           [classes.gutters]: !disableGutters,
-          [classes.focusAfterSubMenuClose]: tempFocus,
         },
         className,
       )}
@@ -266,10 +264,6 @@ MenuItem.propTypes = {
    * @ignore
    */
   tabIndex: PropTypes.number,
-  /**
-   * @ignore
-   */
-  tempFocus: PropTypes.bool,
 };
 
 export default withStyles(styles, { name: 'MuiMenuItem' })(MenuItem);
