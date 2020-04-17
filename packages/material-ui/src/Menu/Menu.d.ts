@@ -79,7 +79,7 @@ export interface MenuProps
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   PopoverClasses?: PopoverProps['classes'];
-  setParentLastEnteredItemIndex?: (index: number) => void;
+  setParentOpenSubMenuIndex?: (index: number) => void;
   /**
    * The length of the transition in `ms`, or 'auto'
    */

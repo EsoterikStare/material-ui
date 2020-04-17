@@ -32,7 +32,7 @@ export type MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> = Omit<
      * Function passed to nested menus to maintain the last index of an
      * entered child to orchestrate menu open/close states.
      */
-    setParentLastEnteredItemIndex?: (index: number) => void;
+    setParentOpenSubMenuIndex?: (index: number) => void;
     /**
      * Menu to display as a sub-menu.
      */
