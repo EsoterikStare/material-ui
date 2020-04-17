@@ -58,16 +58,16 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     open,
     PaperProps = {},
     PopoverClasses,
-    setParentLastEnteredItemIndex,
+    setParentOpenSubMenuIndex,
     transitionDuration = 'auto',
     variant = 'selectedMenu',
     ...other
   } = props;
   const theme = useTheme();
 
-  const [lastEnteredItemIndex, setLastEnteredItemIndex] = React.useState(null);
+  const [openSubMenuIndex, setOpenSubMenuIndex] = React.useState(null);
   const [entering, setEntering] = React.useState(false);
-  const isSubMenu = typeof setParentLastEnteredItemIndex !== 'undefined';
+  const isSubMenu = typeof setParentOpenSubMenuIndex !== 'undefined';
 
   const atLeastOneSubMenu = React.useMemo(() => {
     return (
@@ -88,7 +88,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const handleEnter = (element, isAppearing) => {
     if (atLeastOneSubMenu) {
       setEntering(true);
-      setLastEnteredItemIndex(null);
+      setOpenSubMenuIndex(null);
     }
 
     if (onEnter) {
@@ -116,7 +116,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const handleOnClose = (event) => {
     event.preventDefault();
-    setLastEnteredItemIndex(null);
+    setOpenSubMenuIndex(null);
     if (onClose) {
       onClose(event, `${event.key.toLowerCase()}KeyDown`);
     }
@@ -132,7 +132,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       // don't trigger the sub Menu onClose cascade.
       event.stopPropagation();
       event.preventDefault();
-      setParentLastEnteredItemIndex(null);
+      setParentOpenSubMenuIndex(null);
     }
   };
 
@@ -170,13 +170,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
   });
 
-  const handleSetLastEnteredItemIndex = (value) => {
+  const handleSetOpenSubMenuIndex = (value) => {
     if (value === null) {
       if (contentAnchorRef.current.parentElement) {
-        contentAnchorRef.current.parentElement.children[lastEnteredItemIndex].focus();
+        contentAnchorRef.current.parentElement.children[openSubMenuIndex].focus();
       }
     }
-    setLastEnteredItemIndex(value);
+    setOpenSubMenuIndex(value);
   };
 
   const items = React.Children.map(children, (child, index) => {
@@ -214,14 +214,14 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       const handleArrowRightKeydown = (event) => {
         if (event.key === 'ArrowRight') {
           event.preventDefault();
-          setLastEnteredItemIndex(index);
+          setOpenSubMenuIndex(index);
         }
       };
 
       Object.assign(additionalProps, {
         handleArrowRightKeydown,
-        openSubMenu: index === lastEnteredItemIndex && !entering,
-        setParentLastEnteredItemIndex: handleSetLastEnteredItemIndex,
+        openSubMenu: index === openSubMenuIndex && !entering,
+        setParentOpenSubMenuIndex: handleSetOpenSubMenuIndex,
       });
     }
 
@@ -233,7 +233,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
       Object.assign(additionalProps, {
         onMouseMove: (e) => {
-          setLastEnteredItemIndex(index);
+          setOpenSubMenuIndex(index);
           if (onMouseMoveChildProp) {
             onMouseMoveChildProp(e);
           }
@@ -385,7 +385,7 @@ Menu.propTypes = {
   /**
    * @ignore
    */
-  setParentLastEnteredItemIndex: PropTypes.func,
+  setParentOpenSubMenuIndex: PropTypes.func,
   /**
    * The length of the transition in `ms`, or 'auto'
    */
