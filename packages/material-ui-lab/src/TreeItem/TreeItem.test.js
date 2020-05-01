@@ -283,7 +283,6 @@ describe('<TreeItem />', () => {
       it('should focus the first node if none of the nodes are selected before the tree receives focus', () => {
         const { getByTestId } = render(
           <React.Fragment>
-            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
             <div data-testid="start" tabIndex={0} />
             <TreeView>
               <TreeItem nodeId="1" label="one" data-testid="one" />
@@ -305,7 +304,6 @@ describe('<TreeItem />', () => {
       it('should focus the selected node if a node is selected before the tree receives focus', () => {
         const { getByTestId, getByText } = render(
           <React.Fragment>
-            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
             <div data-testid="start" tabIndex={0} />
             <TreeView>
               <TreeItem nodeId="1" label="one" data-testid="one" />
@@ -330,7 +328,6 @@ describe('<TreeItem />', () => {
       it('should work with programmatic focus', () => {
         const { getByTestId } = render(
           <React.Fragment>
-            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
             <div data-testid="start" tabIndex={0} />
             <TreeView>
               <TreeItem nodeId="1" label="one" data-testid="one" />
@@ -737,6 +734,36 @@ describe('<TreeItem />', () => {
 
           fireEvent.keyDown(document.activeElement, { key: 'v', shiftKey: true });
           expect(getByTestId('apple')).toHaveFocus();
+        });
+
+        it('should not throw when an item is removed', () => {
+          function TestComponent() {
+            const [hide, setState] = React.useState(false);
+            return (
+              <React.Fragment>
+                <button type="button" onClick={() => setState(true)}>
+                  Hide
+                </button>
+                <TreeView>
+                  {!hide && <TreeItem nodeId="hide" label="ab" />}
+                  <TreeItem nodeId="keyDown" data-testid="keyDown" />
+                  <TreeItem nodeId="navTo" data-testid="navTo" label="ac" />
+                </TreeView>
+              </React.Fragment>
+            );
+          }
+
+          const { getByText, getByTestId } = render(<TestComponent />);
+          fireEvent.click(getByText('Hide'));
+          const navTreeItem = getByTestId('navTo');
+          expect(navTreeItem).not.toHaveFocus();
+
+          expect(() => {
+            fireEvent.keyDown(getByTestId('keyDown'), { key: 'a' });
+          }).not.to.throw();
+
+          expect(navTreeItem).toHaveFocus();
+          expect(navTreeItem).to.have.attribute('tabindex', '0');
         });
       });
 

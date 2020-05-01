@@ -77,6 +77,27 @@ describe('<Autocomplete />', () => {
       checkHighlightIs('one');
     });
 
+    it('should keep the highlight on the first item', () => {
+      const options = ['one', 'two'];
+      const { getByRole } = render(
+        <Autocomplete
+          {...defaultProps}
+          value="one"
+          autoHighlight
+          options={options}
+          renderInput={(params) => <TextField autoFocus {...params} />}
+        />,
+      );
+
+      function checkHighlightIs(expected) {
+        expect(getByRole('listbox').querySelector('li[data-focus]')).to.have.text(expected);
+      }
+
+      checkHighlightIs('one');
+      fireEvent.change(document.activeElement, { target: { value: 'two' } });
+      checkHighlightIs('two');
+    });
+
     it('should set the highlight on selected item when dropdown is expanded', () => {
       const { getByRole, setProps } = render(
         <Autocomplete
@@ -1098,6 +1119,50 @@ describe('<Autocomplete />', () => {
       fireEvent.click(queryByTitle('Open'));
       expect(textbox).toHaveFocus();
     });
+
+    it('should mantain list box open clicking on input when it is not empty', () => {
+      const handleChange = spy();
+      const { getByRole, getAllByRole } = render(
+        <Autocomplete
+          onHighlightChange={handleChange}
+          options={['one']}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+      const combobox = getByRole('combobox');
+      const textbox = getByRole('textbox');
+
+      expect(combobox).to.have.attribute('aria-expanded', 'false');
+      fireEvent.mouseDown(textbox); // Open listbox
+      expect(combobox).to.have.attribute('aria-expanded', 'true');
+      const options = getAllByRole('option');
+      fireEvent.click(options[0]);
+      expect(combobox).to.have.attribute('aria-expanded', 'false');
+      fireEvent.mouseDown(textbox); // Open listbox
+      expect(combobox).to.have.attribute('aria-expanded', 'true');
+      fireEvent.mouseDown(textbox); // Remain open listbox
+      expect(combobox).to.have.attribute('aria-expanded', 'true');
+    });
+
+    it('should not toggle list box', () => {
+      const handleChange = spy();
+      const { getByRole } = render(
+        <Autocomplete
+          value="one"
+          onHighlightChange={handleChange}
+          options={['one']}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+      const combobox = getByRole('combobox');
+      const textbox = getByRole('textbox');
+
+      expect(combobox).to.have.attribute('aria-expanded', 'false');
+      fireEvent.mouseDown(textbox);
+      expect(combobox).to.have.attribute('aria-expanded', 'true');
+      fireEvent.mouseDown(textbox);
+      expect(combobox).to.have.attribute('aria-expanded', 'true');
+    });
   });
 
   describe('controlled', () => {
@@ -1526,6 +1591,68 @@ describe('<Autocomplete />', () => {
       );
 
       expect(container.querySelector(`.${classes.root}`)).to.have.class(classes.fullWidth);
+    });
+  });
+
+  describe('prop: onHighlightChange', () => {
+    it('should trigger event when default value is passed', () => {
+      const handleChange = spy();
+      const options = ['one', 'two', 'three'];
+      render(
+        <Autocomplete
+          defaultValue={options[0]}
+          onHighlightChange={handleChange}
+          options={options}
+          open
+          renderInput={(params) => <TextField autoFocus {...params} />}
+        />,
+      );
+      expect(handleChange.callCount).to.equal(1);
+      expect(handleChange.args[0][0]).to.equal(undefined);
+      expect(handleChange.args[0][1]).to.equal(options[0]);
+      expect(handleChange.args[0][2]).to.equal('auto');
+    });
+
+    it('should support keyboard event', () => {
+      const handleChange = spy();
+      const options = ['one', 'two', 'three'];
+      render(
+        <Autocomplete
+          onHighlightChange={handleChange}
+          options={options}
+          open
+          renderInput={(params) => <TextField autoFocus {...params} />}
+        />,
+      );
+      fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
+      expect(handleChange.callCount).to.equal(2);
+      expect(handleChange.args[1][0]).to.not.equal(undefined);
+      expect(handleChange.args[1][1]).to.equal(options[0]);
+      expect(handleChange.args[1][2]).to.equal('keyboard');
+      fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
+      expect(handleChange.callCount).to.equal(3);
+      expect(handleChange.args[2][0]).to.not.equal(undefined);
+      expect(handleChange.args[2][1]).to.equal(options[1]);
+      expect(handleChange.args[2][2]).to.equal('keyboard');
+    });
+
+    it('should support mouse event', () => {
+      const handleChange = spy();
+      const options = ['one', 'two', 'three'];
+      const { getAllByRole } = render(
+        <Autocomplete
+          onHighlightChange={handleChange}
+          options={options}
+          open
+          renderInput={(params) => <TextField autoFocus {...params} />}
+        />,
+      );
+      const firstOption = getAllByRole('option')[0];
+      fireEvent.mouseOver(firstOption);
+      expect(handleChange.callCount).to.equal(2);
+      expect(handleChange.args[1][0]).to.not.equal(undefined);
+      expect(handleChange.args[1][1]).to.equal(options[0]);
+      expect(handleChange.args[1][2]).to.equal('mouse');
     });
   });
 });

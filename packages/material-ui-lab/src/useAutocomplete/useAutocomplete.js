@@ -1,6 +1,5 @@
 /* eslint-disable no-constant-condition */
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   setRef,
   useEventCallback,
@@ -22,7 +21,6 @@ export function createFilterOptions(config = {}) {
     ignoreCase = true,
     limit,
     matchFrom = 'any',
-    startAfter = 0,
     stringify,
     trim = false,
   } = config;
@@ -34,10 +32,6 @@ export function createFilterOptions(config = {}) {
     }
     if (ignoreAccents) {
       input = stripDiacritics(input);
-    }
-
-    if (startAfter > 0 && input.length <= startAfter) {
-      return [];
     }
 
     const filteredOptions = options.filter((option) => {
@@ -78,6 +72,7 @@ export default function useAutocomplete(props) {
     autoHighlight = false,
     autoSelect = false,
     blurOnSelect = false,
+    clearOnBlur = !props.freeSolo,
     clearOnEscape = false,
     componentName = 'useAutocomplete',
     debug = false,
@@ -99,6 +94,7 @@ export default function useAutocomplete(props) {
     multiple = false,
     onChange,
     onClose,
+    onHighlightChange,
     onInputChange,
     onOpen,
     open: openProp,
@@ -120,7 +116,7 @@ export default function useAutocomplete(props) {
   const defaultHighlighted = autoHighlight ? 0 : -1;
   const highlightedIndexRef = React.useRef(defaultHighlighted);
 
-  const setHighlightedIndex = useEventCallback((index, mouse = false) => {
+  const setHighlightedIndex = useEventCallback((index, reason = 'auto', event) => {
     highlightedIndexRef.current = index;
     // does the index exist?
     if (index === -1) {
@@ -145,6 +141,10 @@ export default function useAutocomplete(props) {
       return;
     }
 
+    if (onHighlightChange) {
+      onHighlightChange(event, options[index], reason);
+    }
+
     if (index === -1) {
       listboxNode.scrollTop = 0;
       return;
@@ -163,7 +163,7 @@ export default function useAutocomplete(props) {
     //
     // Consider this API instead once it has a better browser support:
     // .scrollIntoView({ scrollMode: 'if-needed', block: 'nearest' });
-    if (listboxNode.scrollHeight > listboxNode.clientHeight && !mouse) {
+    if (listboxNode.scrollHeight > listboxNode.clientHeight && reason !== 'mouse') {
       const element = option;
 
       const scrollBottom = listboxNode.clientHeight + listboxNode.scrollTop;
@@ -232,9 +232,12 @@ export default function useAutocomplete(props) {
     resetInputValue(null, value);
   }, [value, resetInputValue]);
 
-  const { current: isOpenControlled } = React.useRef(openProp != null);
-  const [openState, setOpenState] = React.useState(false);
-  const open = isOpenControlled ? openProp : openState;
+  const [open, setOpenState] = useControlled({
+    controlled: openProp,
+    default: false,
+    name: componentName,
+    state: 'open',
+  });
 
   const inputValueIsSelectedValue =
     !multiple && value != null && inputValue === getOptionLabel(value);
@@ -332,7 +335,7 @@ export default function useAutocomplete(props) {
     }
   }
 
-  const changeHighlightedIndex = useEventCallback((diff, direction) => {
+  const changeHighlightedIndex = useEventCallback((diff, direction, reason = 'auto', event) => {
     if (!popupOpen) {
       return;
     }
@@ -382,7 +385,7 @@ export default function useAutocomplete(props) {
     };
 
     const nextIndex = validOptionIndex(getNextIndex(), direction);
-    setHighlightedIndex(nextIndex);
+    setHighlightedIndex(nextIndex, reason, event);
 
     if (autoComplete && diff !== 'reset') {
       if (nextIndex === -1) {
@@ -431,7 +434,11 @@ export default function useAutocomplete(props) {
         getOptionSelected(optionItem, valueItem),
       );
 
-      setHighlightedIndex(itemIndex);
+      if (itemIndex === -1) {
+        changeHighlightedIndex('reset', 'next');
+      } else {
+        setHighlightedIndex(itemIndex);
+      }
       return;
     }
 
@@ -457,11 +464,10 @@ export default function useAutocomplete(props) {
       return;
     }
 
+    setOpenState(true);
+
     if (onOpen) {
       onOpen(event);
-    }
-    if (!isOpenControlled) {
-      setOpenState(true);
     }
   };
 
@@ -470,11 +476,10 @@ export default function useAutocomplete(props) {
       return;
     }
 
+    setOpenState(false);
+
     if (onClose) {
       onClose(event, reason);
-    }
-    if (!isOpenControlled) {
-      setOpenState(false);
     }
   };
 
@@ -623,38 +628,38 @@ export default function useAutocomplete(props) {
         if (popupOpen) {
           // Prevent scroll of the page
           event.preventDefault();
-          changeHighlightedIndex('start', 'next');
+          changeHighlightedIndex('start', 'next', 'keyboard', event);
         }
         break;
       case 'End':
         if (popupOpen) {
           // Prevent scroll of the page
           event.preventDefault();
-          changeHighlightedIndex('end', 'previous');
+          changeHighlightedIndex('end', 'previous', 'keyboard', event);
         }
         break;
       case 'PageUp':
         // Prevent scroll of the page
         event.preventDefault();
-        changeHighlightedIndex(-pageSize, 'previous');
+        changeHighlightedIndex(-pageSize, 'previous', 'keyboard', event);
         handleOpen(event);
         break;
       case 'PageDown':
         // Prevent scroll of the page
         event.preventDefault();
-        changeHighlightedIndex(pageSize, 'next');
+        changeHighlightedIndex(pageSize, 'next', 'keyboard', event);
         handleOpen(event);
         break;
       case 'ArrowDown':
         // Prevent cursor move
         event.preventDefault();
-        changeHighlightedIndex(1, 'next');
+        changeHighlightedIndex(1, 'next', 'keyboard', event);
         handleOpen(event);
         break;
       case 'ArrowUp':
         // Prevent cursor move
         event.preventDefault();
-        changeHighlightedIndex(-1, 'previous');
+        changeHighlightedIndex(-1, 'previous', 'keyboard', event);
         handleOpen(event);
         break;
       case 'ArrowLeft':
@@ -758,7 +763,7 @@ export default function useAutocomplete(props) {
       selectNewValue(event, filteredOptions[highlightedIndexRef.current], 'blur');
     } else if (autoSelect && freeSolo && inputValue !== '') {
       selectNewValue(event, inputValue, 'blur', 'freeSolo');
-    } else if (!freeSolo) {
+    } else if (clearOnBlur) {
       resetInputValue(event, value);
     }
 
@@ -787,7 +792,7 @@ export default function useAutocomplete(props) {
 
   const handleOptionMouseOver = (event) => {
     const index = Number(event.currentTarget.getAttribute('data-option-index'));
-    setHighlightedIndex(index, 'mouse');
+    setHighlightedIndex(index, 'mouse', event);
   };
 
   const handleOptionTouchStart = () => {
@@ -856,7 +861,7 @@ export default function useAutocomplete(props) {
   };
 
   const handleInputMouseDown = (event) => {
-    if (inputValue === '') {
+    if (inputValue === '' || !open) {
       handlePopupIndicator(event);
     }
   };
@@ -987,157 +992,3 @@ export default function useAutocomplete(props) {
     groupedOptions,
   };
 }
-
-useAutocomplete.propTypes = {
-  /**
-   * If `true`, the portion of the selected suggestion that has not been typed by the user,
-   * known as the completion string, appears inline after the input cursor in the textbox.
-   * The inline completion string is visually highlighted and has a selected state.
-   */
-  autoComplete: PropTypes.bool,
-  /**
-   * If `true`, the first option is automatically highlighted.
-   */
-  autoHighlight: PropTypes.bool,
-  /**
-   * If `true`, the selected option becomes the value of the input
-   * when the Autocomplete loses focus unless the user chooses
-   * a different option or changes the character string in the input.
-   */
-  autoSelect: PropTypes.bool,
-  /**
-   * Override or extend the styles applied to the component.
-   * See [CSS API](#css) below for more details.
-   */
-  classes: PropTypes.object,
-  /**
-   * @ignore
-   */
-  className: PropTypes.string,
-  /**
-   * If `true`, clear all values when the user presses escape and the popup is closed.
-   */
-  clearOnEscape: PropTypes.bool,
-  /**
-   * The component name that is using this hook. Used for warnings.
-   */
-  componentName: PropTypes.string,
-  /**
-   * If `true`, the popup will ignore the blur event if the input is filled.
-   * You can inspect the popup markup with your browser tools.
-   * Consider this option when you need to customize the component.
-   */
-  debug: PropTypes.bool,
-  /**
-   * The default input value. Use when the component is not controlled.
-   */
-  defaultValue: PropTypes.any,
-  /**
-   * If `true`, the input can't be cleared.
-   */
-  disableClearable: PropTypes.bool,
-  /**
-   * If `true`, the popup won't close when a value is selected.
-   */
-  disableCloseOnSelect: PropTypes.bool,
-  /**
-   * If `true`, will allow focus on disabled items.
-   */
-  disabledItemsFocusable: PropTypes.bool,
-  /**
-   * If `true`, the list box in the popup will not wrap focus.
-   */
-  disableListWrap: PropTypes.bool,
-  /**
-   * A filter function that determins the options that are eligible.
-   *
-   * @param {any} options The options to render.
-   * @param {object} state The state of the component.
-   * @returns {boolean}
-   */
-  filterOptions: PropTypes.func,
-  /**
-   * If `true`, hide the selected options from the list box.
-   */
-  filterSelectedOptions: PropTypes.bool,
-  /**
-   * If `true`, the Autocomplete is free solo, meaning that the user input is not bound to provided options.
-   */
-  freeSolo: PropTypes.bool,
-  /**
-   * Used to determine the disabled state for a given option.
-   */
-  getOptionDisabled: PropTypes.func,
-  /**
-   * Used to determine the string value for a given option.
-   * It's used to fill the input (and the list box options if `renderOption` is not provided).
-   */
-  getOptionLabel: PropTypes.func,
-  /**
-   * If provided, the options will be grouped under the returned string.
-   * The groupBy value is also used as the text for group headings when `renderGroup` is not provided.
-   *
-   * @param {any} options The option to group.
-   * @returns {string}
-   */
-  groupBy: PropTypes.func,
-  /**
-   * This prop is used to help implement the accessibility logic.
-   * If you don't provide this prop. It falls back to a randomly generated id.
-   */
-  id: PropTypes.string,
-  /**
-   * If `true`, the highlight can move to the input.
-   */
-  includeInputInList: PropTypes.bool,
-  /**
-   * If `true`, `value` must be an array and the menu will support multiple selections.
-   */
-  multiple: PropTypes.bool,
-  /**
-   * Callback fired when the value changes.
-   *
-   * @param {object} event The event source of the callback
-   * @param {any} value
-   * @param {string} reason One of "create-option", "select-option", "remove-option", "blur" or "clear".
-   */
-  onChange: PropTypes.func,
-  /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   *
-   * @param {object} event The event source of the callback.
-   */
-  onClose: PropTypes.func,
-  /**
-   * Callback fired when the text input value changes.
-   *
-   * @param {object} event The event source of the callback.
-   * @param {string} value The new value of the text input.
-   * @param {string} reason One of "input" (user input) or "reset" (programmatic change).
-   */
-  onInputChange: PropTypes.func,
-  /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   *
-   * @param {object} event The event source of the callback.
-   */
-  onOpen: PropTypes.func,
-  /**
-   * Control the popup` open state.
-   */
-  open: PropTypes.bool,
-  /**
-   * If `true`, the popup will open on input focus.
-   */
-  openOnFocus: PropTypes.bool,
-  /**
-   * Array of options.
-   */
-  options: PropTypes.array,
-  /**
-   * The input value.
-   */
-  value: PropTypes.any,
-};

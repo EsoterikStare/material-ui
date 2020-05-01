@@ -94,6 +94,8 @@
   "viewGitHub": "Ver la fuente en GitHub",
   "visit": "Visite el sitio web",
   "whosUsing": "¿Quién usa Material-UI?",
+  "initialFocusLabel": "A generic container that is programmatically focused to test keyboard navigation of our components.",
+  "resetFocus": "Reset focus to test keyboard navigation",
   "pages": {
     "/getting-started": "Primeros pasos",
     "/getting-started/installation": "Instalación",
@@ -230,7 +232,7 @@
     "/components/rating": "Rating",
     "/components/skeleton": "Skeleton",
     "/components/tree-view": "Vista de arbol",
-    "/customization/density": "Density",
+    "/customization/density": "Densidad",
     "/components/button-group": "Button Group",
     "/components/floating-action-button": "Floating Action Button",
     "/components/backdrop": "Backdrop",

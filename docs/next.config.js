@@ -90,6 +90,7 @@ module.exports = {
       module: {
         ...config.module,
         rules: config.module.rules.concat([
+          // used in some /getting-started/templates
           {
             test: /\.md$/,
             loader: 'raw-loader',
@@ -120,7 +121,7 @@ module.exports = {
           },
           // required to transpile ../packages/
           {
-            test: /\.(js|mjs|jsx)$/,
+            test: /\.(js|mjs|jsx|ts)$/,
             include: [workspaceRoot],
             exclude: /node_modules/,
             use: options.defaultLoaders.babel,

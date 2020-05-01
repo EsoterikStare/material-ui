@@ -21,6 +21,10 @@ export const styles = (theme) => ({
   contained: {
     boxShadow: theme.shadows[2],
   },
+  /* Styles applied to the root element if `disableElevation={true}`. */
+  disableElevation: {
+    boxShadow: 'none',
+  },
   /* Pseudo-class applied to child elements if `disabled={true}`. */
   disabled: {},
   /* Styles applied to the root element if `fullWidth={true}`. */
@@ -164,6 +168,7 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
     color = 'default',
     component: Component = 'div',
     disabled = false,
+    disableElevation = false,
     disableFocusRipple = false,
     disableRipple = false,
     fullWidth = false,
@@ -193,6 +198,7 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
           [classes.contained]: variant === 'contained',
           [classes.vertical]: orientation === 'vertical',
           [classes.fullWidth]: fullWidth,
+          [classes.disableElevation]: disableElevation,
         },
         className,
       )}
@@ -224,6 +230,7 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
           fullWidth,
           size: child.props.size || size,
           variant: child.props.variant || variant,
+          disableElevation: child.props.disableElevation || disableElevation,
         });
       })}
     </Component>
@@ -250,13 +257,17 @@ ButtonGroup.propTypes = {
   color: PropTypes.oneOf(['default', 'inherit', 'primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
    * If `true`, the buttons will be disabled.
    */
   disabled: PropTypes.bool,
+  /**
+   * If `true`, no elevation is used.
+   */
+  disableElevation: PropTypes.bool,
   /**
    * If `true`, the button keyboard focus ripple will be disabled.
    * `disableRipple` must also be true.

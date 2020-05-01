@@ -17,7 +17,7 @@ export const styles = (theme) => {
       display: 'flex',
       minHeight: 8 * 6,
       transition: theme.transitions.create(['min-height', 'background-color'], transition),
-      padding: theme.spacing(0, 3),
+      padding: theme.spacing(0, 2),
       '&:hover:not($disabled)': {
         cursor: 'pointer',
       },
@@ -25,10 +25,10 @@ export const styles = (theme) => {
         minHeight: 64,
       },
       '&$focused': {
-        backgroundColor: theme.palette.grey[300],
+        backgroundColor: theme.palette.action.focus,
       },
       '&$disabled': {
-        opacity: 0.38,
+        opacity: theme.palette.action.disabledOpacity,
       },
     },
     /* Pseudo-class applied to the root element, children wrapper element and `IconButton` component if `expanded={true}`. */

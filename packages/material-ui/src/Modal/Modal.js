@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { getThemeProps, useTheme } from '@material-ui/styles';
-import { elementAcceptingRef } from '@material-ui/utils';
+import { elementAcceptingRef, HTMLElementType } from '@material-ui/utils';
 import ownerDocument from '../utils/ownerDocument';
 import Portal from '../Portal';
 import createChainedFunction from '../utils/createChainedFunction';
@@ -193,15 +193,17 @@ const Modal = React.forwardRef(function Modal(inProps, ref) {
       return;
     }
 
-    // Swallow the event, in case someone is listening for the escape key on the body.
-    event.stopPropagation();
-
     if (onEscapeKeyDown) {
       onEscapeKeyDown(event);
     }
 
-    if (!disableEscapeKeyDown && onClose) {
-      onClose(event, 'escapeKeyDown');
+    if (!disableEscapeKeyDown) {
+      // Swallow the event, in case someone is listening for the escape key on the body.
+      event.stopPropagation();
+
+      if (onClose) {
+        onClose(event, 'escapeKeyDown');
+      }
     }
   };
 
@@ -273,10 +275,17 @@ Modal.propTypes = {
    */
   closeAfterTransition: PropTypes.bool,
   /**
-   * A node, component instance, or function that returns either.
+   * A HTML element, component instance, or function that returns either.
    * The `container` will have the portal children appended to it.
+   *
+   * By default, it uses the body of the top-level document object,
+   * so it's simply `document.body` most of the time.
    */
-  container: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  container: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    HTMLElementType,
+    PropTypes.instanceOf(React.Component),
+    PropTypes.func,
+  ]),
   /**
    * If `true`, the modal will not automatically shift focus to itself when it opens, and
    * replace it to the last focused element when it closes.
@@ -287,7 +296,7 @@ Modal.propTypes = {
    */
   disableAutoFocus: PropTypes.bool,
   /**
-   * If `true`, clicking the backdrop will not fire any callback.
+   * If `true`, clicking the backdrop will not fire `onClose`.
    */
   disableBackdropClick: PropTypes.bool,
   /**
@@ -298,7 +307,7 @@ Modal.propTypes = {
    */
   disableEnforceFocus: PropTypes.bool,
   /**
-   * If `true`, hitting escape will not fire any callback.
+   * If `true`, hitting escape will not fire `onClose`.
    */
   disableEscapeKeyDown: PropTypes.bool,
   /**

@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { withStyles, fade } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Collapse from '@material-ui/core/Collapse';
+import { unstable_StrictModeCollapse as Collapse } from '@material-ui/core/Collapse';
 import NoSsr from '@material-ui/core/NoSsr';
 import EditIcon from '@material-ui/icons/Edit';
 import CodeIcon from '@material-ui/icons/Code';
@@ -18,7 +18,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Tooltip from '@material-ui/core/Tooltip';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
+import ResetFocusIcon from '@material-ui/icons/CenterFocusWeak';
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import DemoSandboxed from 'docs/src/modules/components/DemoSandboxed';
 import DemoLanguages from 'docs/src/modules/components/DemoLanguages';
 import getDemoConfig from 'docs/src/modules/utils/getDemoConfig';
@@ -60,6 +61,9 @@ const styles = (theme) => ({
     justifyContent: 'center',
     [theme.breakpoints.up('sm')]: {
       borderRadius: theme.shape.borderRadius,
+    },
+    '&:focus': {
+      outline: `2px dashed ${theme.palette.text.primary}`,
     },
   },
   /* Isolate the demo with an outline. */
@@ -123,6 +127,14 @@ const styles = (theme) => ({
   anchorLink: {
     marginTop: -64, // height of toolbar
     position: 'absolute',
+  },
+  initialFocus: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    pointerEvents: 'none',
   },
 });
 
@@ -335,6 +347,11 @@ function Demo(props) {
   const demoSourceId = useUniqueId(`demo-`);
   const openDemoSource = codeOpen || showPreview;
 
+  const initialFocusRef = React.useRef(null);
+  function handleResetFocusClick() {
+    initialFocusRef.current.focusVisible();
+  }
+
   return (
     <div className={classes.root}>
       <div
@@ -344,10 +361,15 @@ function Demo(props) {
           [classes.demoBgTrue]: demoOptions.bg === true,
           [classes.demoBgInline]: demoOptions.bg === 'inline',
         })}
-        tabIndex={-1}
         onMouseEnter={handleDemoHover}
         onMouseLeave={handleDemoHover}
       >
+        <IconButton
+          aria-label={t('initialFocusLabel')}
+          className={classes.initialFocus}
+          action={initialFocusRef}
+          tabIndex={-1}
+        />
         <DemoSandboxed
           key={demoKey}
           style={demoSandboxedStyle}
@@ -424,6 +446,21 @@ function Demo(props) {
                   onClick={handleCopyClick}
                 >
                   <FileCopyIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip
+                classes={{ popper: classes.tooltip }}
+                title={t('resetFocus')}
+                placement="top"
+              >
+                <IconButton
+                  aria-label={t('resetFocus')}
+                  data-ga-event-category="demo"
+                  data-ga-event-label={demoOptions.demo}
+                  data-ga-event-action="reset-focus"
+                  onClick={handleResetFocusClick}
+                >
+                  <ResetFocusIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
               <Tooltip classes={{ popper: classes.tooltip }} title={t('resetDemo')} placement="top">
@@ -504,10 +541,11 @@ function Demo(props) {
         </div>
       )}
       <Collapse in={openDemoSource} unmountOnExit>
-        <MarkdownElement
+        <HighlightedCode
           className={classes.code}
           id={demoSourceId}
-          text={`\`\`\`${demoData.sourceLanguage}\n${codeOpen ? demoData.raw : jsx}\n\`\`\``}
+          code={showPreview && !codeOpen ? jsx : demoData.raw}
+          language={demoData.sourceLanguage}
         />
       </Collapse>
       <Snackbar

@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+import { expect } from 'chai';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createMount } from '@material-ui/core/test-utils';
@@ -95,20 +95,20 @@ describe('focus-visible polyfill', () => {
       simulatePointerDevice();
 
       const { current: button } = buttonRef;
-      if (!(button instanceof window.HTMLButtonElement)) {
+      if (button.nodeName !== 'BUTTON') {
         throw new Error('missing button');
       }
 
-      assert.strictEqual(button.classList.contains('focus-visible'), false);
+      expect(button.classList.contains('focus-visible')).to.equal(false);
 
       button.focus();
 
-      assert.strictEqual(button.classList.contains('focus-visible'), false);
+      expect(button.classList.contains('focus-visible')).to.equal(false);
 
       button.blur();
       dispatchFocusVisible(button);
 
-      assert.strictEqual(button.classList.contains('focus-visible'), true);
+      expect(button.classList.contains('focus-visible')).to.equal(true);
     });
   });
 });

@@ -5,7 +5,6 @@ export interface CreateFilterOptionsConfig<T> {
   ignoreCase?: boolean;
   limit?: number;
   matchFrom?: 'any' | 'start';
-  startAfter?: number;
   stringify?: (option: T) => string;
   trim?: boolean;
 }
@@ -45,6 +44,13 @@ export interface UseAutocompleteCommonProps<T> {
    * - `mouse` the input is blurred after a mouse event.
    */
   blurOnSelect?: 'touch' | 'mouse' | true | false;
+  /**
+   * If `true`, the input's text will be cleared on blur if no value is selected.
+   *
+   * Set to `true` if you want to help the user enter a new value.
+   * Set to `false` if you want to help the user resume his search.
+   */
+  clearOnBlur?: boolean;
   /**
    * If `true`, clear all values when the user presses escape and the popup is closed.
    */
@@ -93,23 +99,33 @@ export interface UseAutocompleteCommonProps<T> {
   freeSolo?: boolean;
   /**
    * Used to determine the disabled state for a given option.
+   *
+   * @param {T} option The option to test.
+   * @returns {boolean}
    */
   getOptionDisabled?: (option: T) => boolean;
   /**
    * Used to determine the string value for a given option.
    * It's used to fill the input (and the list box options if `renderOption` is not provided).
+   *
+   * @param {T} option
+   * @returns {string}
    */
   getOptionLabel?: (option: T) => string;
   /**
-   * Used to determine if an option is selected.
+   * Used to determine if an option is selected, considering the current value.
    * Uses strict equality by default.
+   *
+   * @param {T} option The option to test.
+   * @param {T} value The value to test against.
+   * @returns {boolean}
    */
   getOptionSelected?: (option: T, value: T) => boolean;
   /**
    * If provided, the options will be grouped under the returned string.
    * The groupBy value is also used as the text for group headings when `renderGroup` is not provided.
    *
-   * @param {T} options The option to group.
+   * @param {T} options The options to group.
    * @returns {string}
    */
   groupBy?: (option: T) => string;
@@ -154,6 +170,18 @@ export interface UseAutocompleteCommonProps<T> {
    */
   onOpen?: (event: React.ChangeEvent<{}>) => void;
   /**
+   * Callback fired when the highlight option changes.
+   *
+   * @param {object} event The event source of the callback.
+   * @param {T} option The highlighted option.
+   * @param {string} reason Can be: `"keyboard"`, `"auto"`, `"mouse"`.
+   */
+  onHighlightChange?: (
+    event: React.ChangeEvent<{}>,
+    option: T | null,
+    reason: AutocompleteHighlightChangeReason
+  ) => void;
+  /**
    * Control the popup` open state.
    */
   open?: boolean;
@@ -171,6 +199,8 @@ export interface UseAutocompleteCommonProps<T> {
    */
   selectOnFocus?: boolean;
 }
+
+export type AutocompleteHighlightChangeReason = 'keyboard' | 'mouse' | 'auto';
 
 export type AutocompleteChangeReason =
   | 'create-option'
@@ -204,7 +234,7 @@ export interface UseAutocompleteMultipleProps<T> extends UseAutocompleteCommonPr
    * Callback fired when the value changes.
    *
    * @param {object} event The event source of the callback.
-   * @param {T[]} value
+   * @param {T[]} value The new value of the component.
    * @param {string} reason One of "create-option", "select-option", "remove-option", "blur" or "clear".
    */
   onChange?: (
@@ -235,7 +265,7 @@ export interface UseAutocompleteSingleProps<T> extends UseAutocompleteCommonProp
    * Callback fired when the value changes.
    *
    * @param {object} event The event source of the callback.
-   * @param {T} value
+   * @param {T} value The new value of the component.
    * @param {string} reason One of "create-option", "select-option", "remove-option", "blur" or "clear".
    */
   onChange?: (

@@ -100,7 +100,7 @@ function focusThumb({ sliderRef, activeIndex, setActive }) {
     !sliderRef.current.contains(document.activeElement) ||
     Number(document.activeElement.getAttribute('data-index')) !== activeIndex
   ) {
-    sliderRef.current.querySelector(`[data-index="${activeIndex}"]`).focus();
+    sliderRef.current.querySelector(`[role="slider"][data-index="${activeIndex}"]`).focus();
   }
 
   if (setActive) {
@@ -155,6 +155,9 @@ export const styles = (theme) => ({
       '&$vertical': {
         padding: '0 20px',
       },
+    },
+    '@media print': {
+      colorAdjust: 'exact',
     },
   },
   /* Styles applied to the root element if `color="primary"`. */
@@ -830,7 +833,7 @@ Slider.propTypes = {
   color: PropTypes.oneOf(['primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**

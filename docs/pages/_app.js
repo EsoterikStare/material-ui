@@ -37,7 +37,7 @@ function useFirstRender() {
   return firstRenderRef.current;
 }
 
-acceptLanguage.languages(['en', 'zh']);
+acceptLanguage.languages(['en', 'zh', 'pt']);
 
 function loadCrowdin() {
   window._jipt = [];
@@ -261,7 +261,9 @@ function AppWrapper(props) {
   const { children, pageProps } = props;
 
   const router = useRouter();
-  const [redux] = React.useState(() => initRedux(pageProps.reduxServerState));
+  const [redux] = React.useState(() =>
+    initRedux({ options: { userLanguage: pageProps.userLanguage } }),
+  );
 
   React.useEffect(() => {
     loadDependencies();
@@ -339,21 +341,10 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
     pageProps = await Component.getInitialProps(ctx);
   }
 
-  if (!process.browser) {
-    const redux = initRedux({
-      options: {
-        userLanguage: ctx.query.userLanguage,
-      },
-    });
-    pageProps = {
-      ...pageProps,
-      // No need to include other initial Redux state because when it
-      // initialises on the client-side it'll create it again anyway
-      reduxServerState: redux.getState(),
-    };
-  }
-
   return {
-    pageProps,
+    pageProps: {
+      userLanguage: ctx.query.userLanguage || 'en',
+      ...pageProps,
+    },
   };
 };

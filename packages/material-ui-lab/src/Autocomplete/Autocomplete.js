@@ -244,6 +244,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
     ChipProps,
     classes,
     className,
+    clearOnBlur = !props.freeSolo,
     clearOnEscape = false,
     clearText = 'Clear',
     closeIcon = <CloseIcon fontSize="small" />,
@@ -278,6 +279,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
     noOptionsText = 'No options',
     onChange,
     onClose,
+    onHighlightChange,
     onInputChange,
     onOpen,
     open,
@@ -542,6 +544,13 @@ Autocomplete.propTypes = {
    */
   className: PropTypes.string,
   /**
+   * If `true`, the input's text will be cleared on blur if no value is selected.
+   *
+   * Set to `true` if you want to help the user enter a new value.
+   * Set to `false` if you want to help the user resume his search.
+   */
+  clearOnBlur: PropTypes.bool,
+  /**
    * If `true`, clear all values when the user presses escape and the popup is closed.
    */
   clearOnEscape: PropTypes.bool,
@@ -629,23 +638,33 @@ Autocomplete.propTypes = {
   getLimitTagsText: PropTypes.func,
   /**
    * Used to determine the disabled state for a given option.
+   *
+   * @param {T} option The option to test.
+   * @returns {boolean}
    */
   getOptionDisabled: PropTypes.func,
   /**
    * Used to determine the string value for a given option.
    * It's used to fill the input (and the list box options if `renderOption` is not provided).
+   *
+   * @param {T} option
+   * @returns {string}
    */
   getOptionLabel: PropTypes.func,
   /**
-   * Used to determine if an option is selected.
+   * Used to determine if an option is selected, considering the current value.
    * Uses strict equality by default.
+   *
+   * @param {T} option The option to test.
+   * @param {T} value The value to test against.
+   * @returns {boolean}
    */
   getOptionSelected: PropTypes.func,
   /**
    * If provided, the options will be grouped under the returned string.
    * The groupBy value is also used as the text for group headings when `renderGroup` is not provided.
    *
-   * @param {T} options The option to group.
+   * @param {T} options The options to group.
    * @returns {string}
    */
   groupBy: PropTypes.func,
@@ -699,7 +718,7 @@ Autocomplete.propTypes = {
    * Callback fired when the value changes.
    *
    * @param {object} event The event source of the callback.
-   * @param {T} value
+   * @param {T} value The new value of the component.
    * @param {string} reason One of "create-option", "select-option", "remove-option", "blur" or "clear".
    */
   onChange: PropTypes.func,
@@ -711,6 +730,14 @@ Autocomplete.propTypes = {
    * @param {string} reason Can be: `"toggleInput"`, `"escape"`, `"select-option"`, `"blur"`.
    */
   onClose: PropTypes.func,
+  /**
+   * Callback fired when the highlight option changes.
+   *
+   * @param {object} event The event source of the callback.
+   * @param {T} option The highlighted option.
+   * @param {string} reason Can be: `"keyboard"`, `"auto"`, `"mouse"`.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when the input value changes.
    *

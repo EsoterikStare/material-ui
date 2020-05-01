@@ -169,7 +169,7 @@ const TablePagination = React.forwardRef(function TablePagination(props, ref) {
 TablePagination.propTypes = {
   /**
    * The component used for displaying the actions.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   ActionsComponent: PropTypes.elementType,
   /**
@@ -197,7 +197,7 @@ TablePagination.propTypes = {
   colSpan: PropTypes.number,
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
@@ -218,7 +218,7 @@ TablePagination.propTypes = {
    *
    * For localization purposes, you can use the provided [translations](/guides/localization/).
    */
-  labelRowsPerPage: PropTypes.node,
+  labelRowsPerPage: PropTypes.string,
   /**
    * Props applied to the next arrow [`IconButton`](/api/icon-button/) element.
    */

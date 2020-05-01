@@ -89,6 +89,7 @@ const FormLabel = React.forwardRef(function FormLabel(props, ref) {
       {children}
       {fcs.required && (
         <span
+          aria-hidden
           className={clsx(classes.asterisk, {
             [classes.error]: fcs.error,
           })}
@@ -120,7 +121,7 @@ FormLabel.propTypes = {
   color: PropTypes.oneOf(['primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**

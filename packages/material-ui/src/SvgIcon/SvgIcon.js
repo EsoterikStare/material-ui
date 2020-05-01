@@ -79,7 +79,7 @@ const SvgIcon = React.forwardRef(function SvgIcon(props, ref) {
       focusable="false"
       viewBox={viewBox}
       color={htmlColor}
-      aria-hidden={titleAccess ? undefined : 'true'}
+      aria-hidden={titleAccess ? undefined : true}
       role={titleAccess ? 'img' : undefined}
       ref={ref}
       {...other}
@@ -115,7 +115,7 @@ SvgIcon.propTypes = {
   color: PropTypes.oneOf(['action', 'disabled', 'error', 'inherit', 'primary', 'secondary']),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**

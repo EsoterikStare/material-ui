@@ -25,7 +25,7 @@ Material-UI permite que você altere o elemento raiz que será renderizado por m
 
 ### Como é que funciona?
 
-O componente será renderizado assim:
+O componente customizado será renderizado pelo Material-UI desta forma:
 
 ```js
 return React.createElement(props.component, props)
@@ -48,7 +48,7 @@ Esse padrão é muito poderoso e permite uma grande flexibilidade, além de uma 
 
 ### Advertência com o uso de funções em linha
 
-Using an inline function as an argument for the `component` prop may result in **unexpected unmounting**, since a new component is passed every time React renders. Por exemplo, se você quiser cria um `ListItem` customizado que atua como link, você poderia fazer o seguinte:
+Usando uma função em linha como um argumento para a propriedade `component` pode resultar em **desmontagem inesperada**, já que um novo componente é passado cada vez que o React renderiza. Por exemplo, se você quiser cria um `ListItem` customizado que atua como link, você poderia fazer o seguinte:
 
 ```jsx
 import { Link } from 'react-router-dom';
@@ -56,9 +56,11 @@ import { Link } from 'react-router-dom';
 function ListItemLink(props) {
   const { icon, primary, to } = props;
 
+  const CustomLink = props => <Link to={to} {...props} />;
+
   return (
     <li>
-      <ListItem button component={props => <Link to={to} {...props} />}>
+      <ListItem button component={CustomLink}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={primary} />
       </ListItem>
@@ -69,7 +71,7 @@ function ListItemLink(props) {
 
 ⚠️ No entanto, como estamos usando uma função em linha para alterar o componente renderizado, o React desmontará o link toda vez que o `ListItemLink` é renderizado. Não só irá o React atualizar o DOM desnecessariamente, como o efeito cascata do `ListItem` também não funcionará corretamente.
 
-The solution is simple: **avoid inline functions and pass a static component to the `component` prop** instead. Let's change the `ListItemLink` to the following:
+A solução é simples: **evite funções em linha e passe um componente estático para a propriedade `component`**. Vamos mudar o componente `ListItemLink` para que `CustomLink` sempre referencie o mesmo componente:
 
 ```jsx
 import { Link } from 'react-router-dom';
@@ -77,7 +79,7 @@ import { Link } from 'react-router-dom';
 function ListItemLink(props) {
   const { icon, primary, to } = props;
 
-  const renderLink = React.useMemo(
+  const CustomLink = React.useMemo(
     () =>
       React.forwardRef((linkProps, ref) => (
         <Link ref={ref} to={to} {...linkProps} />
@@ -87,7 +89,7 @@ function ListItemLink(props) {
 
   return (
     <li>
-      <ListItem button component={renderLink}>
+      <ListItem button component={CustomLink}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={primary} />
       </ListItem>
@@ -96,11 +98,9 @@ function ListItemLink(props) {
 }
 ```
 
-`renderLink` agora sempre referenciará o mesmo componente.
+### Advertência com o encaminhamento de propriedades
 
-### Caveat with prop forwarding
-
-You can take advantage of the prop forwarding to simplify the code. Neste exemplo, não criamos nenhum componente intermediário:
+Você pode aproveitar o encaminhamento de propriedades para simplificar o código. Neste exemplo, não criamos nenhum componente intermediário:
 
 ```jsx
 import { Link } from 'react-router-dom';
@@ -108,7 +108,7 @@ import { Link } from 'react-router-dom';
 <ListItem button component={Link} to="/">
 ```
 
-⚠️ However, this strategy suffers from a limitation: prop collisions. The component providing the `component` prop (e.g. ListItem) might not forward all the props (for example dense) to the root element.
+⚠️ No entanto, esta estratégia sofre de uma limitação: colisões de propriedade. O componente que fornece a propriedade `component` (por exemplo, ListItem) pode não encaminhar todas as propriedades (por exemplo) para o elemento raiz.
 
 ### Usando TypeScript
 
@@ -116,7 +116,7 @@ Você pode encontrar os detalhes no [guia TypeScript](/guides/typescript/#usage-
 
 ## Bibliotecas de roteamento
 
-The integration with third-party routing libraries is achieved with the `component` prop. The behavior is identical to the description of the prop above. Here are a few demos with [react-router-dom](https://github.com/ReactTraining/react-router). It covers the Button, Link, and List components, you should be able to apply the same strategy with all the components.
+A integração com bibliotecas de roteamento de terceiros é resolvida com a propriedade `component`. O comportamento é idêntico à descrição da propriedade acima. Aqui estão algumas demonstrações com [react-router-dom](https://github.com/ReactTraining/react-router). Ele cobre os componentes Button, Link e List, você deve ser capaz de aplicar a mesma estratégia com todos os componentes.
 
 ### Button
 
@@ -126,7 +126,7 @@ The integration with third-party routing libraries is achieved with the `compone
 
 {{"demo": "pages/guides/composition/LinkRouter.js"}}
 
-### Lista
+### List
 
 {{"demo": "pages/guides/composition/ListRouter.js"}}
 
@@ -149,29 +149,29 @@ Se você não usar um dos tipos acima ao usar seus componentes em conjunto com o
 
 Esteja ciente que você ainda receberá este aviso para componentes `lazy` ou `memo` se eles forem encapsulados por um componente que não contém ref.
 
-In some instances an additional warning is issued to help with debugging, similar to:
+Em alguns casos, um aviso adicional é emitido para ajudar na depuração, semelhante a:
 
 > Invalid prop `component` supplied to `ComponentName`. Expected an element type that can hold a ref.
 
-Only the two most common use cases are covered. Para mais informações, consulte [esta seção na documentação oficial do React](https://reactjs.org/docs/forwarding-refs.html).
+Só as duas formas de utilização mais comuns são cobertas aqui. Para mais informações, consulte [esta seção na documentação oficial do React](https://reactjs.org/docs/forwarding-refs.html).
 
 ```diff
-- const MyButton = props => <div role="button" {...props} />;
-+ const MyButton = React.forwardRef((props, ref) => <div role="button" {...props} ref={ref} />);
+-const MyButton = props => <div role="button" {...props} />;
++const MyButton = React.forwardRef((props, ref) => <div role="button" {...props} ref={ref} />);
 <Button component={MyButton} />;
 ```
 
 ```diff
-- const SomeContent = props => <div {...props}>Olá mundo!</div>;
-+ const SomeContent = React.forwardRef((props, ref) => <div {...props} ref={ref}>Olá mundo!</div>);
+-const SomeContent = props => <div {...props}>Hello, World!</div>;
++const SomeContent = React.forwardRef((props, ref) => <div {...props} ref={ref}>Hello, World!</div>);
 <Tooltip title="Hello, again."><SomeContent /></Tooltip>;
 ```
 
 Para descobrir se o componente de Material-UI que você está usando tem esse requisito, verifique na documentação de propriedades da API do componente. Se você precisar encaminhar refs, a descrição será vinculada a esta seção.
 
-### Caveat with StrictMode
+### Advertência com StrictMode
 
-If you use class components for the cases described above you will still see warnings in `React.StrictMode`. `ReactDOM.findDOMNode` is used internally for backwards compatibility. You can use `React.forwardRef` and a designated prop in your class component to forward the `ref` to a DOM component. Doing so should not trigger any more warnings related to the deprecation of `ReactDOM.findDOMNode`.
+Se você usar componentes de classe para os casos descritos acima, ainda verá avisos em `React.StrictMode`. `ReactDOM.findDOMNode` é usado internamente para compatibilidade com versões anteriores. Você pode usar `React.forwardRef` e uma propriedade designada em seu componente de classe para encaminhar o `ref` para um componente DOM. Fazendo isso não deve acionar mais nenhum aviso relacionado à depreciação de uso de `ReactDOM.findDOMNode`.
 
 ```diff
 class Component extends React.Component {

@@ -54,6 +54,8 @@ const Collapse = React.forwardRef(function Collapse(props, ref) {
     onExiting,
     style,
     timeout = duration.standard,
+    // eslint-disable-next-line react/prop-types
+    TransitionComponent = Transition,
     ...other
   } = props;
   const theme = useTheme();
@@ -153,7 +155,7 @@ const Collapse = React.forwardRef(function Collapse(props, ref) {
   };
 
   return (
-    <Transition
+    <TransitionComponent
       in={inProp}
       onEnter={handleEnter}
       onEntered={handleEntered}
@@ -186,7 +188,7 @@ const Collapse = React.forwardRef(function Collapse(props, ref) {
           </div>
         </Component>
       )}
-    </Transition>
+    </TransitionComponent>
   );
 });
 
@@ -214,7 +216,7 @@ Collapse.propTypes = {
   collapsedHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * The component used for the root node.
-   * Either a string to use a DOM element or a component.
+   * Either a string to use a HTML element or a component.
    */
   component: PropTypes.elementType,
   /**
