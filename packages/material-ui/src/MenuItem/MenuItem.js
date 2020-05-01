@@ -158,12 +158,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
 
   if (!subMenu) return listItem;
 
+  const listItemAnchorEl = listItemRef.current;
+
   return [
     listItem,
-    openSubMenu
+    openSubMenu && listItemAnchorEl
       ? React.cloneElement(subMenu, {
           key: 'subMenu',
-          anchorEl: listItemRef.current,
+          anchorEl: listItemAnchorEl,
           anchorOrigin: theme.direction === 'rtl' ? RTL_ANCHOR_ORIGIN : LTR_ANCHOR_ORIGIN,
           MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
