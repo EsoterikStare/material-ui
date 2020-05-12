@@ -175,6 +175,10 @@ const styles = (theme) => ({
     '& img, video': {
       maxWidth: '100%',
     },
+    '& img': {
+      // Avoid layout jump
+      display: 'inline-block',
+    },
     '& hr': {
       height: 1,
       margin: theme.spacing(6, 0),
@@ -198,7 +202,7 @@ const styles = (theme) => ({
 });
 const useStyles = makeStyles(styles, { name: 'MarkdownElement', flip: false });
 
-export default function MarkdownElement(props) {
+const MarkdownElement = React.forwardRef(function MarkdownElement(props, ref) {
   const { className, renderedMarkdown, ...other } = props;
   const classes = useStyles();
   const more = {};
@@ -209,10 +213,19 @@ export default function MarkdownElement(props) {
     more.dangerouslySetInnerHTML = { __html: renderedMarkdown };
   }
 
-  return <div className={clsx(classes.root, 'markdown-body', className)} {...more} {...other} />;
-}
+  return (
+    <div
+      className={clsx(classes.root, 'markdown-body', className)}
+      {...more}
+      {...other}
+      ref={ref}
+    />
+  );
+});
 
 MarkdownElement.propTypes = {
   className: PropTypes.string,
   renderedMarkdown: PropTypes.string,
 };
+
+export default MarkdownElement;

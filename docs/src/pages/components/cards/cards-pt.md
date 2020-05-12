@@ -3,7 +3,7 @@ title: Componente React para Cartão
 components: Card, CardActionArea, CardActions, CardContent, CardHeader, CardMedia, Collapse, Paper
 ---
 
-# Card (cartão)
+# Cartão
 
 <p class="description">Cartões contêm conteúdo e ações sobre um único assunto.</p>
 
@@ -51,4 +51,4 @@ Aqui está um exemplo de um controle de mídia do cartão.
 
 ## Customização
 
-👑 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://mui-treasury.com/components/card).
+👑 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://deprecate.mui-treasury.com/components/card).

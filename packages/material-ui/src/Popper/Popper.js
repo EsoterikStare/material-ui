@@ -112,7 +112,7 @@ const Popper = React.forwardRef(function Popper(props, ref) {
         ) {
           console.warn(
             [
-              'Material-UI: the `anchorEl` prop provided to the component is invalid.',
+              'Material-UI: The `anchorEl` prop provided to the component is invalid.',
               'The anchor element should be part of the document layout.',
               "Make sure the element is present in the document or that it's not display none.",
             ].join('\n'),
@@ -215,6 +215,7 @@ const Popper = React.forwardRef(function Popper(props, ref) {
           // Fix Popper.js display issue
           top: 0,
           left: 0,
+          display: !open && keepMounted && !transition ? 'none' : null,
           ...style,
         }}
       >
@@ -253,7 +254,7 @@ Popper.propTypes = {
           ) {
             return new Error(
               [
-                'Material-UI: the `anchorEl` prop provided to the component is invalid.',
+                'Material-UI: The `anchorEl` prop provided to the component is invalid.',
                 'The anchor element should be part of the document layout.',
                 "Make sure the element is present in the document or that it's not display none.",
               ].join('\n'),
@@ -267,7 +268,7 @@ Popper.propTypes = {
         ) {
           return new Error(
             [
-              'Material-UI: the `anchorEl` prop provided to the component is invalid.',
+              'Material-UI: The `anchorEl` prop provided to the component is invalid.',
               'It should be an HTML element instance or a referenceObject ',
               '(https://popper.js.org/docs/v1/#referenceObject).',
             ].join('\n'),

@@ -4,6 +4,10 @@
 
 Para uma experiência de usuário ideal, as interfaces do material design precisam adaptar seu layout em vários pontos de quebra. Material-UI usa uma implementação **simplificada** da [especificação](https://material.io/design/layout/responsive-layout-grid.html#breakpoints) original.
 
+Os pontos de quebra são usados internamente em vários componentes para torná-los responsivos, mas você também pode tirar proveito deles para controlar o leiaute da sua aplicação através do componente [Grade](/components/grid/) e [Hidden](/components/hidden/).
+
+## Default breakpoints
+
 Cada ponto de quebra (uma chave) corresponde a uma largura de tela *fixa* (um valor):
 
 - **xs,** extra-pequeno: 0px
@@ -12,7 +16,7 @@ Cada ponto de quebra (uma chave) corresponde a uma largura de tela *fixa* (um va
 - **lg,** grande: 1280px
 - **xl,** extra-grande: 1920px
 
-Estes [valores de ponto de quebra](/customization/default-theme/?expand-path=$.breakpoints.values) são usados para determinar intervalos de ponto de quebra. Um intervalo inicia a partir do valor do ponto de quebra, incluindo seu valor inicial, até o próximo valor de ponto de quebra menos um:
+These breakpoint values are used to determine breakpoint ranges. Um intervalo inicia a partir do valor do ponto de quebra, incluindo seu valor inicial, até o próximo valor de ponto de quebra menos um:
 
 ```js
 valor           |0px     600px    960px    1280px   1920px
@@ -21,9 +25,7 @@ largura da tela |--------|--------|--------|--------|-------->
 intervalo       |   xs   |   sm   |   md   |   lg   |   xl
 ```
 
-Esses valores sempre podem ser customizados. Você os encontrará no tema, no objeto [`breakpoints.values`](/customization/default-theme/?expand-path=$.breakpoints.values).
-
-Os pontos de quebra são usados internamente em vários componentes para torná-los responsivos, mas você também pode tirar proveito deles para controlar o leiaute da sua aplicação através do componente [Grade](/components/grid/) e [Hidden](/components/hidden/).
+These values can be [customized](#custom-breakpoints).
 
 ## Consultas de Mídia CSS
 
@@ -81,6 +83,59 @@ Na demonstração a seguir, alteramos o elemento DOM renderizado (*em*, <u>u</u>
 
 {{"demo": "pages/customization/breakpoints/WithWidth.js"}}
 
+## Custom breakpoints
+
+You define your project's breakpoints in the `theme.breakpoints` section of your theme.
+
+- [`theme.breakpoints.values`](/customization/default-theme/?expand-path=$.breakpoints.values): Default to the [above values](#default-breakpoints). The keys are your screen names, and the values are the min-width where that breakpoint should start.
+- `theme.breakpoints.unit`: Default to `px`. The unit used for the breakpoint's values.
+- `theme.breakpoints.step`: Default to 5 (`0.05px`). The increment used to implement exclusive breakpoints.
+
+If you change the default breakpoints's values, you need to provide them all:
+
+```jsx
+const theme = createMuiTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+})
+```
+
+Feel free to have as few or as many breakpoints as you want, naming them in whatever way you'd prefer for your project.
+
+```tsx
+const theme = createMuiTheme({
+  breakpoints: {
+    values: {
+      tablet: 640,
+      laptop: 1024,
+      desktop: 1280,
+    },
+  },
+});
+
+declare module "@material-ui/core/styles/createBreakpoints"
+{
+  interface BreakpointOverrides
+  {
+    xs: false; // removes the `xs` breakpoint
+    sm: false;
+    md: false;
+    lg: false;
+    xl: false;
+    tablet: true; // adds the `tablet` breakpoint
+    laptop: true;
+    desktop: true;
+  }
+}
+```
+
 ## API
 
 ### `theme.breakpoints.up(key) => media query`
@@ -99,8 +154,8 @@ Na demonstração a seguir, alteramos o elemento DOM renderizado (*em*, <u>u</u>
 const styles = theme => ({
   root: {
     backgroundColor: 'blue',
-    // Corresponde [md, ∞[
-    //             [960px, ∞[
+    // Match [md, ∞)
+    //       [960px, ∞)
     [theme.breakpoints.up('md')]: {
       backgroundColor: 'red',
     },
@@ -124,9 +179,9 @@ const styles = theme => ({
 const styles = theme => ({
   root: {
     backgroundColor: 'blue',
-    // Corresponde [0, md + 1[
-    //             [0, lg[
-    //             [0, 1280px[
+    // Match [0, md + 1)
+    //       [0, lg)
+    //       [0, 1280px)
     [theme.breakpoints.down('md')]: {
       backgroundColor: 'red',
     },
@@ -150,9 +205,9 @@ const styles = theme => ({
 const styles = theme => ({
   root: {
     backgroundColor: 'blue',
-    // Corresponde [md, md + 1[
-    //             [md, lg[
-    //             [960px, 1280px[
+    // Match [md, md + 1)
+    //       [md, lg)
+    //       [960px, 1280px)
     [theme.breakpoints.only('md')]: {
       backgroundColor: 'red',
     },
@@ -177,9 +232,9 @@ const styles = theme => ({
 const styles = theme => ({
   root: {
     backgroundColor: 'blue',
-    // Corresponde [sm, md + 1[
-    //             [sm, lg[
-    //             [600px, 1280px[
+    // Match [sm, md + 1)
+    //       [sm, lg)
+    //       [600px, 1280px[
     [theme.breakpoints.between('sm', 'md')]: {
       backgroundColor: 'red',
     },

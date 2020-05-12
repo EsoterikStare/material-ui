@@ -45,17 +45,22 @@ O componente tem dois estados que podem ser controlados:
 
 ## Free solo
 
-Coloque `freeSolo` como true para que o textbox contenha qualquer valor aleatório. The prop is designed to cover the primary use case of a **search box** with suggestions, e.g. Google search or react-autowhatever.
+Coloque `freeSolo` como true para que o textbox contenha qualquer valor aleatório.
+
+### Campo search
+
+A propriedade foi desenvolvida para suprir a forma de uso mais comum de um **campo do tipo search** com sugestões, por exemplo, pesquisa do Google ou react-autowhatever.
 
 {{"demo": "pages/components/autocomplete/FreeSolo.js"}}
 
 ### Creatable
 
-If you intend to use this mode for a [combo box](#combo-box) like experience (an enhanced version of a select element) we recommend setting:
+Se você pretende usar este modo para uma [caixa de combo](#combo-box), por experiência (uma versão aprimorada de um elemento select) recomendamos a configuração:
 
-- `selectOnFocus` to helps the user clear the selected value.
-- `clearOnBlur` to helps the user to enter a new value.
-- A last option, for instance `Add "YOUR SEARCH"`.
+- `selectOnFocus` para ajudar o usuário a limpar o valor selecionado.
+- `clearOnBlur` para ajudar o usuário a digitar um novo valor.
+- `handleHomeEndKeys` to move focus inside the popup with the <kbd>Home</kbd> and <kbd>End</kbd> keys.
+- Adicione uma última opção para indicar a possibilidade de adição, por exemplo `Adicionar "SUA PESQUISA"`.
 
 {{"demo": "pages/components/autocomplete/FreeSoloCreateOption.js"}}
 

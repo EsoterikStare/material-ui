@@ -11,7 +11,7 @@
 function clamp(value, min = 0, max = 1) {
   if (process.env.NODE_ENV !== 'production') {
     if (value < min || value > max) {
-      console.error(`Material-UI: the value provided ${value} is out of range [${min}, ${max}].`);
+      console.error(`Material-UI: The value provided ${value} is out of range [${min}, ${max}].`);
     }
   }
 
@@ -27,14 +27,20 @@ function clamp(value, min = 0, max = 1) {
 export function hexToRgb(color) {
   color = color.substr(1);
 
-  const re = new RegExp(`.{1,${color.length / 3}}`, 'g');
+  const re = new RegExp(`.{1,${color.length >= 6 ? 2 : 1}}`, 'g');
   let colors = color.match(re);
 
   if (colors && colors[0].length === 1) {
     colors = colors.map((n) => n + n);
   }
 
-  return colors ? `rgb(${colors.map((n) => parseInt(n, 16)).join(', ')})` : '';
+  return colors
+    ? `rgb${colors.length === 4 ? 'a' : ''}(${colors
+        .map((n, index) => {
+          return index < 3 ? parseInt(n, 16) : Math.round((parseInt(n, 16) / 255) * 1000) / 1000;
+        })
+        .join(', ')})`
+    : '';
 }
 
 function intToHex(int) {
@@ -108,7 +114,7 @@ export function decomposeColor(color) {
   if (['rgb', 'rgba', 'hsl', 'hsla'].indexOf(type) === -1) {
     throw new Error(
       [
-        `Material-UI: unsupported \`${color}\` color.`,
+        `Material-UI: Unsupported \`${color}\` color.`,
         'We support the following formats: #nnn, #nnnnnn, rgb(), rgba(), hsl(), hsla().',
       ].join('\n'),
     );

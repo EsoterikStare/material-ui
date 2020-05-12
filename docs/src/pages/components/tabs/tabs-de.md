@@ -1,6 +1,6 @@
 ---
 title: Tabs React-Komponente
-components: Tabs, Tab
+components: Tabs, Tab, TabScrollButton
 ---
 
 # Tabs
@@ -69,7 +69,7 @@ Hier ist ein Beispiel zum Anpassen der Komponente. Mehr dazu erfahren Sie auf de
 
 {{"demo": "pages/components/tabs/CustomizedTabs.js", "bg": true}}
 
-👑 Wenn Sie nach Inspiration suchen, sehen sie sich [MUI Treasury's Anpassungs-Beispiele](https://mui-treasury.com/components/tabs) an.
+👑 Wenn Sie nach Inspiration suchen, sehen sie sich [MUI Treasury's Anpassungs-Beispiele](https://deprecate.mui-treasury.com/components/tabs) an.
 
 ## Vertikale Tabs
 
@@ -88,3 +88,9 @@ Tab-Beschriftungen können entweder nur Symbole oder nur Text enthalten.
 {{"demo": "pages/components/tabs/IconTabs.js", "bg": true}}
 
 {{"demo": "pages/components/tabs/IconLabelTabs.js", "bg": true}}
+
+## Experimental Tabs API
+
+`@material-ui/lab` offers utility components that inject props to implement accessible tabs following [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#tabpanel).
+
+{{"demo": "pages/components/tabs/LabTabs.js", "bg": true}}

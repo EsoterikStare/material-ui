@@ -2,7 +2,7 @@
   "adblock": "Se você não se importa com anúncios relacionados à tecnologia e deseja dar suporte ao Código Aberto, inscreva o Material-UI na lista de liberações no seu bloqueador de anúncios.",
   "albumDescr": "Um layout de página de álbum / galeria responsivo com uma unidade de herói e rodapé.",
   "albumTitle": "Álbum",
-  "algoliaSearch": "Procurar",
+  "algoliaSearch": "Buscar",
   "blogDescr": "Um layout de página de blog sofisticado. O suporte do Markdown é cortesia do markdown-to-jsx, mas é facilmente substituído.",
   "blogTitle": "Blog",
   "cdn": "ou use uma CDN.",
@@ -41,7 +41,7 @@
   "increaseSpacing": "aumentar o espaçamento",
   "installation": "Instalação",
   "installButton": "Ler instruções de instalação",
-  "installDescr": "Instale o Material-UI via npm. Nós cuidamos de injetar o CSS necessário.",
+  "installDescr": "Instale o Material-UI via npm. Nós cuidaremos de injetar o CSS necessário.",
   "joinThese": "Junte-se a estas e outras grandes organizações!",
   "letUsKnow": "Nos conte!",
   "license": "Licença MIT",
@@ -80,7 +80,7 @@
   "thanks": "Obrigado!",
   "themes": "Temas premium",
   "themesButton": "Explorar temas",
-  "themesDescr": "Take your project to the next level with premium themes from our official marketplace – all built on Material-UI.",
+  "themesDescr": "Leve seu projeto para um nível superior com os temas premium da nossa loja - todos construídos em Material-UI.",
   "toggleNotifications": "Alternar Painel de notificações",
   "toggleRTL": "Alternar da direita para a esquerda/esquerda para a direita",
   "toggleTheme": "Alternar tema claro/escuro",
@@ -94,8 +94,8 @@
   "viewGitHub": "Visualizar o código fonte no GitHub",
   "visit": "Acesse o site",
   "whosUsing": "Quem tem usado Material-UI?",
-  "initialFocusLabel": "A generic container that is programmatically focused to test keyboard navigation of our components.",
-  "resetFocus": "Reset focus to test keyboard navigation",
+  "initialFocusLabel": "Um contêiner genérico que é focado via programação para testar a navegação por teclado dos nossos componentes.",
+  "resetFocus": "Resetar foco para testar a navegação por teclado",
   "pages": {
     "/getting-started": "Comece a usar",
     "/getting-started/installation": "Instalação",
@@ -236,7 +236,7 @@
     "/components/button-group": "Grupo de botões",
     "/components/floating-action-button": "Botão de ação flutuante",
     "/components/backdrop": "Backdrop",
-    "/components/alert": "Alert",
+    "/components/alert": "Alerta",
     "/components/pagination": "Paginação"
   }
 }

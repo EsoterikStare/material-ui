@@ -88,6 +88,7 @@ export default function useAutocomplete(props) {
     getOptionLabel = (x) => x,
     getOptionSelected = (option, value) => option === value,
     groupBy,
+    handleHomeEndKeys = !props.freeSolo,
     id: idProp,
     includeInputInList = false,
     inputValue: inputValueProp,
@@ -115,69 +116,6 @@ export default function useAutocomplete(props) {
   const [focusedTag, setFocusedTag] = React.useState(-1);
   const defaultHighlighted = autoHighlight ? 0 : -1;
   const highlightedIndexRef = React.useRef(defaultHighlighted);
-
-  const setHighlightedIndex = useEventCallback((index, reason = 'auto', event) => {
-    highlightedIndexRef.current = index;
-    // does the index exist?
-    if (index === -1) {
-      inputRef.current.removeAttribute('aria-activedescendant');
-    } else {
-      inputRef.current.setAttribute('aria-activedescendant', `${id}-option-${index}`);
-    }
-
-    if (!listboxRef.current) {
-      return;
-    }
-
-    const prev = listboxRef.current.querySelector('[data-focus]');
-    if (prev) {
-      prev.removeAttribute('data-focus');
-    }
-
-    const listboxNode = listboxRef.current.parentElement.querySelector('[role="listbox"]');
-
-    // "No results"
-    if (!listboxNode) {
-      return;
-    }
-
-    if (onHighlightChange) {
-      onHighlightChange(event, options[index], reason);
-    }
-
-    if (index === -1) {
-      listboxNode.scrollTop = 0;
-      return;
-    }
-
-    const option = listboxRef.current.querySelector(`[data-option-index="${index}"]`);
-
-    if (!option) {
-      return;
-    }
-
-    option.setAttribute('data-focus', 'true');
-
-    // Scroll active descendant into view.
-    // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
-    //
-    // Consider this API instead once it has a better browser support:
-    // .scrollIntoView({ scrollMode: 'if-needed', block: 'nearest' });
-    if (listboxNode.scrollHeight > listboxNode.clientHeight && reason !== 'mouse') {
-      const element = option;
-
-      const scrollBottom = listboxNode.clientHeight + listboxNode.scrollTop;
-      const elementBottom = element.offsetTop + element.offsetHeight;
-      if (elementBottom > scrollBottom) {
-        listboxNode.scrollTop = elementBottom - listboxNode.clientHeight;
-      } else if (
-        element.offsetTop - element.offsetHeight * (groupBy ? 1.3 : 0) <
-        listboxNode.scrollTop
-      ) {
-        listboxNode.scrollTop = element.offsetTop - element.offsetHeight * (groupBy ? 1.3 : 0);
-      }
-    }
-  });
 
   const [value, setValue] = useControlled({
     controlled: valueProp,
@@ -207,7 +145,7 @@ export default function useAutocomplete(props) {
           const erroneousReturn =
             optionLabel === undefined ? 'undefined' : `${typeof optionLabel} (${optionLabel})`;
           console.error(
-            `Material-UI: the \`getOptionLabel\` method of ${componentName} returned ${erroneousReturn} instead of a string for ${JSON.stringify(
+            `Material-UI: The \`getOptionLabel\` method of ${componentName} returned ${erroneousReturn} instead of a string for ${JSON.stringify(
               newValue,
             )}.`,
           );
@@ -242,7 +180,7 @@ export default function useAutocomplete(props) {
   const inputValueIsSelectedValue =
     !multiple && value != null && inputValue === getOptionLabel(value);
 
-  let popupOpen = open;
+  const popupOpen = open;
 
   const filteredOptions = popupOpen
     ? filterOptions(
@@ -263,8 +201,6 @@ export default function useAutocomplete(props) {
       )
     : [];
 
-  popupOpen = freeSolo && filteredOptions.length === 0 ? false : popupOpen;
-
   if (process.env.NODE_ENV !== 'production') {
     if (value !== null && !freeSolo && options.length > 0) {
       const missingValue = (multiple ? value : [value]).filter(
@@ -274,7 +210,7 @@ export default function useAutocomplete(props) {
       if (missingValue.length > 0) {
         console.warn(
           [
-            `Material-UI: the value provided to ${componentName} is invalid.`,
+            `Material-UI: The value provided to ${componentName} is invalid.`,
             `None of the options match with \`${
               missingValue.length > 1
                 ? JSON.stringify(missingValue)
@@ -334,6 +270,68 @@ export default function useAutocomplete(props) {
       }
     }
   }
+  const setHighlightedIndex = useEventCallback((index, reason = 'auto', event) => {
+    highlightedIndexRef.current = index;
+    // does the index exist?
+    if (index === -1) {
+      inputRef.current.removeAttribute('aria-activedescendant');
+    } else {
+      inputRef.current.setAttribute('aria-activedescendant', `${id}-option-${index}`);
+    }
+
+    if (!listboxRef.current) {
+      return;
+    }
+
+    const prev = listboxRef.current.querySelector('[data-focus]');
+    if (prev) {
+      prev.removeAttribute('data-focus');
+    }
+
+    const listboxNode = listboxRef.current.parentElement.querySelector('[role="listbox"]');
+
+    // "No results"
+    if (!listboxNode) {
+      return;
+    }
+
+    if (onHighlightChange) {
+      onHighlightChange(event, filteredOptions[index], reason);
+    }
+
+    if (index === -1) {
+      listboxNode.scrollTop = 0;
+      return;
+    }
+
+    const option = listboxRef.current.querySelector(`[data-option-index="${index}"]`);
+
+    if (!option) {
+      return;
+    }
+
+    option.setAttribute('data-focus', 'true');
+
+    // Scroll active descendant into view.
+    // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
+    //
+    // Consider this API instead once it has a better browser support:
+    // .scrollIntoView({ scrollMode: 'if-needed', block: 'nearest' });
+    if (listboxNode.scrollHeight > listboxNode.clientHeight && reason !== 'mouse') {
+      const element = option;
+
+      const scrollBottom = listboxNode.clientHeight + listboxNode.scrollTop;
+      const elementBottom = element.offsetTop + element.offsetHeight;
+      if (elementBottom > scrollBottom) {
+        listboxNode.scrollTop = elementBottom - listboxNode.clientHeight;
+      } else if (
+        element.offsetTop - element.offsetHeight * (groupBy ? 1.3 : 0) <
+        listboxNode.scrollTop
+      ) {
+        listboxNode.scrollTop = element.offsetTop - element.offsetHeight * (groupBy ? 1.3 : 0);
+      }
+    }
+  });
 
   const changeHighlightedIndex = useEventCallback((diff, direction, reason = 'auto', event) => {
     if (!popupOpen) {
@@ -405,7 +403,7 @@ export default function useAutocomplete(props) {
   });
 
   React.useEffect(() => {
-    if (!open) {
+    if (!popupOpen) {
       return;
     }
 
@@ -451,7 +449,7 @@ export default function useAutocomplete(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     value,
-    open,
+    popupOpen,
     filterSelectedOptions,
     changeHighlightedIndex,
     setHighlightedIndex,
@@ -502,7 +500,7 @@ export default function useAutocomplete(props) {
     let newValue = option;
 
     if (multiple) {
-      newValue = Array.isArray(value) ? [...value] : [];
+      newValue = Array.isArray(value) ? value.slice() : [];
 
       if (process.env.NODE_ENV !== 'production') {
         const matches = newValue.filter((val) => getOptionSelected(option, val));
@@ -510,7 +508,7 @@ export default function useAutocomplete(props) {
         if (matches.length > 1) {
           console.error(
             [
-              `Material-UI: the \`getOptionSelected\` method of ${componentName} do not handle the arguments correctly.`,
+              `Material-UI: The \`getOptionSelected\` method of ${componentName} do not handle the arguments correctly.`,
               `The component expects a single value to match a given option but found ${matches.length} matches.`,
             ].join('\n'),
           );
@@ -625,14 +623,14 @@ export default function useAutocomplete(props) {
 
     switch (event.key) {
       case 'Home':
-        if (popupOpen) {
+        if (popupOpen && handleHomeEndKeys) {
           // Prevent scroll of the page
           event.preventDefault();
           changeHighlightedIndex('start', 'next', 'keyboard', event);
         }
         break;
       case 'End':
-        if (popupOpen) {
+        if (popupOpen && handleHomeEndKeys) {
           // Prevent scroll of the page
           event.preventDefault();
           changeHighlightedIndex('end', 'previous', 'keyboard', event);
@@ -718,7 +716,7 @@ export default function useAutocomplete(props) {
       case 'Backspace':
         if (multiple && inputValue === '' && value.length > 0) {
           const index = focusedTag === -1 ? value.length - 1 : focusedTag;
-          const newValue = [...value];
+          const newValue = value.slice();
           newValue.splice(index, 1);
           handleValue(event, newValue, 'remove-option', {
             option: value[index],
@@ -807,7 +805,7 @@ export default function useAutocomplete(props) {
   };
 
   const handleTagDelete = (index) => (event) => {
-    const newValue = [...value];
+    const newValue = value.slice();
     newValue.splice(index, 1);
     handleValue(event, newValue, 'remove-option', {
       option: value[index],
@@ -884,7 +882,7 @@ export default function useAutocomplete(props) {
         if (process.env.NODE_ENV !== 'production') {
           if (indexBy.get(group) && !warn) {
             console.warn(
-              `Material-UI: the options provided combined with the \`groupBy\` method of ${componentName} returns duplicated headers.`,
+              `Material-UI: The options provided combined with the \`groupBy\` method of ${componentName} returns duplicated headers.`,
               'You can solve the issue by sorting the options with the output of `groupBy`.',
             );
             warn = true;

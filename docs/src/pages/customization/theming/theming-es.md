@@ -19,7 +19,7 @@ Si desea personalizar el tema, deberá de usar el componente ` ThemeProvider ` p
 Cambiar las variables de configuración del tema es la forma más efectiva de adaptar Material-UI a sus necesidades. Las siguientes secciones cubren las variables de tema más importantes:
 
 - [Paleta](/customization/palette/)
-- [Typography](/customization/typography/)
+- [Tipografía](/customization/typography/)
 - [Espaciado](/customization/spacing/)
 - [Separaciones](/customization/breakpoints/)
 - [z-index](/customization/z-index/)
@@ -43,11 +43,11 @@ Usted [ puedes anidar ](/styles/advanced/#theme-nesting) multiples proveedores d
 
 {{"demo": "pages/customization/theming/ThemeNesting.js"}}
 
-El tema interno **sobreescribirá** el tema exterior. Puede ampliar el tema externo proporcionando una función:
+El tema interno **sobrescribirá** el tema exterior. Puede ampliar el tema externo proporcionando una función:
 
 {{"demo": "pages/customization/theming/ThemeNestingExtend.js"}}
 
-### A note on performance
+### Sobre el rendimiento
 
 Las implicaciones de rendimiento de anidar el componente ` ThemeProvider ` están vinculados al trabajo de JSS detrás de escena. El punto principal a entender es que el CSS inyectado se almacena en caché con la siguiente tupla ` (styles, theme) `.
 
@@ -58,7 +58,7 @@ Las implicaciones de rendimiento de anidar el componente ` ThemeProvider ` está
 
 ### `createMuiTheme(options, ...args) => theme`
 
-Generate a theme base on the options received.
+Generar un tema en base a las opciones recibidas.
 
 #### Argumentos
 
@@ -113,3 +113,88 @@ import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 let theme = createMuiTheme();
 theme = responsiveFontSizes(theme);
 ```
+
+### `unstable_createMuiStrictModeTheme(options, ...args) => theme`
+
+**WARNING**: Do not use this method in production.
+
+Generates a theme that reduces the amount of warnings inside [`React.StrictMode`](https://reactjs.org/docs/strict-mode.html) like `Warning: findDOMNode is deprecated in StrictMode`.
+
+#### Requirements
+
+Using `unstable_createMuiStrictModeTheme` restricts the usage of some of our components.
+
+##### `component` prop
+
+The component used in the `component` prop of the following components need to forward their ref:
+
+- [`Collapse`](/api/Collapse/)
+
+Otherwise you'll encounter `Error: Function component cannot be given refs`. See also: [Composition: Caveat with refs](/guides/composition/#caveat-with-refs).
+
+##### `children` prop
+
+The `children` of the following components need to forward their ref:
+
+- [`Fade`](/api/Fade/)
+- [`Grow`](/api/Grow/)
+- [`Zoom`](/api/Zoom/)
+
+```diff
+-function TabPanel(props) {
++const TabPanel = React.forwardRef(function TabPanel(props, ref) {
+  return <div role="tabpanel" {...props} ref={ref} />;
+-}
++});
+
+function Tabs() {
+  return <Fade><TabPanel>...</TabPanel></Fade>;
+}
+```
+
+Otherwise the component will not animate properly and you'll encounter the warning that `Function components cannot be given refs`.
+
+#### Disable StrictMode compatibility partially
+
+If you still see `Error: Function component cannot be given refs` then you're probably using a third-party component for which the previously mentioned fixes aren't applicable. You can fix this by applying `disableStrictModeCompat`. You'll see deprecation warnings again but these are only warnings while `Function component cannot be given refs` actually breaks the documented behavior of our components.
+
+```diff
+import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
+
+function ThirdPartyTabPanel(props) {
+  return <div {...props} role="tabpanel">
+}
+
+const theme = unstable_createMuiStrictModeTheme();
+
+function Fade() {
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+
+-        <Fade>
++        <Fade disableStrictModeCompat>
+          <ThirdPartyTabPanel />
+        </Fade>
+      </ThemeProvider>
+    </React.StrictMode>,
+  );
+}
+```
+
+#### Argumentos
+
+1. `options` (*Object*): Takes an incomplete theme object and adds the missing parts.
+2. `...args` (*Array*): Deep merge the arguments with the about to be returned theme.
+
+#### Regresa
+
+`theme` (*Object*): A complete, ready to use theme object.
+
+#### Ejemplos
+
+```js import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
+
+const theme = unstable_createMuiStrictModeTheme();
+
+function App() { return ( <React.StrictMode> <ThemeProvider theme={theme}> <LandingPage /> </ThemeProvider> </React.StrictMode>, ); } ````

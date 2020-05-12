@@ -46,7 +46,7 @@ describe('<TreeView />', () => {
 
       setProps({ expanded: undefined });
       expect(consoleErrorMock.messages()[0]).to.include(
-        'Material-UI: a component is changing the controlled expanded state of TreeView to be uncontrolled.',
+        'Material-UI: A component is changing the controlled expanded state of TreeView to be uncontrolled.',
       );
     });
 
@@ -59,7 +59,7 @@ describe('<TreeView />', () => {
 
       setProps({ selected: undefined });
       expect(consoleErrorMock.messages()[0]).to.include(
-        'Material-UI: a component is changing the controlled selected state of TreeView to be uncontrolled.',
+        'Material-UI: A component is changing the controlled selected state of TreeView to be uncontrolled.',
       );
     });
   });
@@ -86,7 +86,7 @@ describe('<TreeView />', () => {
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
     fireEvent.click(getByText('one'));
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'false');
-    fireEvent.keyDown(document.activeElement, { key: '*' });
+    fireEvent.keyDown(getByTestId('one'), { key: '*' });
     expect(getByTestId('one')).to.have.attribute('aria-expanded', 'true');
   });
 
@@ -166,11 +166,11 @@ describe('<TreeView />', () => {
 
     fireEvent.click(getByText('one'));
     expect(getByTestId('one')).toHaveFocus();
-    fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
+    fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
     expect(getByTestId('two')).toHaveFocus();
-    fireEvent.keyDown(document.activeElement, { key: 'ArrowUp' });
+    fireEvent.keyDown(getByTestId('two'), { key: 'ArrowUp' });
     expect(getByTestId('one')).toHaveFocus();
-    fireEvent.keyDown(document.activeElement, { key: 'ArrowDown' });
+    fireEvent.keyDown(getByTestId('one'), { key: 'ArrowDown' });
     expect(getByTestId('two')).toHaveFocus();
   });
 

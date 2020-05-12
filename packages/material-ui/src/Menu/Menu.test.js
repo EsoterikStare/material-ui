@@ -226,7 +226,7 @@ describe('<Menu />', () => {
       </Menu>,
     );
 
-    assert.lengthOf(wrapper.find('span[role="menuitem"]'), 1);
+    expect(wrapper.find('span[role="menuitem"]')).to.have.length(1);
   });
 
   describe('warnings', () => {
@@ -247,7 +247,7 @@ describe('<Menu />', () => {
 
       expect(consoleErrorMock.callCount()).to.equal(2);
       expect(consoleErrorMock.messages()[0]).to.include(
-        "Material-UI: the Menu component doesn't accept a Fragment as a child.",
+        "Material-UI: The Menu component doesn't accept a Fragment as a child.",
       );
     });
   });

@@ -36,8 +36,8 @@ components: TextField, Popper, Autocomplete
 
 此组件有两种可控的状态：
 
-1. 一种状态是“value”，它是 `value`/`onChange` 属性的组合。 This state represents the value selected by the user, for instance when pressing <kbd>Enter</kbd>.
-2. 还有一种状态是 “input value”，它则是 `inputValue`/`onInputChange` 这两个属性的组合。 This state represents the value displayed in the textbox.
+1. “value” 状态，使用 `value`/`onChange` 属性组合。 这个状态表示用户选择的值，例如，当按 <kbd>Enter</kbd> 键时.
+2. “input value” 状态，使用 `inputValue`/`onInputChange` 属性组合。 这个状态表示展示在文本框中的值。
 
 > ⚠️ 以上两种状态互不干涉，它们应该被单独控制着。
 
@@ -45,7 +45,11 @@ components: TextField, Popper, Autocomplete
 
 ## 免费工具
 
-将 `freeSolo` 设置为true，以便在文本框中输入任意值。 The prop is designed to cover the primary use case of a **search box** with suggestions, e.g. Google search or react-autowhatever.
+将 `freeSolo` 设置为true，以便在文本框中输入任意值。
+
+### Search input
+
+The prop is designed to cover the primary use case of a **search input** with suggestions, e.g. Google search or react-autowhatever.
 
 {{"demo": "pages/components/autocomplete/FreeSolo.js"}}
 
@@ -55,11 +59,12 @@ If you intend to use this mode for a [combo box](#combo-box) like experience (an
 
 - `selectOnFocus` to helps the user clear the selected value.
 - `clearOnBlur` to helps the user to enter a new value.
+- `handleHomeEndKeys` to move focus inside the popup with the <kbd>Home</kbd> and <kbd>End</kbd> keys.
 - A last option, for instance `Add "YOUR SEARCH"`.
 
 {{"demo": "pages/components/autocomplete/FreeSoloCreateOption.js"}}
 
-您也可以在用户想要添加一个新的值时显示一个对话框。
+您也可以在用户想要添加一个新的值时显示一个对话框
 
 {{"demo": "pages/components/autocomplete/FreeSoloCreateOptionDialog.js"}}
 
@@ -73,7 +78,7 @@ If you intend to use this mode for a [combo box](#combo-box) like experience (an
 
 ## `useAutocomplete`
 
-对于那些更高级的定制用例，我们公开了一个 `useAutocomplete()` hook。 它接受的参数与 Autocomplete 组件接受的大同小异，但是不包括与 JSX 渲染相关的所有属性。 Autocomplete 组件的内部也使用了此 hook。
+作为一种高级定制方式，我们公开了一个 `useAutocomplete()` 钩子方法。 它接受几乎与Autocomplete组件相同的参数，辅以与JSX渲染有关的所有参数。 Autocomplete组件内部也是使用的此钩子方法。
 
 ```jsx
 import useAutocomplete from '@material-ui/lab/useAutocomplete';
@@ -83,11 +88,11 @@ import useAutocomplete from '@material-ui/lab/useAutocomplete';
 
 {{"demo": "pages/components/autocomplete/UseAutocomplete.js", "defaultCodeOpen": false}}
 
-### 自定义的 hook
+### 自定义钩子
 
 {{"demo": "pages/components/autocomplete/CustomizedHook.js"}}
 
-你也可以转到[定制的自动补全组件](#customized-autocomplete)章节，查看一下使用 `自动补全（Autocomplete）` 组件的自定义例子，而不是使用 hook。
+转到[自定义自动完成](#customized-autocomplete)部分，查看使用 `Autocomplete` 组件（而不是钩子）的例子。
 
 ## 异步请求
 
@@ -99,7 +104,7 @@ import useAutocomplete from '@material-ui/lab/useAutocomplete';
 
 {{"demo": "pages/components/autocomplete/GoogleMaps.js"}}
 
-在这个例子里，我们加载了[Google Maps JavaScript](https://developers. google. com/maps/documentation/javascript/tutorial) API。
+对于这个演示，我们需要加载 [谷歌地图JavaScript](https://developers. google. com/maps/documentation/javascript/tutorial) API。
 
 > ⚠️在你开始使用 Google Maps JavaScript API 之前，你必须注册并且创建一个可支付的账户。
 
@@ -109,7 +114,7 @@ import useAutocomplete from '@material-ui/lab/useAutocomplete';
 
 {{"demo": "pages/components/autocomplete/Tags.js"}}
 
-### 固定的选项
+### 固定选项
 
 有时候你需要锁定某个标签，这样他们不会被从界面中移除，这时你可以将 chips 设置为禁用。
 
@@ -133,7 +138,7 @@ import useAutocomplete from '@material-ui/lab/useAutocomplete';
 
 ## 自定义的自动补全组件
 
-该演示再次生成了 GitHub 的标签选择器：
+该演示再现了GitHub的标签选择器：
 
 {{"demo": "pages/components/autocomplete/GitHubLabel.js"}}
 
@@ -182,7 +187,7 @@ const filterOptions = createFilterOptions({
 
 {{"demo": "pages/components/autocomplete/Filter.js", "defaultCodeOpen": false}}
 
-### 高级使用
+### 高级
 
 对于更复杂的过滤机制，譬如模糊匹配（fuzzy matching），我们推荐您看一下 [match-sorter](https://github.com/kentcdodds/match-sorter)。 就像这样：
 
@@ -222,7 +227,7 @@ const filterOptions = (options, { inputValue }) =>
         }}
         />
 
-### iOS VoiceOver 辅助功能
+### iOS VoiceOver
 
 iOS Safari 中的 VoiceOver 对 `aria-owns` 属性的支持并不是很到位。 你可以用 `disablePortal` 属性来解决这个问题。
 

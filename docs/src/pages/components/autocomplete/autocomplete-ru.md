@@ -45,7 +45,11 @@ The component has two states that can be controlled:
 
 ## Произвольное значение
 
-Установите для `freeSolo` значение true, чтобы текстовое поле могло содержать любое произвольное значение. The prop is designed to cover the primary use case of a **search box** with suggestions, e.g. Google search or react-autowhatever.
+Установите для `freeSolo` значение true, чтобы текстовое поле могло содержать любое произвольное значение.
+
+### Search input
+
+The prop is designed to cover the primary use case of a **search input** with suggestions, e.g. Google search or react-autowhatever.
 
 {{"demo": "pages/components/autocomplete/FreeSolo.js"}}
 
@@ -55,6 +59,7 @@ If you intend to use this mode for a [combo box](#combo-box) like experience (an
 
 - `selectOnFocus` to helps the user clear the selected value.
 - `clearOnBlur` to helps the user to enter a new value.
+- `handleHomeEndKeys` to move focus inside the popup with the <kbd>Home</kbd> and <kbd>End</kbd> keys.
 - A last option, for instance `Add "YOUR SEARCH"`.
 
 {{"demo": "pages/components/autocomplete/FreeSoloCreateOption.js"}}

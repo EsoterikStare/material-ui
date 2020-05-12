@@ -40,6 +40,7 @@ const theme = createMuiTheme({
 | French                  | fr-FR               | `frFR`     |
 | German                  | de-DE               | `deDE`     |
 | Hebrew                  | he-IL               | `heIL`     |
+| Hindi                   | hi-IN               | `hiIN`     |
 | Hungarian               | hu-HU               | `huHU`     |
 | Icelandic               | is-IS               | `isIS`     |
 | Indonesian              | id-ID               | `idID`     |
@@ -59,7 +60,7 @@ const theme = createMuiTheme({
 | Ukrainian               | uk-UA               | `ukUA`     |
 | Vietnamese              | vi-VN               | `viVN`     |
 
-You can [find the source](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/locale/index.js) in the GitHub repository.
+You can [find the source](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/locale/index.ts) in the GitHub repository.
 
 To create your own translation, or to customise the English text, copy this file to your project, make any changes needed and import the locale from there.
 

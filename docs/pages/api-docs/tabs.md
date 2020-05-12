@@ -29,6 +29,8 @@ The `MuiTabs` name can be used for providing [default props](/customization/glob
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | <span class="prop-name">action</span> | <span class="prop-type">ref</span> |  | Callback fired when the component mounts. This is useful when you want to trigger an action programmatically. It supports two actions: `updateIndicator()` and `updateScrollButtons()` |
+| <span class="prop-name">aria-label</span> | <span class="prop-type">string</span> |  | The label for the Tabs as a string. |
+| <span class="prop-name">aria-labelledby</span> | <span class="prop-type">string</span> |  | An id or list of ids separated by a space that label the Tabs. |
 | <span class="prop-name">centered</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | If `true`, the tabs will be centered. This property is intended for large views. |
 | <span class="prop-name">children</span> | <span class="prop-type">node</span> |  | The content of the component. |
 | <span class="prop-name">classes</span> | <span class="prop-type">object</span> |  | Override or extend the styles applied to the component. See [CSS API](#css) below for more details. |
@@ -38,6 +40,7 @@ The `MuiTabs` name can be used for providing [default props](/customization/glob
 | <span class="prop-name">orientation</span> | <span class="prop-type">'horizontal'<br>&#124;&nbsp;'vertical'</span> | <span class="prop-default">'horizontal'</span> | The tabs orientation (layout flow direction). |
 | <span class="prop-name">ScrollButtonComponent</span> | <span class="prop-type">elementType</span> | <span class="prop-default">TabScrollButton</span> | The component used to render the scroll buttons. |
 | <span class="prop-name">scrollButtons</span> | <span class="prop-type">'auto'<br>&#124;&nbsp;'desktop'<br>&#124;&nbsp;'on'<br>&#124;&nbsp;'off'</span> | <span class="prop-default">'auto'</span> | Determine behavior of scroll buttons when tabs are set to scroll:<br>- `auto` will only present them when not all the items are visible. - `desktop` will only present them on medium and larger viewports. - `on` will always present them. - `off` will never present them. |
+| <span class="prop-name">selectionFollowsFocus</span> | <span class="prop-type">bool</span> |  | If `true` the selected tab changes on focus. Otherwise it only changes on activation. |
 | <span class="prop-name">TabIndicatorProps</span> | <span class="prop-type">object</span> | <span class="prop-default">{}</span> | Props applied to the tab indicator element. |
 | <span class="prop-name">TabScrollButtonProps</span> | <span class="prop-type">object</span> |  | Props applied to the [`TabScrollButton`](/api/tab-scroll-button/) element. |
 | <span class="prop-name">textColor</span> | <span class="prop-type">'secondary'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'inherit'</span> | <span class="prop-default">'inherit'</span> | Determines the color of the `Tab`. |

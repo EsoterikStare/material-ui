@@ -40,6 +40,7 @@ const theme = createMuiTheme({
 | 法语          | fr-FR       | `frFR` |
 | 德语          | de-DE       | `deDE` |
 | Hebrew      | he-IL       | `heIL` |
+| Hindi       | hi-IN       | `hiIN` |
 | 匈牙利语        | hu-HU       | `huHU` |
 | 冰岛语         | is-IS       | `isIS` |
 | 印度尼西亚语      | id-ID       | `idID` |
@@ -59,7 +60,7 @@ const theme = createMuiTheme({
 | 乌克兰语        | uk-UA       | `ukUA` |
 | 越南语         | vi-VN       | `viVN` |
 
-您可以在GitHub库中找到[源文件](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/locale/index.js)。
+您可以在GitHub库中找到[源文件](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/locale/index.ts)。
 
 要创建自己的翻译，或自定义英文文本，请将此文件复制到您的项目中，进行所需的任何更改并从那里导入语言环境。
 

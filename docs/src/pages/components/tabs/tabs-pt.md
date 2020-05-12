@@ -1,6 +1,6 @@
 ---
 title: Componente React para Guias
-components: Tabs, Tab
+components: Tabs, Tab, TabScrollButton
 ---
 
 # Guias
@@ -65,11 +65,11 @@ Botões de rolagem para a esquerda e para a direita nunca serão apresentados. T
 
 ## Guias customizadas
 
-Aqui está um exemplo de customização do componente. Você pode aprender mais sobre isso na [página de documentação de sobrescritas](/customization/components/).
+Aqui esta um exemplo de customização do componente. Você pode aprender mais sobre isso na [página de documentação de sobrescritas](/customization/components/).
 
 {{"demo": "pages/components/tabs/CustomizedTabs.js", "bg": true}}
 
-👑 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://mui-treasury.com/components/tabs).
+👑 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://deprecate.mui-treasury.com/components/tabs).
 
 ## Guias verticais
 
@@ -88,3 +88,9 @@ O rótulo das guias podem ser compostos apenas por ícones ou apenas por texto.
 {{"demo": "pages/components/tabs/IconTabs.js", "bg": true}}
 
 {{"demo": "pages/components/tabs/IconLabelTabs.js", "bg": true}}
+
+## Experimental Tabs API
+
+`@material-ui/lab` offers utility components that inject props to implement accessible tabs following [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#tabpanel).
+
+{{"demo": "pages/components/tabs/LabTabs.js", "bg": true}}

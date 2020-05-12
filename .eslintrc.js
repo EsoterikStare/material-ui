@@ -116,6 +116,8 @@ module.exports = {
         // does not work with wildcard imports. Mistakes will throw at runtime anyway
         'import/named': 'off',
 
+        'material-ui/disallow-active-element-as-key-event-target': 'error',
+
         // upgraded level from recommended
         'mocha/no-exclusive-tests': 'error',
         'mocha/no-skipped-tests': 'error',
@@ -137,6 +139,7 @@ module.exports = {
         // tests are not driven by assistive technology
         // add `jsx-a11y` rules once you encounter them in tests
         'jsx-a11y/click-events-have-key-events': 'off',
+        'jsx-a11y/control-has-associated-label': 'off',
         'jsx-a11y/iframe-has-title': 'off',
         'jsx-a11y/mouse-events-have-key-events': 'off',
         'jsx-a11y/no-noninteractive-tabindex': 'off',

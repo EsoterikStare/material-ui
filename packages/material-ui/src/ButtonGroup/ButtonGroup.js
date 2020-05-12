@@ -214,7 +214,7 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
           if (isFragment(child)) {
             console.error(
               [
-                "Material-UI: the ButtonGroup component doesn't accept a Fragment as a child.",
+                "Material-UI: The ButtonGroup component doesn't accept a Fragment as a child.",
                 'Consider providing an array instead.',
               ].join('\n'),
             );
@@ -223,14 +223,14 @@ const ButtonGroup = React.forwardRef(function ButtonGroup(props, ref) {
 
         return React.cloneElement(child, {
           className: clsx(buttonClassName, child.props.className),
-          disabled: child.props.disabled || disabled,
           color: child.props.color || color,
+          disabled: child.props.disabled || disabled,
+          disableElevation: child.props.disableElevation || disableElevation,
           disableFocusRipple,
           disableRipple,
           fullWidth,
           size: child.props.size || size,
           variant: child.props.variant || variant,
-          disableElevation: child.props.disableElevation || disableElevation,
         });
       })}
     </Component>

@@ -169,7 +169,7 @@ export const styles = (theme) => ({
   listbox: {
     listStyle: 'none',
     margin: 0,
-    padding: '8px 0px',
+    padding: '8px 0',
     maxHeight: '40vh',
     overflow: 'auto',
   },
@@ -267,6 +267,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
     getOptionLabel = (x) => x,
     getOptionSelected,
     groupBy,
+    handleHomeEndKeys = !props.freeSolo,
     id: idProp,
     includeInputInList = false,
     inputValue: inputValueProp,
@@ -350,7 +351,7 @@ const Autocomplete = React.forwardRef(function Autocomplete(props, ref) {
 
   if (limitTags > -1 && Array.isArray(startAdornment)) {
     const more = startAdornment.length - limitTags;
-    if (limitTags && !focused && more > 0) {
+    if (!focused && more > 0) {
       startAdornment = startAdornment.splice(0, limitTags);
       startAdornment.push(
         <span className={classes.tag} key={startAdornment.length}>
@@ -668,6 +669,11 @@ Autocomplete.propTypes = {
    * @returns {string}
    */
   groupBy: PropTypes.func,
+  /**
+   * If `true`, the component handles the "Home" and "End" keys when the popup is open.
+   * It should move focus to the first option and last option, respectively.
+   */
+  handleHomeEndKeys: PropTypes.bool,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.

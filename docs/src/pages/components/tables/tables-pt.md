@@ -3,9 +3,9 @@ title: Componente React  para Tabelas
 components: Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel
 ---
 
-# Table (Tabela)
+# Tabela
 
-<p class="description">Tabelas exibem conjuntos de dados. Eles podem ser totalmente customizadas.</p>
+<p class="description">Tabelas exibem conjuntos de dados. Elas podem ser totalmente customizadas.</p>
 
 [Tabelas](https://material.io/design/components/data-tables.html) apresentam informações de uma forma fácil de visualizar, de modo que os usuários podem procurar por padrões e percepções. Elas podem ser incorporadas no conteúdo principal, assim como Cartões.
 
@@ -79,7 +79,13 @@ Um exemplo de uma tabela com linhas roláveis e cabeçalhos de coluna fixos. Ele
 
 {{"demo": "pages/components/tables/StickyHeadTable.js", "bg": true}}
 
-## Tabela de abrangência
+## Tabela minimizável
+
+Um exemplo de uma tabela com linhas expansíveis, revelando mais informações. Ela utiliza o componente [`Collapse`](/api/collapse/).
+
+{{"demo": "pages/components/tables/CollapsibleTable.js", "bg": true}}
+
+## Abrangendo Tabela
 
 Um exemplo simples com abrangência de linhas & colunas.
 
