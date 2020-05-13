@@ -103,7 +103,7 @@ export default function CascadingMenu() {
     'Tic Tac',
     'Sugar Babies',
     'Haribo Starmix'
-  ].map(candy => <MenuItem onClick={handleClose}>{candy}</MenuItem>)
+  ].map((candy, index) => <MenuItem key={`${candy}-${index.toString()}`} onClick={handleClose}>{candy}</MenuItem>)
 
   return (
     <div>
