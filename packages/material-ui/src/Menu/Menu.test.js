@@ -263,7 +263,6 @@ describe('<Menu />', () => {
 
     after(() => {
       clock.restore();
-      cascadeMount.cleanUp();
     });
 
     const CascadingMenu = (props) => {
