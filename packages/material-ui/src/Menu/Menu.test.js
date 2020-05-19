@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { spy, useFakeTimers } from 'sinon';
 import { expect, assert } from 'chai';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
+import { getClasses } from '@material-ui/core/test-utils';
+import createMount from 'test/utils/createMount';
 import describeConformance from '../test-utils/describeConformance';
 import Button from '../Button';
 import Popover from '../Popover';
@@ -14,8 +15,8 @@ const MENU_LIST_HEIGHT = 100;
 
 describe('<Menu />', () => {
   let classes;
-  let mount;
-
+  // StrictModeViolation: uses Popover
+  const mount = createMount({ strict: false });
   const defaultProps = {
     open: false,
     anchorEl: () => document.createElement('div'),
@@ -23,12 +24,6 @@ describe('<Menu />', () => {
 
   before(() => {
     classes = getClasses(<Menu {...defaultProps} />);
-    // StrictModeViolation: uses Popover
-    mount = createMount({ strict: false });
-  });
-
-  after(() => {
-    mount.cleanUp();
   });
 
   describeConformance(<Menu {...defaultProps} open />, () => ({
@@ -136,13 +131,8 @@ describe('<Menu />', () => {
   });
 
   describe('list node', () => {
-    let wrapper;
-
-    before(() => {
-      wrapper = mount(<Menu {...defaultProps} className="test-class" data-test="hi" open />);
-    });
-
     it('should render a MenuList inside the Popover', () => {
+      const wrapper = mount(<Menu {...defaultProps} className="test-class" data-test="hi" open />);
       expect(wrapper.find(Popover).find(MenuList).exists()).to.equal(true);
     });
   });

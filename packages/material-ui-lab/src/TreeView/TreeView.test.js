@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createClientRender, fireEvent } from 'test/utils/createClientRender';
+import { createClientRender, fireEvent, screen } from 'test/utils/createClientRender';
 import describeConformance from '@material-ui/core/test-utils/describeConformance';
-import { createMount, getClasses } from '@material-ui/core/test-utils';
+import { getClasses } from '@material-ui/core/test-utils';
+import createMount from 'test/utils/createMount';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
 import TreeView from './TreeView';
 import TreeItem from '../TreeItem';
 
 describe('<TreeView />', () => {
   let classes;
-  let mount;
+  const mount = createMount();
   // StrictModeViolation: test uses TreeItem
   const render = createClientRender({ strict: false });
 
   before(() => {
-    mount = createMount({ strict: true });
     classes = getClasses(<TreeView />);
   });
 
@@ -25,7 +25,6 @@ describe('<TreeView />', () => {
     mount,
     refInstanceof: window.HTMLUListElement,
     skip: ['componentProp'],
-    after: () => mount.cleanUp(),
   }));
 
   describe('warnings', () => {
@@ -61,6 +60,66 @@ describe('<TreeView />', () => {
       expect(consoleErrorMock.messages()[0]).to.include(
         'Material-UI: A component is changing the controlled selected state of TreeView to be uncontrolled.',
       );
+    });
+
+    // should not throw eventually or with a better error message
+    // FIXME: https://github.com/mui-org/material-ui/issues/20832
+    it('crashes when unmounting with duplicate ids', () => {
+      class ErrorBoundary extends React.Component {
+        state = { error: null };
+
+        errors = [];
+
+        static getDerivedStateFromError(error) {
+          return { error };
+        }
+
+        componentDidCatch(error) {
+          this.errors.push(error);
+        }
+
+        render() {
+          if (this.state.error) {
+            return null;
+          }
+          return this.props.children;
+        }
+      }
+      const CustomTreeItem = () => {
+        return <TreeItem nodeId="iojerogj" />;
+      };
+      function App() {
+        const [isVisible, hideTreeView] = React.useReducer(() => false, true);
+
+        return (
+          <React.Fragment>
+            <button onClick={hideTreeView} type="button">
+              Toggle
+            </button>
+            {isVisible && (
+              <TreeView>
+                <TreeItem nodeId="a" label="b">
+                  <CustomTreeItem nodeId="a" />
+                </TreeItem>
+              </TreeView>
+            )}
+          </React.Fragment>
+        );
+      }
+      const errorRef = React.createRef();
+      render(
+        <ErrorBoundary ref={errorRef}>
+          <App />
+        </ErrorBoundary>,
+      );
+
+      screen.getByRole('button').click();
+
+      const {
+        current: { errors },
+      } = errorRef;
+      expect(errors).to.have.length(1);
+      expect(errors[0].toString()).to.include('RangeError: Maximum call stack size exceeded');
     });
   });
 
