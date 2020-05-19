@@ -276,7 +276,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         classes: {
           ...PaperProps.classes,
           root: classes.paper
-          ...clsx({[classes.enablePointerEvents]: isSubMenu})
         },
         className: clsx({[classes.enablePointerEvents]: isSubMenu})
       }}
