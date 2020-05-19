@@ -293,8 +293,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         variant={variant}
         {...MenuListProps}
         className={clsx(classes.list, MenuListProps.className)}
-          [classes.enablePointerEvents]: isSubMenu,
-        })}
       >
         {items}
       </MenuList>
