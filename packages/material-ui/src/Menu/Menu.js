@@ -275,9 +275,10 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         ...PaperProps,
         classes: {
           ...PaperProps.classes,
-          root: classes.paper,
+          root: classes.paper
           ...clsx({[classes.enablePointerEvents]: isSubMenu})
         },
+        className: clsx({[classes.enablePointerEvents]: isSubMenu})
       }}
       open={open}
       ref={ref}
@@ -292,7 +293,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
         autoFocusItem={autoFocusItem}
         variant={variant}
         {...MenuListProps}
-        className={clsx(classes.list, MenuListProps.className, {
+        className={clsx(classes.list, MenuListProps.className)}
           [classes.enablePointerEvents]: isSubMenu,
         })}
       >
