@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { ComponentsPropsList } from '../styles/props';
 
 export interface Localization {
@@ -7,7 +8,8 @@ export interface Localization {
       ComponentsPropsList['MuiTablePagination'],
       'backIconButtonText' | 'labelRowsPerPage' | 'labelDisplayedRows' | 'nextIconButtonText'
     >;
-    // @material-ui/lab components need to be inlined
+    // The core package has no dependencies on the @material-ui/lab components.
+    // We can't use ComponentsPropsList, we have to duplicate and inline the definitions.
     MuiRating?: {
       emptyLabelText?: string;
       getLabelText?: (value: number) => string;
@@ -15,8 +17,8 @@ export interface Localization {
     MuiAutocomplete?: {
       clearText?: string;
       closeText?: string;
-      loadingText?: string;
-      noOptionsText?: string;
+      loadingText?: React.ReactNode;
+      noOptionsText?: React.ReactNode;
       openText?: string;
     };
     MuiAlert?: {
@@ -1510,9 +1512,9 @@ export const trTR: Localization = {
 
 export const ukUA: Localization = {
   props: {
-    // MuiBreadcrumbs: {
-    //   expandText: 'Show path',
-    // },
+    MuiBreadcrumbs: {
+      expandText: 'Показати шлях сторінок',
+    },
     MuiTablePagination: {
       backIconButtonText: 'Попередня сторінка',
       labelRowsPerPage: 'Рядків на сторінці:',
@@ -1533,7 +1535,7 @@ export const ukUA: Localization = {
 
         return `${value} ${pluralForm}`;
       },
-      // emptyLabelText: 'Empty',
+      emptyLabelText: 'Рейтинг відсутній',
     },
     MuiAutocomplete: {
       clearText: 'Очистити',
@@ -1545,27 +1547,27 @@ export const ukUA: Localization = {
     MuiAlert: {
       closeText: 'Згорнути',
     },
-    // MuiPagination: {
-    //   'aria-label': 'Pagination navigation',
-    //   getItemAriaLabel: (type, page, selected) => {
-    //     if (type === 'page') {
-    //       return `${selected ? '' : 'Go to '}page ${page}`;
-    //     }
-    //     if (type === 'first') {
-    //       return 'Go to first page';
-    //     }
-    //     if (type === 'last') {
-    //       return 'Go to last page';
-    //     }
-    //     if (type === 'next') {
-    //       return 'Go to next page';
-    //     }
-    //     if (type === 'previous') {
-    //       return 'Go to previous page';
-    //     }
-    //     return undefined;
-    //   },
-    // },
+    MuiPagination: {
+      'aria-label': 'Навігація сторінками',
+      getItemAriaLabel: (type, page, selected) => {
+        if (type === 'page') {
+          return `${selected ? '' : 'Перейти на '}сторінку ${page}`;
+        }
+        if (type === 'first') {
+          return 'Перейти на першу сторінку';
+        }
+        if (type === 'last') {
+          return 'Перейти на останню сторінку';
+        }
+        if (type === 'next') {
+          return 'Перейти на наступну сторінку';
+        }
+        if (type === 'previous') {
+          return 'Перейти на попередню сторінку';
+        }
+        return undefined;
+      },
+    },
   },
 };
 

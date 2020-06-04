@@ -11,31 +11,33 @@ components: Radio, RadioGroup, FormControl, FormLabel, FormControlLabel
 
 默认情况下，单选按钮应该选择了最常用的选项。
 
-## RadioGroup
+## RadioGroup 单选框组
 
 `RadioGroup`适用于一组` Radio `，它提供相对简单的 API 并且能够使用键盘对该RadioGroup 进行控制。
 
 {{"demo": "pages/components/radio-buttons/RadioButtonsGroup.js"}}
 
-## Standalone radio buttons
+要横向布置按钮，请设置 `row`prop: `<RadioGroup row />`.
 
-`Radio` can also be used standalone, without the RadioGroup wrapper.
+## Standalone radio buttons 独立的单选框按钮 
+
+`Radio` 也可以单独使用，无需额外的包装。
 
 {{"demo": "pages/components/radio-buttons/RadioButtons.js"}}
 
 ## 标签放置
 
-You can change the placement of the label with the `FormControlLabel` component's `labelPlacement` prop:
+你可以用 `FormControlLabel` 组件的 `labelPlacement` prop 来改变标签的位置。
 
-{{"demo": "pages/components/radio-buttons/FormControlLabelPlacement.js"}}
+{{"demo": "pages/components/radio-buttons/FormControlLabelPlacement.js"}} 
 
-## Show error
+## Show error 显示错误
 
-In general, radio buttons should have a value selected by default. If this is not the case, you can display an error if no value is selected when the form is submitted:
+一般来说，单选按钮应具有一个被默认选中的值。 如果不是这种情况，则在提交表单时如果未选择任何值，则可能会显示错误：
 
 {{"demo": "pages/components/radio-buttons/ErrorRadios.js"}}
 
-## 自定义单选框
+## Customized radios 自定义单选框
 
 以下是自定义组件的一个示例。 您可以在[重写文档页](/customization/components/)中了解有关此内容的更多信息。
 
@@ -45,7 +47,7 @@ In general, radio buttons should have a value selected by default. If this is no
 
 - [复选框 对比 单选按钮](https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/)
 
-## 可访问性
+## 可及性
 
 (WAI-ARIA: https://www.w3.org/TR/wai-aria-practices/#radiobutton)
 

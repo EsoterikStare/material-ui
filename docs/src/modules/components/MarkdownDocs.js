@@ -10,7 +10,6 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Head from 'docs/src/modules/components/Head';
 import AppFrame from 'docs/src/modules/components/AppFrame';
-import Ad from 'docs/src/modules/components/Ad';
 import EditPage from 'docs/src/modules/components/EditPage';
 import AppContainer from 'docs/src/modules/components/AppContainer';
 import PageContext from 'docs/src/modules/components/PageContext';
@@ -21,6 +20,7 @@ import { SOURCE_CODE_ROOT_URL } from 'docs/src/modules/constants';
 import Demo from 'docs/src/modules/components/Demo';
 import AppTableOfContents from 'docs/src/modules/components/AppTableOfContents';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
+import Ad from 'docs/src/modules/components/Ad';
 
 function flattenPages(pages, current = []) {
   return pages.reduce((items, item) => {
@@ -89,7 +89,7 @@ const styles = (theme) => ({
 });
 
 function MarkdownDocs(props) {
-  const { classes, disableAd = false, disableToc = false, demos, docs, requireDemo } = props;
+  const { classes, disableAd = false, disableToc = false, demos = {}, docs, requireDemo } = props;
 
   const t = useSelector((state) => state.options.t);
   const userLanguage = useSelector((state) => state.options.userLanguage);
@@ -100,7 +100,7 @@ function MarkdownDocs(props) {
 
   const { activePage, pages } = React.useContext(PageContext);
   const pageList = flattenPages(pages);
-  const currentPageNum = findIndex(pageList, (page) => page.pathname === activePage.pathname);
+  const currentPageNum = findIndex(pageList, (page) => page.pathname === activePage?.pathname);
   const currentPage = pageList[currentPageNum];
   const prevPage = pageList[currentPageNum - 1];
   const nextPage = pageList[currentPageNum + 1];

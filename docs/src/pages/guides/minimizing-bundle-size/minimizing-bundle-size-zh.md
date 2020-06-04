@@ -60,6 +60,21 @@ import TabIndicator from '@material-ui/core/Tabs/TabIndicator';
 //                                               ^^^^^^^^^^^^ 3rd level
 ```
 
+If you're using `eslint` you can catch problematic imports with the [`no-restricted-imports` rule](https://eslint.org/docs/rules/no-restricted-imports). The following `.eslintrc` configuration will highlight problematic imports from `@material-ui` packages:
+
+```json
+{
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@material-ui/*/*/*", "!@material-ui/core/test-utils/*"]
+      }
+    ]
+  }
+}
+```
+
 ### 选项2
 
 This option provides the best User Experience and Developer Experience:
@@ -73,7 +88,7 @@ import { Button, TextField } from '@material-ui/core';
 
 However, you need to apply the two following steps correctly.
 
-#### 1。 Configure Babel
+#### 1、 Configure Babel
 
 请在以下插件中选择一个：
 

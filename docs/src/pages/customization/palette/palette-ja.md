@@ -23,7 +23,7 @@ A color intention とは、パレットをアプリケーション内の特定�
 
 テーマの一部として palette オブジェクトを含めると、パレットの既定値を変更できます。
 
-If any of the [`palette.primary`](/customization/default-theme/?expand-path=$.palette.primary), [`palette.secondary`](/customization/default-theme/?expand-path=$.palette.secondary), [`palette.error`](/customization/default-theme/?expand-path=$.palette.error), [`palette.warning`](/customization/default-theme/?expand-path=$.palette.warning), [`palette.info`](/customization/default-theme/?expand-path=$.palette.info) or [`palette.successs`](/customization/default-theme/?expand-path=$.palette.successs) 'intention' objects are provided, they will replace the defaults.
+If any of the [`palette.primary`](/customization/default-theme/?expand-path=$.palette.primary), [`palette.secondary`](/customization/default-theme/?expand-path=$.palette.secondary), [`palette.error`](/customization/default-theme/?expand-path=$.palette.error), [`palette.warning`](/customization/default-theme/?expand-path=$.palette.warning), [`palette.info`](/customization/default-theme/?expand-path=$.palette.info) or [`palette.success`](/customization/default-theme/?expand-path=$.palette.success) 'intention' objects are provided, they will replace the defaults.
 
 Intention値は、 [color](/customization/color/)オブジェクト、または次のTypeScriptインターフェイスで指定されたキーを持つオブジェクトのいずれかです。
 
@@ -137,6 +137,7 @@ For instance, you can enable the dark mode automatically:
 import React from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -153,6 +154,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <Routes />
     </ThemeProvider>
   );

@@ -23,7 +23,7 @@ Se você quiser aprender mais sobre cor, você pode conferir [a seção de cores
 
 Você pode sobrescrever os valores padrão da paleta incluindo um objeto palette como parte do seu tema.
 
-Se algum dos objetos [`palette.primary`](/customization/default-theme/?expand-path=$.palette.primary), [`palette.secondary`](/customization/default-theme/?expand-path=$.palette.secondary), [`palette.error`](/customization/default-theme/?expand-path=$.palette.error), [`palette.warning`](/customization/default-theme/?expand-path=$.palette.warning), [`palette.info`](/customization/default-theme/?expand-path=$.palette.info) ou [`palette.successs`](/customization/default-theme/?expand-path=$.palette.successs) 'intenção' são fornecidos, eles substituirão os padrões.
+Se algum dos objetos [`palette.primary`](/customization/default-theme/?expand-path=$.palette.primary), [`palette.secondary`](/customization/default-theme/?expand-path=$.palette.secondary), [`palette.error`](/customization/default-theme/?expand-path=$.palette.error), [`palette.warning`](/customization/default-theme/?expand-path=$.palette.warning), [`palette.info`](/customization/default-theme/?expand-path=$.palette.info) ou [`palette.success`](/customization/default-theme/?expand-path=$.palette.successs) 'intenção' são fornecidos, eles substituirão os padrões.
 
 O valor da intenção pode ser um objeto [cor](/customization/color/), ou um objeto com uma ou mais das chaves especificadas pela seguinte interface TypeScript:
 
@@ -137,6 +137,7 @@ Por exemplo, você pode ativar o modo escuro automaticamente:
 import React from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -153,6 +154,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <Routes />
     </ThemeProvider>
   );

@@ -12,7 +12,7 @@
 
 Если вы хотите настроить тему, вам нужно использовать компонент `ThemeProvider`, чтобы добавить тему в ваше приложение. Однако это необязательно; компоненты Material-UI поставляются с базовой темой, по умолчанию.
 
-`ThemeProvider` использует контекст React для передачи темы дочерним компонентам, поэтому вам нужно убедиться, что `ThemeProvider` является родительским по отношению к компонентам, которые вы собираетесь темизировать. Вы можете узнать больше об этом в [ разделе API](/styles/api/#themeprovider).
+`ThemeProvider` relies on the [context feature of React](https://reactjs.org/docs/context.html) to pass the theme down to the components, so you need to make sure that `ThemeProvider` is a parent of the components you are trying to customize. Вы можете узнать больше об этом в [ разделе API](/styles/api/#themeprovider).
 
 ## Переменные конфигурации темы
 
@@ -29,7 +29,7 @@
 
 ### Пользовательские переменные
 
-При использовании темы Material-UI с [styling solution](/styles/basics/) или [ любым другим подходом](/guides/interoperability/#themeprovider), бывает удобным добавить в тему дополнительные переменные, которые вы сможете использовать везде. Например:
+When using Material-UI's theme with the [styling solution](/styles/basics/) or [any others](/guides/interoperability/#themeprovider), it can be convenient to add additional variables to the theme so you can use them everywhere. Например:
 
 {{"demo": "pages/customization/theming/CustomStyles.js"}}
 
@@ -128,7 +128,7 @@ Using `unstable_createMuiStrictModeTheme` restricts the usage of some of our com
 
 The component used in the `component` prop of the following components need to forward their ref:
 
-- [`Collapse`](/api/Collapse/)
+- [`Collapse`](/api/collapse/)
 
 Otherwise you'll encounter `Error: Function component cannot be given refs`. See also: [Composition: Caveat with refs](/guides/composition/#caveat-with-refs).
 
@@ -136,9 +136,9 @@ Otherwise you'll encounter `Error: Function component cannot be given refs`. See
 
 The `children` of the following components need to forward their ref:
 
-- [`Fade`](/api/Fade/)
-- [`Grow`](/api/Grow/)
-- [`Zoom`](/api/Zoom/)
+- [`Fade`](/api/fade/)
+- [`Grow`](/api/grow/)
+- [`Zoom`](/api/zoom/)
 
 ```diff
 -function TabPanel(props) {
@@ -193,8 +193,18 @@ function Fade() {
 
 #### Примеры
 
-```js import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
+```js
+import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
 
 const theme = unstable_createMuiStrictModeTheme();
 
-function App() { return ( <React.StrictMode> <ThemeProvider theme={theme}> <LandingPage /> </ThemeProvider> </React.StrictMode>, ); } ````
+function App() {
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <LandingPage />
+      </ThemeProvider>
+    </React.StrictMode>,
+  );
+}
+```

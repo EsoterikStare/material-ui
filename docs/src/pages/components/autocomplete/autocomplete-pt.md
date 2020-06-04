@@ -12,7 +12,7 @@ Essa ferramenta é útil para configurar os valores de um campo de texto quando 
 1. O valor para a caixa de texto deve ser escolhido a partir de um conjunto pré-definido de valores permitidos, por exemplo, um campo de localização deve conter um nome de localização válido: [combo box](#combo-box).
 2. A caixa de texto pode conter qualquer valor arbitrário, mas é vantajoso porque pode sugerir possíveis valores para o usuário, por exemplo, um campo de pesquisa que pode sugerir pesquisas anteriores ou semelhantes para economizar o tempo do usuário: [solo livre](#free-solo).
 
-A ideia dessa ferramenta era para ser uma versão melhorada das bibliotecas "react-select" e "downshift".
+A idéia dessa ferramenta é ser uma versão melhorada das bibliotecas "react-select" e "downshift".
 
 ## Combo box
 
@@ -59,7 +59,7 @@ Se você pretende usar este modo para uma [caixa de combo](#combo-box), por expe
 
 - `selectOnFocus` para ajudar o usuário a limpar o valor selecionado.
 - `clearOnBlur` para ajudar o usuário a digitar um novo valor.
-- `handleHomeEndKeys` to move focus inside the popup with the <kbd>Home</kbd> and <kbd>End</kbd> keys.
+- `handleHomeEndKeys` para mover o foco dentro do popup com as teclas <kbd>Home</kbd> e <kbd>End</kbd>.
 - Adicione uma última opção para indicar a possibilidade de adição, por exemplo `Adicionar "SUA PESQUISA"`.
 
 {{"demo": "pages/components/autocomplete/FreeSoloCreateOption.js"}}
@@ -136,7 +136,15 @@ Gosta mais de campos de texto menores? Use a propriedade `size`.
 
 {{"demo": "pages/components/autocomplete/Sizes.js"}}
 
-## Autocompletar personalizado
+## Customizations
+
+### Custom input
+
+The `renderInput` prop allows you to customize the rendered input. The first argument of this render prop contains props that you need to forward. Pay specific attention to the `ref` and `inputProps` keys.
+
+{{"demo": "pages/components/autocomplete/CustomInputAutocomplete.js"}}
+
+### GitHub's picker
 
 Esta demonstração reproduz o rótulo de selecão do GitHub's:
 
@@ -230,10 +238,6 @@ No entanto, além de relembrar valores fornecidos anteriormente, o navegador tam
 ### iOS VoiceOver
 
 VoiceOver no Safari do iOS não suporta o atributo `aria-owns` muito bem. Você pode contornar o problema com a propriedade `disablePortal`.
-
-### TypeScript
-
-Para tirar o máximo de proveito da inferência de tipos, você precisa definir a propriedade `multiple` para `undefined`, `false` ou `true`. Veja [esta discussão](https://github.com/mui-org/material-ui/pull/18854#discussion_r364215153) para maiores detalhes. TypeScript poderá resolver este problema no futuro.
 
 ### ListboxComponent
 

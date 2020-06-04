@@ -12,7 +12,7 @@
 
 如果你想要自定义样式，则需要使用 `MuiThemeProvider` 组件才能将样式注入到你的应用中。 但是，这是可选的，因为 Material-UI 组件带有默认主题。
 
-`MuiThemeProvider` 依赖于React的Context上下文将样式传递给组件， 因此您需要确保 `MuiThemeProvider` 是您想要自定义的组件的父级元素。 您可以在 [API 章节](/styles/api/#themeprovider) 中了解有关此内容的更多信息 。
+`ThemeProvider` relies on the [context feature of React](https://reactjs.org/docs/context.html) to pass the theme down to the components, so you need to make sure that `ThemeProvider` is a parent of the components you are trying to customize. 您可以在 [API 章节](/styles/api/#themeprovider) 中了解有关此内容的更多信息 。
 
 ## 主题配置变量
 
@@ -29,7 +29,7 @@
 
 ### 自定义变量
 
-When using Material-UI's theme with the [styling solution](/styles/basics/) or [any others](/guides/interoperability/#themeprovider). 可以方便地向样式添加其他变量，以便您可以在任何地方使用它们。 就像这样：
+When using Material-UI's theme with the [styling solution](/styles/basics/) or [any others](/guides/interoperability/#themeprovider), it can be convenient to add additional variables to the theme so you can use them everywhere. 就像这样：
 
 {{"demo": "pages/customization/theming/CustomStyles.js"}}
 
@@ -128,7 +128,7 @@ Using `unstable_createMuiStrictModeTheme` restricts the usage of some of our com
 
 The component used in the `component` prop of the following components need to forward their ref:
 
-- [`Collapse 折叠`](/api/Collapse/)
+- [`Collapse 折叠`](/api/collapse/)
 
 Otherwise you'll encounter `Error: Function component cannot be given refs`. See also: [Composition: Caveat with refs](/guides/composition/#caveat-with-refs).
 
@@ -136,9 +136,9 @@ Otherwise you'll encounter `Error: Function component cannot be given refs`. See
 
 The `children` of the following components need to forward their ref:
 
-- [`Fade 淡入淡出`](/api/Fade/)
-- [`Grow 扩展`](/api/Grow/)
-- [`Zoom 放大`](/api/Zoom/)
+- [`Fade 淡入淡出`](/api/fade/)
+- [`Grow 扩展`](/api/grow/)
+- [`Zoom 放大`](/api/zoom/)
 
 ```diff
 -function TabPanel(props) {
@@ -193,8 +193,18 @@ function Fade() {
 
 #### 例子
 
-```js import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
+```js
+import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
 
 const theme = unstable_createMuiStrictModeTheme();
 
-function App() { return ( <React.StrictMode> <ThemeProvider theme={theme}> <LandingPage /> </ThemeProvider> </React.StrictMode>, ); } ````
+function App() {
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <LandingPage />
+      </ThemeProvider>
+    </React.StrictMode>,
+  );
+}
+```

@@ -51,4 +51,4 @@ components: Card, CardActionArea, CardActions, CardContent, CardHeader, CardMedi
 
 ## Customization 个性化
 
-👑如果您还在寻找灵感，您可以查看一下 [MUI Treasury 自定义的例子](https://deprecate.mui-treasury.com/components/card)。
+🎨如果你是在寻找灵感，你可以查看 [MUI Treasury's customization examples](https://mui-treasury.com/components/card)。

@@ -112,6 +112,28 @@ describe('<Autocomplete />', () => {
       checkHighlightIs('two');
     });
 
+    it('should set the focus on the first item when possible', () => {
+      const options = ['one', 'two'];
+      const { getByRole, setProps } = render(
+        <Autocomplete
+          {...defaultProps}
+          options={[]}
+          autoHighlight
+          loading
+          renderInput={(params) => <TextField autoFocus {...params} />}
+        />,
+      );
+
+      const textbox = getByRole('textbox');
+      expect(textbox).not.to.have.attribute('aria-activedescendant');
+
+      setProps({ options, loading: false });
+      expect(textbox).to.have.attribute(
+        'aria-activedescendant',
+        screen.getAllByRole('option')[0].getAttribute('id'),
+      );
+    });
+
     it('should set the highlight on selected item when dropdown is expanded', () => {
       const { getByRole, setProps } = render(
         <Autocomplete
@@ -941,7 +963,7 @@ describe('<Autocomplete />', () => {
       fireEvent.keyDown(textbox, { key: 'Enter' });
       expect(handleChange.callCount).to.equal(1);
       expect(handleChange.args[0][1]).to.equal('a');
-      expect(consoleErrorMock.callCount()).to.equal(2); // strict mode renders twice
+      expect(consoleErrorMock.callCount()).to.equal(4); // strict mode renders twice
       expect(consoleErrorMock.messages()[0]).to.include(
         'Material-UI: The `getOptionLabel` method of Autocomplete returned undefined instead of a string',
       );
@@ -974,7 +996,7 @@ describe('<Autocomplete />', () => {
       fireEvent.keyDown(textbox, { key: 'ArrowDown' });
       fireEvent.keyDown(textbox, { key: 'Enter' });
 
-      expect(consoleErrorMock.callCount()).to.equal(1); // strict mode renders twice
+      expect(consoleErrorMock.callCount()).to.equal(1);
       expect(consoleErrorMock.messages()[0]).to.include(
         'The component expects a single value to match a given option but found 2 matches.',
       );
@@ -993,7 +1015,7 @@ describe('<Autocomplete />', () => {
         />,
       );
 
-      expect(consoleWarnMock.callCount()).to.equal(4);
+      expect(consoleWarnMock.callCount()).to.equal(4); // strict mode renders twice
       expect(consoleWarnMock.messages()[0]).to.include(
         'None of the options match with `"not a good value"`',
       );
@@ -1022,7 +1044,7 @@ describe('<Autocomplete />', () => {
       const options = getAllByRole('option').map((el) => el.textContent);
       expect(options).to.have.length(7);
       expect(options).to.deep.equal(['A', 'D', 'E', 'B', 'G', 'F', 'C']);
-      expect(consoleWarnMock.callCount()).to.equal(2);
+      expect(consoleWarnMock.callCount()).to.equal(2); // strict mode renders twice
       expect(consoleWarnMock.messages()[0]).to.include('returns duplicated headers');
     });
   });
@@ -1051,10 +1073,6 @@ describe('<Autocomplete />', () => {
       // three option is added and autocomplete re-renders, two should still be highlighted
       setProps({ options: ['one', 'two', 'three'] });
       checkHighlightIs('two');
-
-      // user presses down, three should be highlighted
-      fireEvent.keyDown(textbox, { key: 'ArrowDown' });
-      checkHighlightIs('three');
     });
 
     it('should not select undefined ', () => {

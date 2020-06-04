@@ -17,7 +17,7 @@ Os menus são posicionados sobre seus elementos emissores, de modo que o item de
 
 O componente `Select` é pensado para ser intercambiável com um elemento nativo `<select>`.
 
-Se você estiver procurando por recursos mais avançados, como combobox, seleção múltipla, autocompletar, uso assíncrono ou com suporte de adição, vá para o [ componente `Autocomplete`](/components/autocomplete/). A ideia dessa ferramenta era para ser uma versão melhorada das bibliotecas "react-select" e "downshift".
+Se você estiver procurando por recursos mais avançados, como combobox, seleção múltipla, autocompletar, uso assíncrono ou com suporte de adição, vá para o [ componente `Autocomplete`](/components/autocomplete/). A idéia dessa ferramenta é ser uma versão melhorada das bibliotecas "react-select" e "downshift".
 
 ## Seleção Nativa
 
@@ -36,6 +36,8 @@ Aqui estão alguns exemplos de customização do componente. Você pode aprender
 O primeiro passo é modelar o componente `InputBase`. Uma vez estilizado, você pode usá-lo diretamente como um campo de texto ou fornecê-lo à propriedade `input` da seleção para ter um campo `select`.
 
 {{"demo": "pages/components/selects/CustomizedSelects.js"}}
+
+🎨 Se você está procurando inspiração, você pode verificar [os exemplos de customização de MUI Treasury](https://mui-treasury.com/styles/select).
 
 ## Seleção Múltipla
 

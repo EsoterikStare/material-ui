@@ -226,7 +226,7 @@
     "/styles": "Estilos",
     "/styles/basics": "Fundamentos",
     "/styles/advanced": "Avanzado",
-    "https://material-ui.com/store/": "Almacén",
+    "https://material-ui.com/store/": "Temas Premium",
     "/components/material-icons": "Material Icons",
     "/components/textarea-autosize": "Auto-dimensionar área de texto",
     "/components/rating": "Rating",
@@ -234,7 +234,7 @@
     "/components/tree-view": "Vista de arbol",
     "/customization/density": "Densidad",
     "/components/button-group": "Grupo de botones",
-    "/components/floating-action-button": "Floating Action Button",
+    "/components/floating-action-button": "Botón de acción flotante",
     "/components/backdrop": "Backdrop",
     "/components/alert": "Alerta",
     "/components/pagination": "Pagination"

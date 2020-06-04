@@ -6,7 +6,7 @@ components: CssBaseline, ScopedCssBaseline
 
 <p class="description">Material-UI 提供了一个 CssBaseline 组件，用于启动一个优雅、一致且简单的基线。</p>
 
-## Global reset
+## 全局重置
 
 您可能对 [normailize.css](https://github.com/necolas/normalize.css)比较熟悉，而这是一个 HTML 元素和样式规范化的属性的集合。
 
@@ -24,9 +24,9 @@ export default function MyApp() {
 }
 ```
 
-## Scoping on children
+## 非全局作用域
 
-However, you might be progressively migrating a website to Material-UI, using a global reset might not be an option. It's possible to apply the baseline only to the children by using the `ScopedCssBaseline` component.
+然而，您可能正在逐步将一个网站迁移到Material-UI，如果使用全局重置可能不是一个妥善的选项。 通过使用 `ScopedCsseline` 组件可以将基线只应用于某些子节点。
 
 ```jsx
 import React from 'react';
@@ -43,7 +43,7 @@ export default function MyApp() {
 }
 ```
 
-⚠️ Make sure you import `ScopedCssBaseline` first to avoid box-sizing conflicts as in the above example.
+⚠️ 请确保 `ScopedCssBaseline` 被第一个导入，以避免像在上面的例子中出现的 box-sizing 冲突。
 
 ## 方法
 
@@ -58,9 +58,13 @@ export default function MyApp() {
 
 - 在 `<html>` 元素里面，我们将 `box-sizing` 全局设置为 `border-box`。 这样一来，包括 `*:: before` 和 `*:: after` 的每个元素，都会被声明来继承这个属性，这样能够确保元素的声明宽度永远不会超过 padding 或者 border。
 
-### Typography
+### 文字排版
 
 - 在 `<html>` 里面不会声明基础的 font-size，但是我们假设是 16px (浏览器的默认设置)。 您可以在[主题文档](/customization/typography/#typography-html-font-size) 页面中了解更多有关更改 `<html>` 默认字体大小的影响 。
 - 在 `theme.typography.body2` 元素上设置 `<body>` 样式。
-- Set the font-weight to `theme.typography.fontWeightBold` for the `<b>` and `<strong>` elements.
-- 字体的平滑化能让 Roboto 字体更好地展示。
+- 您可以通过设置 `theme.typography.fontWeightBold` 来控制 `<b>` 和 `<strong>` 元素的 font-weight 属性。
+- 为了更好地显示Roboto字体，启用了自定义字体平滑功能。
+
+## Customization 个性化
+
+前往文档中的 [全局自定义](/customization/globals/#global-css) 部分来改变这些组件的输出。

@@ -75,6 +75,7 @@ const blacklist = [
   'docs-components-selects/GroupedSelect.png', // Needs interaction
   'docs-components-skeleton/Animations.png', // Animation disabled
   'docs-components-skeleton/Facebook.png', // Flaky image loading
+  'docs-components-skeleton/SkeletonChildren.png', // flaky image loading
   'docs-components-skeleton/YouTube.png', // Flaky image loading
   'docs-components-snackbars/ConsecutiveSnackbars.png', // Needs interaction
   'docs-components-snackbars/CustomizedSnackbars.png', // Redundant
@@ -117,6 +118,7 @@ const blacklist = [
   'docs-getting-started-usage/Usage.png', // No public components
   /^docs-guides-.*/, // No public components
   'docs-landing', // Mostly images, redundant
+  'docs-production-error', // No components, page for DX
   'docs-styles-advanced', // Redudant
   'docs-system-borders', // Unit tests are enough
   'docs-system-display', // Unit tests are enough

@@ -44,6 +44,16 @@ Outlined buttonは、Contained buttonと比べると強調が弱く、 Text butt
 
 {{"demo": "pages/components/buttons/OutlinedButtons.js"}}
 
+## Handling clicks
+
+All components accept an `onClick` handler that is applied to the root DOM element.
+
+```jsx
+<Button onClick={() => { alert('clicked') }}>Click me</Button>
+```
+
+Note that the documentation [avoids](/guides/api/#native-properties) mentioning native props (there are a lot) in the API section of the components.
+
 ## Upload button
 
 {{"demo": "pages/components/buttons/UploadButtons.js"}}
@@ -54,27 +64,27 @@ Outlined buttonは、Contained buttonと比べると強調が弱く、 Text butt
 
 {{"demo": "pages/components/buttons/ButtonSizes.js"}}
 
-## アイコンとラベルの付いたButton
+## Buttons with icons and label
 
-プレーンテキストよりもロゴを認識しやすいため、アプリケーションのUXを向上させるために特定のボタンのアイコンを表示したい場合があります。 たとえば、削除ボタンがある場合は、ゴミ箱アイコンでラベルを付けることができます。
+ロゴはプレーンテキストよりも認識しやすいため、ボタンにアイコンを追加してアプリケーションのUXを強化したい場合があります。 たとえば、削除ボタンにごみ箱アイコンを付けるような場合です。
 
 {{"demo": "pages/components/buttons/IconLabelButtons.js"}}
 
 ## Icon Buttons
 
-アイコンボタンは通常、アプリバーとツールバーにあります。
+アイコンだけのボタンは、App BarやToolbarでよく使われます。
 
-アイコンは、アイテムへの星の追加や削除など、単一の選択肢を選択または選択解除できるトグルボタンにも適しています。
+アイコンは、アイテムを一つ選択したり、アイテムに星を追加または削除するなど選択/解除できるトグルボタンにも適しています。
 
 {{"demo": "pages/components/buttons/IconButtons.js"}}
 
 ## カスタムButton
 
-コンポーネントのカスタマイズの例を次に示します。 詳細については、 [overrides documentation page](/customization/components/)を参照してください。
+コンポーネントのカスタマイズの例を次に示します。 詳細については、 [オーバーライドのドキュメントページ](/customization/components/)を参照してください。
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js", "defaultCodeOpen": false}}
 
-👑 インスピレーションを求めているなら, [MUI Treasury's customization examples](https://mui-treasury.com/styles/button)を確認できます。
+🎨 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/styles/button).
 
 ## 複雑なButton
 

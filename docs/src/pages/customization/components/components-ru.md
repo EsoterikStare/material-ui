@@ -144,7 +144,7 @@ const StyledButton = withStyles({
 
 ### Используйте `$ruleName` для ссылки на правило в той же таблице стилей
 
-The [jss-nested](https://github.com/cssinjs/jss/tree/master/packages/jss-plugin-nested) plugin (available by default) can make the process of increasing specificity easier.
+Плагин [jss-nested](https://github.com/cssinjs/jss/tree/master/packages/jss-plugin-nested) (доступный по умолчанию) позволяет упростить процесс повышения специфичности.
 
 ```js
 const styles = {
@@ -187,11 +187,11 @@ const styles = {
 
 {{"demo": "pages/customization/components/InlineStyle.js"}}
 
-[Когда я должен использовать встраиваемый стиль, а когда классы?](/getting-started/faq/#when-should-i-use-inline-style-vs-classes)
+[Когда я должен использовать встраиваемый стиль, а когда классы?](/getting-started/faq/#when-should-i-use-inline-style-vs-css)
 
 ## 2. Динамическое изменение для единичного случая
 
-You have learned how to override the style of a Material-UI component in the previous section. Теперь давайте посмотрим, как мы можем сделать эти переопределения динамическими. Here are five alternatives; each has it's pros and cons.
+You have learned how to override the style of a Material-UI component in the previous section. Теперь давайте посмотрим, как мы можем сделать эти переопределения динамическими. Here are five alternatives; each has its pros and cons.
 
 ### Динамический CSS
 

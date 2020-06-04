@@ -25,9 +25,35 @@ const theme = createMuiTheme({
 
 每个组件可自定义的部分列在文档的**Component API**部分。 例如，你可以看一下[Button](/api/button/#css)， 而且你总可以查阅 [implementation](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/Button/Button.js)。
 
+## 全局 CSS
+
+如果你使用 [CssBaseline](/components/css-baseline/) 组件来应用全局重置(global resets)，那么也可以用它来应用全局样式。 就像这样：
+
+```jsx
+const theme = createMuiTheme({
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        html: {
+          WebkitFontSmoothing: 'auto',
+        },
+      },
+    },
+  },
+});
+
+// ...
+return (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    {children}
+  </ThemeProvider>
+);
+```
+
 ## 默认属性
 
-您可以更改所有Material-UI组件的默认属性。 A `props` key is exposed in the `theme` for this use case.
+您可以更改所有Material-UI组件的默认属性。 该用例展示了在 `主题` 中的一个 `props` 建。 
 
 ```js
 const theme = createMuiTheme({

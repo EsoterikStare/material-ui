@@ -36,7 +36,7 @@ function getTranslateValue(direction, node) {
   }
 
   if (direction === 'left') {
-    return `translateX(${window.innerWidth}px) translateX(-${rect.left - offsetX}px)`;
+    return `translateX(${window.innerWidth}px) translateX(${offsetX - rect.left}px)`;
   }
 
   if (direction === 'right') {
@@ -44,7 +44,7 @@ function getTranslateValue(direction, node) {
   }
 
   if (direction === 'up') {
-    return `translateY(${window.innerHeight}px) translateY(-${rect.top - offsetY}px)`;
+    return `translateY(${window.innerHeight}px) translateY(${offsetY - rect.top}px)`;
   }
 
   // direction === 'down'
@@ -101,7 +101,12 @@ const Slide = React.forwardRef(function Slide(props, ref) {
 
   const normalizedTransitionCallback = (callback) => (isAppearing) => {
     if (callback) {
-      callback(childrenRef.current, isAppearing);
+      // onEnterXxx and onExitXxx callbacks have a different arguments.length value.
+      if (isAppearing === undefined) {
+        callback(childrenRef.current);
+      } else {
+        callback(childrenRef.current, isAppearing);
+      }
     }
   };
 

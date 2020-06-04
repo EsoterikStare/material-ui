@@ -12,7 +12,7 @@ Para promover uma maior consistência entre os aplicativos, os temas claro e esc
 
 Se você deseja personalizar o tema, você precisa usar o ` ThemeProvider ` componente para injetar um tema em sua aplicação. No entanto, isso é opcional; Material-UI componentes vêm com um tema padrão.
 
-O `ThemeProvider` depende do recurso de contexto do React para passar o tema para os componentes, então você precisa ter certeza de que `ThemeProvider` é um pai (parent) dos componentes que você está tentando customizar. Você pode aprender mais sobre isso lendo a [sessão da API](/styles/api/#themeprovider).
+O `ThemeProvider` depende do [ recurso de contexto do React](https://pt-br.reactjs.org/docs/context.html) afim de passar o tema para baixo na árvore de componentes, então você precisa ter certeza de que o `ThemeProvider` é um pai dos componentes que você está tentando customizar. Você pode aprender mais sobre isso lendo a [sessão da API](/styles/api/#themeprovider).
 
 ## Variáveis de configuração do tema
 
@@ -29,7 +29,7 @@ Você pode conferir a [seção de tema padrão](/customization/default-theme/) p
 
 ### Variáveis customizáveis
 
-Ao usar Material-UI com a [solução de estilo](/styles/basics/) ou [quaisquer outras](/guides/interoperability/#themeprovider), surgem algumas necessidades de customização. Pode ser conveniente adicionar variáveis adicionais ao tema para que você possa usá-las em todos os lugares. Por exemplo:
+Ao usar o tema do Material-UI com a [solução de estilo](/styles/basics/) ou [quaisquer outros](/guides/interoperability/#themeprovider), pode ser conveniente adicionar variáveis adicionais ao tema, para que você possa usá-las em qualquer lugar. Por exemplo:
 
 {{"demo": "pages/customization/theming/CustomStyles.js"}}
 
@@ -43,7 +43,7 @@ Você [pode acessar](/styles/advanced/#accessing-the-theme-in-a-component) as va
 
 {{"demo": "pages/customization/theming/ThemeNesting.js"}}
 
-O tema interno **sobrescreverá** o tema exterior. Você pode estender o tema externo fornecendo uma função:
+O tema interno **sobrescreverá** o tema externo. Você pode estender o tema externo fornecendo uma função:
 
 {{"demo": "pages/customization/theming/ThemeNestingExtend.js"}}
 
@@ -96,10 +96,10 @@ Gera configurações de tipografia responsivas com base nas opções recebidas.
 1. `theme` (*Object*): O objeto de tema a ser aplicado as alterações.
 2. `options` (*Object* [opcional]):
 
-- `breakpoints` (*Array\String* [opcional]): Padrão `['sm', 'md', 'lg']`. Array de [pontos de quebra](/customization/breakpoints/) (identificadores).
+- `breakpoints` (*Array\<String\>* [opcional]): Padrão `['sm', 'md', 'lg']`. Array de [pontos de quebra](/customization/breakpoints/) (identificadores).
 - `disableAlign` (*Boolean* [opcional]): Padrão `false`. Se os tamanhos de fonte mudam pouco, as alturas da linha são preservadas e alinhadas à altura da linha da grade em 4px do Material Design. Isso requer uma altura de linha sem unidade nos estilos do tema.
 - `factor` (*Number* [opcional]): Padrão `2`. Este valor determina o fator de redimensionamento do tamanho da fonte. Quanto maior o valor, menor a diferença entre tamanhos de fonte em telas pequenas. Quanto menor o valor, maiores os tamanhos de fonte para telas pequenas. O valor deve ser maior que 1.
-- `variants` (*Array\String* [opcional]): Padrão todos. As variantes de tipografia para manipular.
+- `variants` (*Array\<String\>* [opcional]): Padrão todos. As variantes de tipografia para manipular.
 
 #### Retornos
 
@@ -116,29 +116,29 @@ theme = responsiveFontSizes(theme);
 
 ### `unstable_createMuiStrictModeTheme(options, ...args) => theme`
 
-**WARNING**: Do not use this method in production.
+**AVISO**: Não use esse método em produção.
 
-Generates a theme that reduces the amount of warnings inside [`React.StrictMode`](https://reactjs.org/docs/strict-mode.html) like `Warning: findDOMNode is deprecated in StrictMode`.
+Gera um tema que reduz a quantidade de avisos dentro de [`React.StrictMode`](https://pt-br.reactjs.org/docs/strict-mode.html) como por exemplo, `Warning: findDOMNode is deprecated in StrictMode`.
 
-#### Requirements
+#### Requisitos
 
-Using `unstable_createMuiStrictModeTheme` restricts the usage of some of our components.
+Usando `unstable_createMuiStrictModeTheme` restringe o uso de alguns de nossos componentes.
 
-##### `component` prop
+##### Propriedade `component`
 
-The component used in the `component` prop of the following components need to forward their ref:
+O componente usado na propriedade `component` dos seguintes componentes precisa encaminhar seu ref:
 
-- [`Collapse`](/api/Collapse/)
+- [`Collapse`](/api/collapse/)
 
-Otherwise you'll encounter `Error: Function component cannot be given refs`. See also: [Composition: Caveat with refs](/guides/composition/#caveat-with-refs).
+Caso contrário, você irá se deparar com `Error: Function component cannot be given refs`. Veja também: [Composição: Advertência com refs](/guides/composition/#caveat-with-refs).
 
-##### `children` prop
+##### Propriedade `children`
 
-The `children` of the following components need to forward their ref:
+O `children` dos seguintes componentes precisam encaminhar seu ref:
 
-- [`Fade`](/api/Fade/)
-- [`Grow`](/api/Grow/)
-- [`Zoom`](/api/Zoom/)
+- [`Fade`](/api/fade/)
+- [`Grow`](/api/grow/)
+- [`Zoom`](/api/zoom/)
 
 ```diff
 -function TabPanel(props) {
@@ -152,11 +152,11 @@ function Tabs() {
 }
 ```
 
-Otherwise the component will not animate properly and you'll encounter the warning that `Function components cannot be given refs`.
+Caso contrário o componente não irá animar corretamente e você irá se deparar com o aviso `Function components cannot be given refs`.
 
-#### Disable StrictMode compatibility partially
+#### Desabilitar a compatibilidade do StrictMode parcialmente
 
-If you still see `Error: Function component cannot be given refs` then you're probably using a third-party component for which the previously mentioned fixes aren't applicable. You can fix this by applying `disableStrictModeCompat`. You'll see deprecation warnings again but these are only warnings while `Function component cannot be given refs` actually breaks the documented behavior of our components.
+Se você ainda ver essa mensagem, `Error: Function component cannot be given refs`, então você provavelmente está utilizando um componente de terceiros no qual as correções mencionadas acima não surtem efeito. Você pode corrigir isso aplicando `disableStrictModeCompat`. Você verá novamente avisos de depreciação, mas estes são somente avisos, enquanto a mensagem `Function component cannot be given refs` quebra o comportamento documentado de nossos componentes.
 
 ```diff
 import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
@@ -193,8 +193,18 @@ function Fade() {
 
 #### Exemplos
 
-```js import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
+```js
+import { unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
 
 const theme = unstable_createMuiStrictModeTheme();
 
-function App() { return ( <React.StrictMode> <ThemeProvider theme={theme}> <LandingPage /> </ThemeProvider> </React.StrictMode>, ); } ````
+function App() {
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <LandingPage />
+      </ThemeProvider>
+    </React.StrictMode>,
+  );
+}
+```
