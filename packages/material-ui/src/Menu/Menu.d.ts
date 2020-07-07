@@ -59,6 +59,7 @@ export interface MenuProps extends StandardProps<PopoverProps & Partial<Transiti
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   PopoverClasses?: PopoverProps['classes'];
+  setParentOpenSubMenuIndex?: (index: number) => void;
   /**
    * The length of the transition in `ms`, or 'auto'
    * @default 'auto'
