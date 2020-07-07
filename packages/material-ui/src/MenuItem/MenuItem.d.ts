@@ -29,6 +29,34 @@ export interface MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> {
        * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
        */
       ListItemClasses?: ListItemProps['classes'];
+      /**
+       * Fires when the right arrow key is pressed
+       * on a MenuItem that contains nested items
+       * and passes focus to the first child of the
+       * nested items array
+       */
+      handleArrowRightKeydown?: React.ReactEventHandler<{}>;
+      onKeyDown?: React.KeyboardEventHandler<any>;
+      onMouseEnter?: React.MouseEventHandler<any>;
+      /**
+       * When `true`, opens the subMenu, if provided.
+       */
+      openSubMenu?: boolean;
+      /**
+       * Function passed to nested menus to maintain the last index of an
+       * entered child to orchestrate menu open/close states.
+       */
+      setParentOpenSubMenuIndex?: (index: number) => void;
+      /**
+       * Menu to display as a sub-menu.
+       */
+      subMenu?: React.ReactNode;
+      /**
+       * Normally `Icon`, `SvgIcon`, or a `@material-ui/icons`
+       * SVG icon element rendered on a MenuItem that
+       * contains a subMenu
+       */
+      subMenuIcon?: React.ReactNode;
     };
   defaultComponent: D;
 }
