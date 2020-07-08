@@ -179,6 +179,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
 });
 
 MenuItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
+  /**
+   * @ignore
+   */
+  button: PropTypes.bool,
   /**
    * The content of the component.
    */
@@ -186,7 +194,7 @@ MenuItem.propTypes = {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -212,17 +220,16 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
-   * @ignore
+   * Fires when the right arrow key is pressed
+   * on a MenuItem that contains nested items
+   * and passes focus to the first child of the
+   * nested items array
    */
   handleArrowRightKeydown: PropTypes.func,
   /**
    * @ignore
    */
-  handleParentClose: PropTypes.func,
-  /**
-   * @ignore
-   */
-  key: PropTypes.any,
+  key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
    */
@@ -236,7 +243,7 @@ MenuItem.propTypes = {
    */
   onMouseEnter: PropTypes.func,
   /**
-   * @ignore
+   * When `true`, opens the subMenu, if provided.
    */
   openSubMenu: PropTypes.bool,
   /**
@@ -248,25 +255,24 @@ MenuItem.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * @ignore
-   */
-  setParentJustArrowedLeft: PropTypes.func,
-  /**
-   * @ignore
+   * Function passed to nested menus to maintain the last index of an
+   * entered child to orchestrate menu open/close states.
    */
   setParentOpenSubMenuIndex: PropTypes.func,
   /**
-   * The sub-Menu that a Menu item will render
+   * Menu to display as a sub-menu.
    */
   subMenu: PropTypes.node,
   /**
-   * The icon used to indicate a Menu item has a sub-Menu.
+   * Normally `Icon`, `SvgIcon`, or a `@material-ui/icons`
+   * SVG icon element rendered on a MenuItem that
+   * contains a subMenu
    */
   subMenuIcon: PropTypes.node,
   /**
    * @ignore
    */
-  tabIndex: PropTypes.number,
+  tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 export default withStyles(styles, { name: 'MuiMenuItem' })(MenuItem);
