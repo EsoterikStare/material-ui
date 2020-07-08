@@ -220,10 +220,7 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
-   * Fires when the right arrow key is pressed
-   * on a MenuItem that contains nested items
-   * and passes focus to the first child of the
-   * nested items array
+   * @ignore
    */
   handleArrowRightKeydown: PropTypes.func,
   /**
@@ -255,8 +252,7 @@ MenuItem.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * Function passed to nested menus to maintain the last index of an
-   * entered child to orchestrate menu open/close states.
+   * @ignore
    */
   setParentOpenSubMenuIndex: PropTypes.func,
   /**

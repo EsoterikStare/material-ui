@@ -51,6 +51,8 @@ Any other props supplied will be provided to the root element ([Popover](/api/po
 |:-----|:-------------|:------------|
 | <span class="prop-name">paper</span> | <span class="prop-name">.MuiMenu-paper</span> | Styles applied to the `Paper` component.
 | <span class="prop-name">list</span> | <span class="prop-name">.MuiMenu-list</span> | Styles applied to the `List` component via `MenuList`.
+| <span class="prop-name">disablePointerEvents</span> | <span class="prop-name">.MuiMenu-disablePointerEvents</span> | Styles applied to sub`Menu`s to prevent the Modal from capturing mouse events
+| <span class="prop-name">enablePointerEvents</span> | <span class="prop-name">.MuiMenu-enablePointerEvents</span> | Styles applied to sub`MenuItems` to re-enable mouse events
 
 You can override the style of the component thanks to one of these customization points:
 
