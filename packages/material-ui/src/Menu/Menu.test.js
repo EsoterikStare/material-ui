@@ -7,7 +7,6 @@ import Popover from '../Popover';
 import Menu from './Menu';
 import MenuItem from '../MenuItem';
 import MenuList from '../MenuList';
-import consoleErrorMock from 'test/utils/consoleErrorMock';
 
 const MENU_LIST_HEIGHT = 100;
 
@@ -228,14 +227,6 @@ describe('<Menu />', () => {
   });
 
   describe('warnings', () => {
-    before(() => {
-      consoleErrorMock.spy();
-    });
-
-    after(() => {
-      consoleErrorMock.reset();
-    });
-
     it('warns a Fragment is passed as a child', () => {
       expect(() => {
         mount(
@@ -248,6 +239,8 @@ describe('<Menu />', () => {
         // twice in StrictMode
         "Material-UI: The Menu component doesn't accept a Fragment as a child.",
       ]);
+    });
+  });
 
   describe('cascading menu', () => {
     let clock;
