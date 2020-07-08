@@ -25,13 +25,20 @@ export default function CascadingMenu() {
 
   return (
     <div>
-      <Button aria-controls="cascading-menu" aria-haspopup="true" onClick={handleButtonClick}>
+      <Button
+        aria-controls="cascading-menu"
+        aria-haspopup="true"
+        onClick={handleButtonClick}
+      >
         Open Menu
       </Button>
       <Menu
         id="cascading-menu"
         anchorEl={anchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: theme.direction === 'rtl' ? 'left' : 'right' }}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: theme.direction === 'rtl' ? 'left' : 'right',
+        }}
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
