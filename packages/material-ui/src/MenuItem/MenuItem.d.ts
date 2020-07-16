@@ -29,6 +29,7 @@ export interface MenuItemTypeMap<P = {}, D extends React.ElementType = 'li'> {
        */
       ListItemClasses?: ListItemProps['classes'];
       handleArrowRightKeydown?: React.ReactEventHandler<{}>;
+      handleParentClose?: React.ReactEventHandler<{}>;
       onKeyDown?: React.KeyboardEventHandler<any>;
       onMouseEnter?: React.MouseEventHandler<any>;
       /**

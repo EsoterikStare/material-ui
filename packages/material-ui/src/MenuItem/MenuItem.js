@@ -226,6 +226,10 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
+  handleParentClose: PropTypes.func,
+  /**
+   * @ignore
+   */
   key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
