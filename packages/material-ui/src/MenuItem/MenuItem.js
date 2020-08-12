@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
@@ -95,11 +94,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   } = props;
 
   const listItemRef = React.useRef(null);
-  const handleOwnRef = React.useCallback((instance) => {
-    // #StrictMode ready
-    listItemRef.current = ReactDOM.findDOMNode(instance);
-  }, []);
-  const handleRef = useForkRef(handleOwnRef, ref);
+  const handleRef = useForkRef(listItemRef, ref);
 
   let tabIndex;
   if (!props.disabled) {
