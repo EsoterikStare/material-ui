@@ -79,7 +79,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     component = 'li',
     disableGutters = false,
     handleArrowRightKeydown,
-    key,
     ListItemClasses,
     openSubMenu = false,
     onKeyDown,
@@ -114,7 +113,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
 
   const listItem = (
     <ListItem
-      key={key || (subMenu && 'MenuItem')}
+      key={subMenu && "subMenuItem"}
       button
       role={role}
       tabIndex={tabIndex}
