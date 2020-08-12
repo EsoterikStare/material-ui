@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import SubMenu from '@material-ui/core/SubMenu';
 import Switch from '@material-ui/core/Switch';
 import Box from '@material-ui/core/Box';
 import useTheme from '@material-ui/styles/useTheme';
@@ -44,7 +45,7 @@ export default function CascadingMenu() {
       >
         <MenuItem
           subMenu={
-            <Menu>
+            <SubMenu>
               <MenuItem onClick={swapDarkMode}>
                 Dark Mode
                 <Box ml={1}>
@@ -53,17 +54,17 @@ export default function CascadingMenu() {
               </MenuItem>
               <MenuItem
                 subMenu={
-                  <Menu>
+                  <SubMenu>
                     <MenuItem onClick={handleClose}>75%</MenuItem>
                     <MenuItem onClick={handleClose}>100%</MenuItem>
                     <MenuItem onClick={handleClose}>125%</MenuItem>
-                  </Menu>
+                  </SubMenu>
                 }
               >
                 Zoom
               </MenuItem>
               <MenuItem onClick={handleClose}>Help</MenuItem>
-            </Menu>
+            </SubMenu>
           }
         >
           Options
