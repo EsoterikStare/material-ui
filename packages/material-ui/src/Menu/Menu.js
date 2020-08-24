@@ -52,16 +52,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     disableAutoFocusItem = false,
     MenuListProps = {},
     onClose,
-    onEnter,
-    onEntering,
-    onEntered,
     open,
     PaperProps = {},
     PopoverClasses,
     setParentOpenSubMenuIndex,
     transitionDuration = 'auto',
     variant = 'selectedMenu',
-    TransitionProps: { onEntering, ...TransitionProps } = {},
+    TransitionProps: { onEnter, onEntering, onEntered, ...TransitionProps } = {},
     ...other
   } = props;
   const theme = useTheme();
@@ -265,11 +262,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       })}
       classes={PopoverClasses}
       onClose={onClose}
-      onEnter={handleEnter}
-      onEntering={handleEntering}
-      onEntered={handleEntered}
       anchorOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
-      transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
       PaperProps={{
         ...PaperProps,
         classes: {
@@ -281,7 +274,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       open={open}
       ref={ref}
       transitionDuration={transitionDuration}
-      TransitionProps={{ onEntering: handleEntering, ...TransitionProps }}
+      transformOrigin={theme.direction === 'rtl' ? RTL_ORIGIN : LTR_ORIGIN}
+      TransitionProps={{
+        onEnter: handleEnter,
+        onEntering: handleEntering,
+        onEntered: handleEntered,
+        ...TransitionProps,
+      }}
       {...other}
     >
       <MenuList
