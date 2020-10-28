@@ -78,7 +78,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     className,
     component = 'li',
     disableGutters = false,
-    handleArrowRightKeydown,
+    onArrowRightKeydown,
     ListItemClasses,
     openSubMenu = false,
     onKeyDown,
@@ -129,7 +129,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         },
         className,
       )}
-      onKeyDown={createChainedFunction(handleArrowRightKeydown, onKeyDown)}
+      onKeyDown={createChainedFunction(onArrowRightKeydown, onKeyDown)}
       ref={handleRef}
       aria-expanded={subMenu ? openSubMenu : undefined}
       aria-haspopup={subMenu ? true : undefined}
@@ -216,7 +216,7 @@ MenuItem.propTypes = {
   /**
    * @ignore
    */
-  handleArrowRightKeydown: PropTypes.func,
+  onArrowRightKeydown: PropTypes.func,
   /**
    * @ignore
    */

@@ -208,7 +208,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (hasSubMenu && parentMenuOpen) {
       additionalPropsAdded = true;
 
-      const handleArrowRightKeydown = (event) => {
+      const onArrowRightKeydown = (event) => {
         if (event.key === 'ArrowRight') {
           event.preventDefault();
           setOpenSubMenuIndex(index);
@@ -216,7 +216,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       };
 
       Object.assign(additionalProps, {
-        handleArrowRightKeydown,
+        onArrowRightKeydown,
         openSubMenu: index === openSubMenuIndex && !entering,
         setParentOpenSubMenuIndex: handleSetOpenSubMenuIndex,
       });
