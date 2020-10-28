@@ -47,10 +47,7 @@ export default function CascadingMenu() {
           subMenu={
             <SubMenu>
               <MenuItem onClick={swapDarkMode}>
-                Dark Mode
-                <Box ml={1}>
-                  <Switch size="small" checked={darkMode} />
-                </Box>
+                View
               </MenuItem>
               <MenuItem
                 subMenu={
