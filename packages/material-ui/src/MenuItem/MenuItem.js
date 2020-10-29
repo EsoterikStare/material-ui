@@ -88,7 +88,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     subMenuIcon: SubMenuIcon = KeyboardArrowRight,
     setParentOpenSubMenuIndex,
     tabIndex: tabIndexProp,
-    handleParentClose,
+    onParentClose,
     ...other
   } = props;
 
@@ -102,7 +102,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
 
   const {
     anchorEl, // disallowed
-    handleParentClose: handleParentCloseProp, // disallowed
+    onParentClose: onParentCloseProp, // disallowed
     MenuListProps, // Needs to be spread into subMenu prop
     isSubMenu, // disallowed
     open, // disallowed
@@ -163,7 +163,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           anchorOrigin: theme.direction === 'rtl' ? RTL_ANCHOR_ORIGIN : LTR_ANCHOR_ORIGIN,
           MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
-          onClose: createChainedFunction(handleParentClose, subOnClose),
+          onClose: createChainedFunction(onParentClose, subOnClose),
           setParentOpenSubMenuIndex,
           transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
           ...allowedSubMenuProps,
@@ -214,17 +214,13 @@ MenuItem.propTypes = {
    */
   disableGutters: PropTypes.bool,
   /**
-   * @ignore
-   */
-  onArrowRightKeydown: PropTypes.func,
-  /**
-   * @ignore
-   */
-  handleParentClose: PropTypes.func,
-  /**
    * `classes` prop applied to the [`ListItem`](/api/list-item/) element.
    */
   ListItemClasses: PropTypes.object,
+  /**
+   * @ignore
+   */
+  onArrowRightKeydown: PropTypes.func,
   /**
    * @ignore
    */
@@ -234,7 +230,12 @@ MenuItem.propTypes = {
    */
   onMouseEnter: PropTypes.func,
   /**
+   * @ignore
+   */
+  onParentClose: PropTypes.func,
+  /**
    * When `true`, opens the subMenu, if provided.
+   * @default false
    */
   openSubMenu: PropTypes.bool,
   /**
@@ -257,6 +258,7 @@ MenuItem.propTypes = {
    * Normally `Icon`, `SvgIcon`, or a `@material-ui/icons`
    * SVG icon element rendered on a MenuItem that
    * contains a subMenu
+   * @default KeyboardArrowRight
    */
   subMenuIcon: PropTypes.node,
   /**
