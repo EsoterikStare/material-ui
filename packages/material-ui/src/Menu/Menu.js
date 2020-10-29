@@ -67,14 +67,11 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const [entering, setEntering] = React.useState(false);
   const isSubMenu = typeof setParentOpenSubMenuIndex !== 'undefined';
 
-  const atLeastOneSubMenu = React.useMemo(() => {
-    return (
-      isSubMenu ||
-      React.Children.toArray(children).some(
-        (child) => React.isValidElement(child) && child.props && child.props.subMenu,
-      )
+  const atLeastOneSubMenu =
+    isSubMenu ||
+    React.Children.toArray(children).some(
+      (child) => React.isValidElement(child) && child.props && child.props.subMenu,
     );
-  }, [children, isSubMenu]);
 
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
 
