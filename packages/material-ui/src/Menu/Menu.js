@@ -128,9 +128,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (event.key === 'ArrowLeft' && isSubMenu) {
       // Tell the parent Menu to close the sub Menu that you're in, but
       // don't trigger the sub Menu onClose cascade.
-      event.stopPropagation();
+      if (!event.defaultPrevented) setParentOpenSubMenuIndex(null);
       event.preventDefault();
-      setParentOpenSubMenuIndex(null);
     }
   };
 
