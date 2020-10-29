@@ -178,7 +178,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const items = React.Children.map(children, (child, index) => {
     if (!React.isValidElement(child)) {
-      return;
+      return undefined;
     }
 
     const { subMenu, onMouseMove: onMouseMoveChildProp } = child.props;
@@ -224,13 +224,11 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     }
 
     if (Object.keys(additionalProps).length > 0) {
-      // eslint-disable-next-line consistent-return
       return React.cloneElement(child, {
         ...additionalProps,
       });
     }
 
-    // eslint-disable-next-line consistent-return
     return child;
   });
 
