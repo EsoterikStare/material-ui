@@ -187,62 +187,43 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     const hasSubMenu = Boolean(subMenu);
     const parentMenuOpen = Boolean(anchorEl);
 
-    let additionalPropsAdded = false;
     const additionalProps = {};
 
     // This is the original purpose of this React.Children.map and is basically unchanged.
     if (index === activeItemIndex) {
-      additionalPropsAdded = true;
-
-      Object.assign(additionalProps, {
-        ref: (instance) => {
-          contentAnchorRef.current = instance;
-          setRef(child.ref, instance);
-        },
-      });
+      additionalProps.ref = (instance) => {
+        contentAnchorRef.current = instance;
+        setRef(child.ref, instance);
+      };
     }
 
     // If the current Menu item in this map has a subMenu,
     // we need the parent Menu to orchestrate its subMenu
     if (hasSubMenu && parentMenuOpen) {
-      additionalPropsAdded = true;
-
-      const onArrowRightKeydown = (event) => {
-        if (event.key === 'ArrowRight') {
-          event.preventDefault();
+      additionalProps.onArrowRightKeydown = (e) => {
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
           setOpenSubMenuIndex(index);
         }
       };
-
-      Object.assign(additionalProps, {
-        onArrowRightKeydown,
-        openSubMenu: index === openSubMenuIndex && !entering,
-        setParentOpenSubMenuIndex: handleSetOpenSubMenuIndex,
-      });
+      additionalProps.openSubMenu = index === openSubMenuIndex && !entering;
+      additionalProps.setParentOpenSubMenuIndex = handleSetOpenSubMenuIndex;
     }
 
     // If there are ANY children with subMenus, then ALL
     // of the children need to know how to close any open subMenus
     // and reset the state that controls which subMenu is open.
     if (atLeastOneSubMenu) {
-      additionalPropsAdded = true;
-
-      Object.assign(additionalProps, {
-        onMouseMove: (e) => {
-          setOpenSubMenuIndex(index);
-          if (onMouseMoveChildProp) {
-            onMouseMoveChildProp(e);
-          }
-        },
-        onParentClose: handleOnClose,
-      });
+      additionalProps.onMouseMove = (e) => {
+        setOpenSubMenuIndex(index);
+        if (onMouseMoveChildProp) {
+          onMouseMoveChildProp(e);
+        }
+      };
+      additionalProps.onParentClose = handleOnClose;
     }
 
-    // Using a semaphore instead of inspecting addtionalProps
-    // directly to avoid performance hits at scale. Might be
-    // fine to just do Object.keys(additionalProps).length > 0,
-    // but that seems like iterations we can avoid.
-    if (additionalPropsAdded) {
+    if (Object.keys(additionalProps).length > 0) {
       // eslint-disable-next-line consistent-return
       return React.cloneElement(child, {
         ...additionalProps,
