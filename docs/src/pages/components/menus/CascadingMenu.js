@@ -3,8 +3,6 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import SubMenu from '@material-ui/core/SubMenu';
-import Switch from '@material-ui/core/Switch';
-import Box from '@material-ui/core/Box';
 import useTheme from '@material-ui/styles/useTheme';
 
 export default function CascadingMenu() {
