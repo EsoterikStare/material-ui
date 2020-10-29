@@ -235,7 +235,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
             onMouseMoveChildProp(e);
           }
         },
-        handleParentClose: handleOnClose,
+        onParentClose: handleOnClose,
       });
     }
 
