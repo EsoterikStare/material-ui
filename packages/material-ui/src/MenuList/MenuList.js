@@ -140,11 +140,11 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
     }),
     [],
   );
-  
+
   const handleKeyDown = (event) => {
     const list = listRef.current;
     const key = event.key;
-    
+
     /**
      * @type {Element} - will always be defined since we are in a keydown handler
      * attached to an element. A keydown event is either dispatched to the activeElement
