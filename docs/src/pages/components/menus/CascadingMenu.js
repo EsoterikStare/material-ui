@@ -44,9 +44,7 @@ export default function CascadingMenu() {
         <MenuItem
           subMenu={
             <SubMenu>
-              <MenuItem onClick={swapDarkMode}>
-                View
-              </MenuItem>
+              <MenuItem onClick={swapDarkMode}>View</MenuItem>
               <MenuItem
                 subMenu={
                   <SubMenu>

@@ -534,7 +534,7 @@ describe('<Menu />', () => {
     //   // FIXME: @eps1lon - the assertion below is what's failing after the changes in https://github.com/mui-org/material-ui/commit/e58cc23df9e262a0f95c822504ac6c019b94407d
     //   // Basically, this test correctly discovered that the parent item is no longer getting the Mui-focusVisible class when its child menu closes after an ArrowLeft.
     //   // So, from manual testing, I confirmed the correct item is technically focused, as before, but it no longer _appears_ focused.
-      
+
     //   // assert.strictEqual(wrapper.find('#settings-item').last().hasClass('Mui-focusVisible'), true);
 
     //   wrapper.find('#settings-item').last().simulate('keyDown', {
