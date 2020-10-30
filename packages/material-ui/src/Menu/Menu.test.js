@@ -251,7 +251,7 @@ describe('<Menu />', () => {
       // StrictModeViolation: uses Popover
       cascadeMount = createMount({ strict: false });
     });
-    
+
     beforeEach(() => {
       clock = useFakeTimers();
       wrapper = cascadeMount(<CascadingMenu />);
