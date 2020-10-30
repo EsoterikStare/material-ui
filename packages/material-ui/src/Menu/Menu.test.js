@@ -248,12 +248,12 @@ describe('<Menu />', () => {
     let wrapper;
 
     before(() => {
-      clock = useFakeTimers();
       // StrictModeViolation: uses Popover
       cascadeMount = createMount({ strict: false });
     });
-
+    
     beforeEach(() => {
+      clock = useFakeTimers();
       wrapper = cascadeMount(<CascadingMenu />);
     });
 
@@ -261,9 +261,6 @@ describe('<Menu />', () => {
       clock.restore();
       wrapper.unmount();
     });
-
-    // after(() => {
-    // });
 
     const CascadingMenu = (props) => {
       const [anchorEl, setAnchorEl] = React.useState(null);
@@ -340,208 +337,208 @@ describe('<Menu />', () => {
       assert.strictEqual(wrapper.find('#regular-item').exists(), true);
     });
 
-    // it('displays a sub menu level 2', () => {
-    //   wrapper.find(Button).simulate('click');
-    //   wrapper.find('#settings-item').last().simulate('mousemove');
+    it('displays a sub menu level 2', () => {
+      wrapper.find(Button).simulate('click');
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find('#go-deeper-1').last().simulate('mousemove');
+      wrapper.find('#go-deeper-1').last().simulate('mousemove');
 
-    //   clock.tick(500);
-    //   wrapper.update();
+      clock.tick(500);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#go-deeper-2').exists(), true);
-    // });
+      assert.strictEqual(wrapper.find('#go-deeper-2').exists(), true);
+    });
 
-    // it('sub menus collapse when parent menu is changed', () => {
-    //   wrapper.find(Button).simulate('click');
-    //   wrapper.find('#settings-item').last().simulate('mousemove');
+    it('sub menus collapse when parent menu is changed', () => {
+      wrapper.find(Button).simulate('click');
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find('#account-item').last().simulate('mousemove');
+      wrapper.find('#account-item').last().simulate('mousemove');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#change-username').exists(), true);
-    //   wrapper.find('#settings-item').last().simulate('mousemove');
+      assert.strictEqual(wrapper.find('#change-username').exists(), true);
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#change-username').exists(), false);
-    // });
+      assert.strictEqual(wrapper.find('#change-username').exists(), false);
+    });
 
-    // it('sub menu stays open when mouse is outside of menu', () => {
-    //   wrapper.find(Button).simulate('click');
-    //   wrapper.find('#settings-item').last().simulate('mousemove');
+    it('sub menu stays open when mouse is outside of menu', () => {
+      wrapper.find(Button).simulate('click');
+      wrapper.find('#settings-item').last().simulate('mousemove');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
 
-    //   wrapper.find('#regular-item').last().simulate('mousemove');
-    //   wrapper.find('#regular-item').last().simulate('mouseout');
-    //   wrapper.find(Button).simulate('mouseenter');
+      wrapper.find('#regular-item').last().simulate('mousemove');
+      wrapper.find('#regular-item').last().simulate('mouseout');
+      wrapper.find(Button).simulate('mouseenter');
 
-    //   assert.strictEqual(wrapper.find('#regular-item').last().exists(), true);
-    // });
+      assert.strictEqual(wrapper.find('#regular-item').last().exists(), true);
+    });
 
-    // it('opens a sub Menu on RightArrow keydown', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('opens a sub Menu on RightArrow keydown', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(200);
-    //   wrapper.update();
+      clock.tick(200);
+      wrapper.update();
 
-    //   wrapper.find('#settings-item').last().simulate('keyDown', {
-    //     key: 'ArrowRight',
-    //   });
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
+      });
 
-    //   clock.tick(200);
-    //   wrapper.update();
+      clock.tick(200);
+      wrapper.update();
 
-    //   const expected = true;
-    //   const actual = wrapper.find('#regular-item').exists();
-    //   assert.strictEqual(actual, expected);
-    // });
+      const expected = true;
+      const actual = wrapper.find('#regular-item').exists();
+      assert.strictEqual(actual, expected);
+    });
 
-    // it('closes current sub Menu on LeftArrow keydown', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('closes current sub Menu on LeftArrow keydown', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find('#settings-item').last().simulate('keyDown', {
-    //     key: 'ArrowRight',
-    //   });
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
 
-    //   wrapper.find('#regular-item').last().simulate('keyDown', {
-    //     key: 'ArrowLeft',
-    //   });
+      wrapper.find('#regular-item').last().simulate('keyDown', {
+        key: 'ArrowLeft',
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#regular-item').exists(), false);
-    // });
+      assert.strictEqual(wrapper.find('#regular-item').exists(), false);
+    });
 
-    // it('closes all menus on Tab keydown', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('closes all menus on Tab keydown', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find('#settings-item').last().simulate('keyDown', {
-    //     key: 'ArrowRight',
-    //   });
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
 
-    //   wrapper.find('#regular-item').last().simulate('keyDown', {
-    //     key: 'Tab',
-    //   });
+      wrapper.find('#regular-item').last().simulate('keyDown', {
+        key: 'Tab',
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#settings-item').exists(), false);
-    //   assert.strictEqual(wrapper.find('#regular-item').exists(), false);
-    // });
+      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
+      assert.strictEqual(wrapper.find('#regular-item').exists(), false);
+    });
 
-    // it('closes all menus on Escape keydown', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('closes all menus on Escape keydown', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find('#settings-item').last().simulate('keyDown', {
-    //     key: 'ArrowRight',
-    //   });
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
 
-    //   wrapper.find('#regular-item').last().simulate('keyDown', {
-    //     key: 'Escape',
-    //   });
+      wrapper.find('#regular-item').last().simulate('keyDown', {
+        key: 'Escape',
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#settings-item').exists(), false);
-    //   assert.strictEqual(wrapper.find('#regular-item').exists(), false);
-    // });
+      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
+      assert.strictEqual(wrapper.find('#regular-item').exists(), false);
+    });
 
-    // it('changes focus with up and down arrow buttons', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('changes focus with up and down arrow buttons', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find('#settings-item').last().simulate('keyDown', {
-    //     key: 'ArrowRight',
-    //   });
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
+      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
 
-    //   wrapper.find('#regular-item').last().simulate('keyDown', {
-    //     key: 'ArrowDown',
-    //   });
-    //   assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), false);
+      wrapper.find('#regular-item').last().simulate('keyDown', {
+        key: 'ArrowDown',
+      });
+      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), false);
 
-    //   wrapper.find('#regular-item').last().simulate('keyDown', {
-    //     key: 'ArrowUp',
-    //   });
-    //   assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
-    // });
+      wrapper.find('#regular-item').last().simulate('keyDown', {
+        key: 'ArrowUp',
+      });
+      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
+    });
 
-    // it('changes focus with left and right arrow buttons', () => {
-    //   wrapper.find(Button).simulate('click');
+    it('changes focus with left and right arrow buttons', () => {
+      wrapper.find(Button).simulate('click');
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   wrapper.find('#settings-item').last().simulate('keyDown', {
-    //     key: 'ArrowRight',
-    //   });
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
+      });
 
-    //   clock.tick(0);
-    //   wrapper.update();
+      clock.tick(0);
+      wrapper.update();
 
-    //   assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
+      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
 
-    //   wrapper.find('#regular-item').last().simulate('keyDown', {
-    //     key: 'ArrowLeft',
-    //   });
-    //   // FIXME: @eps1lon - the assertion below is what's failing after the changes in https://github.com/mui-org/material-ui/commit/e58cc23df9e262a0f95c822504ac6c019b94407d
-    //   // Basically, this test correctly discovered that the parent item is no longer getting the Mui-focusVisible class when its child menu closes after an ArrowLeft.
-    //   // So, from manual testing, I confirmed the correct item is technically focused, as before, but it no longer _appears_ focused.
+      wrapper.find('#regular-item').last().simulate('keyDown', {
+        key: 'ArrowLeft',
+      });
+      // FIXME: @eps1lon - the assertion below is what's failing after the changes in https://github.com/mui-org/material-ui/commit/e58cc23df9e262a0f95c822504ac6c019b94407d
+      // Basically, this test correctly discovered that the parent item is no longer getting the Mui-focusVisible class when its child menu closes after an ArrowLeft.
+      // So, from manual testing, I confirmed the correct item is technically focused, as before, but it no longer _appears_ focused.
 
-    //   // assert.strictEqual(wrapper.find('#settings-item').last().hasClass('Mui-focusVisible'), true);
+      // assert.strictEqual(wrapper.find('#settings-item').last().hasClass('Mui-focusVisible'), true);
 
-    //   wrapper.find('#settings-item').last().simulate('keyDown', {
-    //     key: 'ArrowRight',
-    //   });
+      wrapper.find('#settings-item').last().simulate('keyDown', {
+        key: 'ArrowRight',
+      });
 
-    //   assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
-    // });
+      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
+    });
   });
 });
