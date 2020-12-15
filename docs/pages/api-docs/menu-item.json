@@ -5,11 +5,22 @@
     "component": { "type": { "name": "elementType" } },
     "dense": { "type": { "name": "bool" } },
     "disableGutters": { "type": { "name": "bool" } },
-    "ListItemClasses": { "type": { "name": "object" } }
+    "ListItemClasses": { "type": { "name": "object" } },
+    "openSubMenu": { "type": { "name": "bool" } },
+    "subMenu": { "type": { "name": "node" } },
+    "subMenuIcon": { "type": { "name": "node" }, "default": "KeyboardArrowRight" }
   },
   "name": "MenuItem",
   "styles": {
-    "classes": ["root", "gutters", "selected", "dense"],
+    "classes": [
+      "root",
+      "gutters",
+      "selected",
+      "dense",
+      "subMenuItemWrapper",
+      "subMenuIcon",
+      "rtlSubMenuIcon"
+    ],
     "globalClasses": { "selected": "Mui-selected" },
     "name": "MuiMenuItem"
   },

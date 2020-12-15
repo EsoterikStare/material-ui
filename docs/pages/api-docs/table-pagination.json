@@ -10,11 +10,11 @@
     "component": { "type": { "name": "elementType" } },
     "getItemAriaLabel": {
       "type": { "name": "func" },
-      "default": "function defaultGetAriaLabel(type) {\n  return `Go to ${type} page`;\n}"
+      "default": "function defaultGetAriaLabel(type) {\r\n  return `Go to ${type} page`;\r\n}"
     },
     "labelDisplayedRows": {
       "type": { "name": "func" },
-      "default": "function defaultLabelDisplayedRows({ from, to, count }) {\n  return `${from}-${to} of ${count !== -1 ? count : `more than ${to}`}`;\n}"
+      "default": "function defaultLabelDisplayedRows({ from, to, count }) {\r\n  return `${from}-${to} of ${count !== -1 ? count : `more than ${to}`}`;\r\n}"
     },
     "labelRowsPerPage": { "type": { "name": "node" }, "default": "'Rows per page:'" },
     "nextIconButtonProps": { "type": { "name": "object" } },
