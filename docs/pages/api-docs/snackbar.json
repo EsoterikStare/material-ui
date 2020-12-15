@@ -25,7 +25,7 @@
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ appear?: number, enter?: number, exit?: number }"
       },
-      "default": "{\n  enter: duration.enteringScreen,\n  exit: duration.leavingScreen,\n}"
+      "default": "{\r\n  enter: duration.enteringScreen,\r\n  exit: duration.leavingScreen,\r\n}"
     },
     "TransitionProps": { "type": { "name": "object" }, "default": "{}" }
   },
