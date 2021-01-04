@@ -5,6 +5,7 @@ import { getClasses, createMount, describeConformance } from 'test/utils';
 import Button from '../Button';
 import Popover from '../Popover';
 import Menu from './Menu';
+import SubMenu from '../SubMenu';
 import MenuItem from '../MenuItem';
 import MenuList from '../MenuList';
 
@@ -277,23 +278,23 @@ describe('<Menu />', () => {
             <MenuItem
               id="settings-item"
               subMenu={
-                <Menu>
+                <SubMenu>
                   <MenuItem id="regular-item" onClick={handleItemClick}>
                     Regular Item
                   </MenuItem>
                   <MenuItem
                     id="go-deeper-1"
                     subMenu={
-                      <Menu>
+                      <SubMenu>
                         <MenuItem key="deeper2" id="go-deeper-2">
                           Go deeper
                         </MenuItem>
-                      </Menu>
+                      </SubMenu>
                     }
                   >
                     Go deeper
                   </MenuItem>
-                </Menu>
+                </SubMenu>
               }
             >
               Settings
@@ -301,14 +302,14 @@ describe('<Menu />', () => {
             <MenuItem
               id="account-item"
               subMenu={
-                <Menu>
+                <SubMenu>
                   <MenuItem id="reset-password" onClick={handleItemClick}>
                     Reset password
                   </MenuItem>
                   <MenuItem id="change-username" onClick={handleItemClick}>
                     Change username
                   </MenuItem>
-                </Menu>
+                </SubMenu>
               }
             >
               My account
