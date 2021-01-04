@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy, useFakeTimers } from 'sinon';
-import { expect, assert } from 'chai';
+import { expect } from 'chai';
 import { getClasses, createMount, describeConformance } from 'test/utils';
 import Button from '../Button';
 import Popover from '../Popover';
@@ -327,7 +327,7 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      expect(wrapper.find('#regular-item').exists()).to.be.true;
     });
 
     it('displays a sub menu level 2', () => {
@@ -343,7 +343,7 @@ describe('<Menu />', () => {
       clock.tick(500);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#go-deeper-2').exists(), true);
+      expect(wrapper.find('#go-deeper-2').exists()).to.be.true;
     });
 
     it('sub menus collapse when parent menu is changed', () => {
@@ -359,13 +359,13 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#change-username').exists(), true);
+      expect(wrapper.find('#change-username').exists()).to.be.true;
       wrapper.find('#settings-item').last().simulate('mousemove');
 
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#change-username').exists(), false);
+      expect(wrapper.find('#change-username').exists()).to.be.false;
     });
 
     it('sub menu stays open when mouse is outside of menu', () => {
@@ -376,13 +376,13 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      expect(wrapper.find('#regular-item').exists()).to.be.true;
 
       wrapper.find('#regular-item').last().simulate('mousemove');
       wrapper.find('#regular-item').last().simulate('mouseout');
       wrapper.find(Button).simulate('mouseenter');
 
-      assert.strictEqual(wrapper.find('#regular-item').last().exists(), true);
+      expect(wrapper.find('#regular-item').last().exists()).to.be.true;
     });
 
     it('opens a sub Menu on RightArrow keydown', () => {
@@ -399,9 +399,7 @@ describe('<Menu />', () => {
       clock.tick(200);
       wrapper.update();
 
-      const expected = true;
-      const actual = wrapper.find('#regular-item').exists();
-      assert.strictEqual(actual, expected);
+      expect(wrapper.find('#regular-item').exists()).to.be.true;
     });
 
     it('closes current sub Menu on LeftArrow keydown', () => {
@@ -418,7 +416,7 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      expect(wrapper.find('#regular-item').exists()).to.be.true;
 
       wrapper.find('#regular-item').last().simulate('keyDown', {
         key: 'ArrowLeft',
@@ -427,7 +425,7 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#regular-item').exists(), false);
+      expect(wrapper.find('#regular-item').exists()).to.be.false;
     });
 
     it('closes all menus on Tab keydown', () => {
@@ -444,7 +442,7 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      expect(wrapper.find('#regular-item').exists()).to.be.true;
 
       wrapper.find('#regular-item').last().simulate('keyDown', {
         key: 'Tab',
@@ -453,8 +451,8 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
-      assert.strictEqual(wrapper.find('#regular-item').exists(), false);
+      expect(wrapper.find('#settings-item').exists()).to.be.false;
+      expect(wrapper.find('#regular-item').exists()).to.be.false;
     });
 
     it('closes all menus on Escape keydown', () => {
@@ -471,7 +469,7 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#regular-item').exists(), true);
+      expect(wrapper.find('#regular-item').exists()).to.be.true;
 
       wrapper.find('#regular-item').last().simulate('keyDown', {
         key: 'Escape',
@@ -480,8 +478,8 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#settings-item').exists(), false);
-      assert.strictEqual(wrapper.find('#regular-item').exists(), false);
+      expect(wrapper.find('#settings-item').exists()).to.be.false;
+      expect(wrapper.find('#regular-item').exists()).to.be.false;
     });
 
     it('changes focus with up and down arrow buttons', () => {
@@ -498,17 +496,17 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
+      expect(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible')).to.be.true;
 
       wrapper.find('#regular-item').last().simulate('keyDown', {
         key: 'ArrowDown',
       });
-      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), false);
+      expect(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible')).to.be.false;
 
       wrapper.find('#regular-item').last().simulate('keyDown', {
         key: 'ArrowUp',
       });
-      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
+      expect(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible')).to.be.true;
     });
 
     it('changes focus with left and right arrow buttons', () => {
@@ -525,7 +523,7 @@ describe('<Menu />', () => {
       clock.tick(0);
       wrapper.update();
 
-      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
+      expect(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible')).to.be.true;
 
       wrapper.find('#regular-item').last().simulate('keyDown', {
         key: 'ArrowLeft',
@@ -534,13 +532,13 @@ describe('<Menu />', () => {
       // Basically, this test correctly discovered that the parent item is no longer getting the Mui-focusVisible class when its child menu closes after an ArrowLeft.
       // So, from manual testing, I confirmed the correct item is technically focused, as before, but it no longer _appears_ focused.
 
-      // assert.strictEqual(wrapper.find('#settings-item').last().hasClass('Mui-focusVisible'), true);
+      // expect(wrapper.find('#settings-item').last().hasClass('Mui-focusVisible')).to.be.true;
 
       wrapper.find('#settings-item').last().simulate('keyDown', {
         key: 'ArrowRight',
       });
 
-      assert.strictEqual(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible'), true);
+      expect(wrapper.find('#regular-item').last().hasClass('Mui-focusVisible')).to.be.true;
     });
   });
 });
