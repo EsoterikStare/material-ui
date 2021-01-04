@@ -244,22 +244,13 @@ describe('<Menu />', () => {
 
   describe('cascading menu', () => {
     let clock;
-    let cascadeMount;
-    let wrapper;
-
-    before(() => {
-      // StrictModeViolation: uses Popover
-      cascadeMount = createMount({ strict: false });
-    });
 
     beforeEach(() => {
       clock = useFakeTimers();
-      wrapper = cascadeMount(<CascadingMenu />);
     });
 
     afterEach(() => {
       clock.restore();
-      wrapper.unmount();
     });
 
     const CascadingMenu = (props) => {
@@ -328,6 +319,7 @@ describe('<Menu />', () => {
     };
 
     it('displays a sub menu level 1', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
       wrapper.find('#settings-item').last().simulate('mousemove');
 
@@ -338,6 +330,7 @@ describe('<Menu />', () => {
     });
 
     it('displays a sub menu level 2', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
       wrapper.find('#settings-item').last().simulate('mousemove');
 
@@ -353,6 +346,7 @@ describe('<Menu />', () => {
     });
 
     it('sub menus collapse when parent menu is changed', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
       wrapper.find('#settings-item').last().simulate('mousemove');
 
@@ -374,6 +368,7 @@ describe('<Menu />', () => {
     });
 
     it('sub menu stays open when mouse is outside of menu', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
       wrapper.find('#settings-item').last().simulate('mousemove');
 
@@ -390,6 +385,7 @@ describe('<Menu />', () => {
     });
 
     it('opens a sub Menu on RightArrow keydown', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
 
       clock.tick(200);
@@ -408,6 +404,7 @@ describe('<Menu />', () => {
     });
 
     it('closes current sub Menu on LeftArrow keydown', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
 
       clock.tick(0);
@@ -433,6 +430,7 @@ describe('<Menu />', () => {
     });
 
     it('closes all menus on Tab keydown', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
 
       clock.tick(0);
@@ -459,6 +457,7 @@ describe('<Menu />', () => {
     });
 
     it('closes all menus on Escape keydown', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
 
       clock.tick(0);
@@ -485,6 +484,7 @@ describe('<Menu />', () => {
     });
 
     it('changes focus with up and down arrow buttons', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
 
       clock.tick(0);
@@ -511,6 +511,7 @@ describe('<Menu />', () => {
     });
 
     it('changes focus with left and right arrow buttons', () => {
+      const wrapper = mount(<CascadingMenu />);
       wrapper.find(Button).simulate('click');
 
       clock.tick(0);
