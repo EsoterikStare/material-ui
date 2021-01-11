@@ -30,9 +30,7 @@ export interface MenuProps extends StandardProps<PopoverProps & Partial<Transiti
     paper?: string;
     /** Styles applied to the List component via `MenuList`. */
     list?: string;
-    /** Styles applied to sub`Menu`s to prevent the Modal from capturing mouse events */
     disablePointerEvents?: string;
-    /** Styles applied to sub`MenuItems` to re-enable mouse events */
     enablePointerEvents?: string;
   };
   /**

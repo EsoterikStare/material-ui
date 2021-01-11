@@ -34,11 +34,11 @@ export const styles = {
     // We disable the focus ring for mouse, touch and keyboard users.
     outline: 0,
   },
-  /* Styles applied to sub`Menu`s to prevent the Modal from capturing mouse events */
+  // Styles applied to sub`Menu`s to prevent the Modal from capturing mouse events.
   disablePointerEvents: {
     pointerEvents: 'none',
   },
-  /* Styles applied to sub`MenuItems` to re-enable mouse events */
+  // Styles applied to sub`MenuItems` to re-enable mouse events.
   enablePointerEvents: {
     pointerEvents: 'auto', // To enable capturing hover events on MenuList
   },
