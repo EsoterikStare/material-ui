@@ -63,7 +63,7 @@ export const styles = (theme) => ({
   subMenuIcon: {
     marginLeft: theme.spacing(2),
   },
-  /* Styles applied to subMenuIcon when dirction is 'rtl' */
+  /* Styles applied to subMenuIcon when direction is 'rtl' */
   rtlSubMenuIcon: {
     transform: 'rotate(-180deg)',
   },
