@@ -2,11 +2,12 @@ import * as React from 'react';
 import { spy, useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import {
-  getClasses,
+  act,
+  createClientRender,
   createMount,
   describeConformance,
-  createClientRender,
   fireEvent,
+  getClasses,
 } from 'test/utils';
 import Button from '../Button';
 import Popover from '../Popover';
@@ -14,7 +15,6 @@ import Menu from './Menu';
 import SubMenu from '../SubMenu';
 import MenuItem from '../MenuItem';
 import MenuList from '../MenuList';
-import ArrowRight from '@material-ui/lab/internal/svg-icons/ArrowRight';
 
 const MENU_LIST_HEIGHT = 100;
 
@@ -330,8 +330,12 @@ describe('<Menu />', () => {
 
     it('displays a sub menu level 1', () => {
       const { getByRole, queryByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+      });
 
       clock.tick(0);
 
@@ -340,12 +344,18 @@ describe('<Menu />', () => {
 
     it('displays a sub menu level 2', () => {
       const { getByRole, queryByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+      });
 
       clock.tick(0);
 
-      fireEvent.mouseMove(getByRole('menuitem', { name: 'Go deeper' }));
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Go deeper' }));
+      });
 
       clock.tick(500);
 
@@ -354,13 +364,19 @@ describe('<Menu />', () => {
 
     it('sub menus collapse when active parent item is changed', () => {
       const { getByRole, queryByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.mouseMove(getByRole('menuitem', { name: 'My account' }));
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'My account' }));
+      });
 
       clock.tick(0);
 
       expect(queryByRole('menuitem', { name: 'Change username' })).to.not.equal(null);
-      fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+      });
 
       clock.tick(0);
 
@@ -369,24 +385,38 @@ describe('<Menu />', () => {
 
     it('sub menu stays open when mouse is outside of menu', () => {
       const { getByRole, queryByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+      });
 
       clock.tick(0);
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
 
-      fireEvent.mouseMove(getByRole('menuitem', { name: 'Regular item' }));
-      fireEvent.mouseOut(getByRole('menuitem', { name: 'Regular item' }));
-      fireEvent.mouseEnter(getByRole('button'));
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Regular item' }));
+      });
+      act(() => {
+        fireEvent.mouseOut(getByRole('menuitem', { name: 'Regular item' }));
+      });
+      act(() => {
+        fireEvent.mouseEnter(getByRole('button'));
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
     });
 
     it('opens a sub Menu on RightArrow keydown', () => {
       const { getByRole, queryByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      });
 
       clock.tick(0);
 
@@ -395,13 +425,19 @@ describe('<Menu />', () => {
 
     it('closes current sub Menu on LeftArrow keydown', () => {
       const { getByRole, queryByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      });
 
       clock.tick(0);
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowLeft' });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowLeft' });
+      });
 
       clock.tick(0);
 
@@ -410,13 +446,19 @@ describe('<Menu />', () => {
 
     it('closes all menus on Tab keydown', () => {
       const { getByRole, queryByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      });
 
       clock.tick(0);
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'Tab' });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'Tab' });
+      });
 
       clock.tick(0);
 
@@ -426,13 +468,19 @@ describe('<Menu />', () => {
 
     it('closes all menus on Escape keydown', () => {
       const { getByRole, queryByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      });
 
       clock.tick(0);
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'Escape' });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'Escape' });
+      });
 
       clock.tick(0);
 
@@ -442,8 +490,12 @@ describe('<Menu />', () => {
 
     it('changes focus with up and down arrow buttons', () => {
       const { getByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      });
 
       clock.tick(0);
 
@@ -451,7 +503,9 @@ describe('<Menu />', () => {
       expect(Array.from(getByRole('menuitem', { name: 'Regular item' }).classList)).to.include(
         'Mui-focusVisible',
       ); // looks focused
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowDown' });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowDown' });
+      });
 
       clock.tick(0);
 
@@ -459,7 +513,9 @@ describe('<Menu />', () => {
       expect(Array.from(getByRole('menuitem', { name: 'Go deeper' }).classList)).to.include(
         'Mui-focusVisible',
       ); // looks focused
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Go deeper' }), { key: 'ArrowUp' });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Go deeper' }), { key: 'ArrowUp' });
+      });
 
       clock.tick(0);
 
@@ -471,8 +527,12 @@ describe('<Menu />', () => {
 
     it('changes focus with left and right arrow buttons', () => {
       const { getByRole } = render(<CascadingMenu />);
-      fireEvent.click(getByRole('button'));
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      });
 
       clock.tick(0);
 
@@ -480,7 +540,9 @@ describe('<Menu />', () => {
       expect(Array.from(getByRole('menuitem', { name: 'Regular item' }).classList)).to.include(
         'Mui-focusVisible',
       ); // looks focused
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowLeft' });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowLeft' });
+      });
 
       clock.tick(0);
 
@@ -492,7 +554,9 @@ describe('<Menu />', () => {
 
       // expect(Array.from(settings.classList)).to.include('Mui-focusVisible'); // looks focused
 
-      fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
+      });
 
       clock.tick(0);
 
