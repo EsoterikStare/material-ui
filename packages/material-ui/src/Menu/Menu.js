@@ -119,6 +119,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const handleListKeyDown = (event) => {
     const { anchorEl } = other;
+    anchorEl.onblur = () => anchorEl.classList.remove('Mui-focusVisible');
     if (event.key === 'Tab' || event.key === 'Escape') {
       handleOnClose(event);
     }
@@ -128,7 +129,10 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (event.key === 'ArrowLeft' && isSubMenu) {
       // Tell the parent Menu to close the sub Menu that you're in, but
       // don't trigger the sub Menu onClose cascade.
-      anchorEl.onfocus = () => anchorEl.classList.add('Mui-focusVisible');
+      anchorEl.onfocus = async () => {
+        await anchorEl.classList.remove('MuiMenuItem-openSubMenuParent');
+        anchorEl.classList.add('Mui-focusVisible');
+      };
       if (!event.defaultPrevented) setParentOpenSubMenuIndex(null);
       event.preventDefault();
     }
