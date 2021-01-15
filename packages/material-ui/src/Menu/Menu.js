@@ -119,20 +119,24 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const handleListKeyDown = (event) => {
     const { anchorEl } = other;
-    anchorEl.onblur = () => anchorEl.classList.remove('Mui-focusVisible');
     if (event.key === 'Tab' || event.key === 'Escape') {
       handleOnClose(event);
     }
 
+    // This removes the imperatively added focusVisible class (from just below)
+    // when the user navigates away from the item and allows normal focus
+    // management to take back over.
     anchorEl.onblur = () => anchorEl.classList.remove('Mui-focusVisible');
 
     if (event.key === 'ArrowLeft' && isSubMenu) {
-      // Tell the parent Menu to close the sub Menu that you're in, but
-      // don't trigger the sub Menu onClose cascade.
+      // This assigns the focusVisible class to the parent item when closing
+      // a sub menu using the left arrow keyboard navigation.
       anchorEl.onfocus = async () => {
         await anchorEl.classList.remove('MuiMenuItem-openSubMenuParent');
         anchorEl.classList.add('Mui-focusVisible');
       };
+      // Tell the parent Menu to close the sub Menu that you're in, but
+      // don't trigger the sub Menu onClose cascade.
       if (!event.defaultPrevented) setParentOpenSubMenuIndex(null);
       event.preventDefault();
     }

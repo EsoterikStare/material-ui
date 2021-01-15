@@ -576,6 +576,6 @@ describe('<Menu />', () => {
       expect(Array.from(getByRole('menuitem', { name: 'Settings' }).classList)).to.include(
         'MuiMenuItem-openSubMenuParent',
       );
-    })
+    });
   });
 });
