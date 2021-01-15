@@ -65,7 +65,7 @@ export const styles = (theme) => ({
   },
   /* Styles applied to parent item of open sub menu. */
   openSubMenuParent: {
-    backgroundColor: theme.palette.action.hover
+    backgroundColor: theme.palette.action.hover,
   },
   /* Styles applied to subMenuIcon when direction is 'rtl'. */
   rtlSubMenuIcon: {
@@ -130,7 +130,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         {
           [classes.selected]: selected,
           [classes.gutters]: !disableGutters,
-          [classes.openSubMenuParent]: openSubMenu
+          [classes.openSubMenuParent]: openSubMenu,
         },
         className,
       )}
