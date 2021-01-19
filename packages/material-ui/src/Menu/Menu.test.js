@@ -337,7 +337,9 @@ describe('<Menu />', () => {
         fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
     });
@@ -351,13 +353,17 @@ describe('<Menu />', () => {
         fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       act(() => {
         fireEvent.mouseMove(getByRole('menuitem', { name: 'Go deeper' }));
       });
 
-      clock.tick(500);
+      act(() => {
+        clock.tick(500);
+      });
 
       expect(queryByRole('menuitem', { name: 'Bottom depth' })).to.not.equal(null);
     });
@@ -371,14 +377,18 @@ describe('<Menu />', () => {
         fireEvent.mouseMove(getByRole('menuitem', { name: 'My account' }));
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Change username' })).to.not.equal(null);
       act(() => {
         fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Change username' })).to.equal(null);
     });
@@ -392,7 +402,9 @@ describe('<Menu />', () => {
         fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
 
@@ -418,7 +430,9 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
     });
@@ -432,14 +446,18 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
       act(() => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowLeft' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.equal(null);
     });
@@ -453,14 +471,18 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
       act(() => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'Tab' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.equal(null);
       expect(queryByRole('menuitem', { name: 'Settings' })).to.equal(null);
@@ -475,14 +497,18 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
       act(() => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'Escape' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(queryByRole('menuitem', { name: 'Regular item' })).to.equal(null);
       expect(queryByRole('menuitem', { name: 'Settings' })).to.equal(null);
@@ -497,7 +523,9 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(getByRole('menuitem', { name: 'Regular item' })).to.equal(document.activeElement); // is focused
       expect(Array.from(getByRole('menuitem', { name: 'Regular item' }).classList)).to.include(
@@ -507,7 +535,9 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowDown' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(getByRole('menuitem', { name: 'Go deeper' })).to.equal(document.activeElement); // is focused
       expect(Array.from(getByRole('menuitem', { name: 'Go deeper' }).classList)).to.include(
@@ -517,7 +547,9 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Go deeper' }), { key: 'ArrowUp' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(getByRole('menuitem', { name: 'Regular item' })).to.equal(document.activeElement); // is focused
       expect(Array.from(getByRole('menuitem', { name: 'Regular item' }).classList)).to.include(
@@ -534,7 +566,9 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       let regularItem = getByRole('menuitem', { name: 'Regular item' });
       expect(regularItem).to.equal(document.activeElement); // is focused
@@ -543,7 +577,9 @@ describe('<Menu />', () => {
         fireEvent.keyDown(regularItem, { key: 'ArrowLeft' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       // There is an async element to the way this works, so we must test asyncronously.
       const settings = await findByRole('menuitem', { name: 'Settings' });
@@ -554,7 +590,9 @@ describe('<Menu />', () => {
         fireEvent.keyDown(settings, { key: 'ArrowRight' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       regularItem = getByRole('menuitem', { name: 'Regular item' });
       expect(regularItem).to.equal(document.activeElement); // is focused
@@ -571,7 +609,9 @@ describe('<Menu />', () => {
         fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
       });
 
-      clock.tick(0);
+      act(() => {
+        clock.tick(0);
+      });
 
       expect(Array.from(getByRole('menuitem', { name: 'Settings' }).classList)).to.include(
         'MuiMenuItem-openSubMenuParent',
