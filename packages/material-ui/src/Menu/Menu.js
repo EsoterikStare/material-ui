@@ -8,6 +8,7 @@ import Popover from '../Popover';
 import MenuList from '../MenuList';
 import setRef from '../utils/setRef';
 import useTheme from '../styles/useTheme';
+import { useTriangle } from './utils/useTriangle';
 
 const RTL_ORIGIN = {
   vertical: 'top',
@@ -66,49 +67,55 @@ const Menu = React.forwardRef(function Menu(props, ref) {
   const [openSubMenuIndex, setOpenSubMenuIndex] = React.useState(null);
   const [entering, setEntering] = React.useState(false);
   const isSubMenu = typeof setParentOpenSubMenuIndex !== 'undefined';
-
+  const enterPointRef = React.useRef();
+  
   const atLeastOneSubMenu =
-    isSubMenu ||
-    React.Children.toArray(children).some(
-      (child) => React.isValidElement(child) && child.props && child.props.subMenu,
+  isSubMenu ||
+  React.Children.toArray(children).some(
+    (child) => React.isValidElement(child) && child.props && child.props.subMenu,
     );
-
-  const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
-
-  const menuListActionsRef = React.useRef(null);
-  const contentAnchorRef = React.useRef(null);
-
-  const getContentAnchorEl = () => contentAnchorRef.current;
-
-  const handleEnter = (element, isAppearing) => {
-    if (atLeastOneSubMenu) {
-      setEntering(true);
-      setOpenSubMenuIndex(null);
+    
+    const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
+    
+    const menuListActionsRef = React.useRef(null);
+    const contentAnchorRef = React.useRef(null);
+    
+    const getContentAnchorEl = () => contentAnchorRef.current;
+    
+    const handleEnter = (element, isAppearing) => {
+      if (atLeastOneSubMenu) {
+        setEntering(true);
+        setOpenSubMenuIndex(null);
+      }
+      
+      if (onEnter) {
+        onEnter(element, isAppearing);
+      }
+    };
+    
+    const handleEntering = (element, isAppearing) => {
+      if (menuListActionsRef.current) {
+        menuListActionsRef.current.adjustStyleForScrollbar(element, theme);
     }
-
-    if (onEnter) {
-      onEnter(element, isAppearing);
-    }
-  };
-
-  const handleEntering = (element, isAppearing) => {
-    if (menuListActionsRef.current) {
-      menuListActionsRef.current.adjustStyleForScrollbar(element, theme);
-    }
-
+    
     if (onEntering) {
       onEntering(element, isAppearing);
     }
   };
-
-  const handleEntered = (element, isAppearing) => {
-    if (atLeastOneSubMenu) setEntering(false);
+  
+  const externalHandleEntered = (element, isAppearing) => {
+    if (atLeastOneSubMenu) {
+      setEntering(false);
+      // theThing(element); // element.getBoundingClientRect();
+    }
 
     if (onEntered) {
       onEntered(element, isAppearing);
     }
   };
 
+  const {handleEntered, isMouseInTransitToSubmenu, itemOnMouseEnter} = useTriangle(externalHandleEntered, enterPointRef)
+  
   const handleOnClose = (event) => {
     event.preventDefault();
     setOpenSubMenuIndex(null);
@@ -190,7 +197,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       return undefined;
     }
 
-    const { subMenu, onMouseMove: onMouseMoveChildProp } = child.props;
+    const { subMenu, onMouseEnter: onMouseEnterProp, onMouseMove: onMouseMoveChildProp } = child.props;
     const { anchorEl } = other;
 
     const hasSubMenu = Boolean(subMenu);
@@ -217,6 +224,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       };
       additionalProps.openSubMenu = index === openSubMenuIndex && !entering;
       additionalProps.setParentOpenSubMenuIndex = handleSetOpenSubMenuIndex;
+      additionalProps.onMouseEnter = itemOnMouseEnter(onMouseEnterProp);
     }
 
     // If there are ANY children with subMenus, then ALL

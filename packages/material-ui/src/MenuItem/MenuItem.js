@@ -96,6 +96,8 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     ...other
   } = props;
 
+  // if (subMenu) console.log('MenuItem', other.onMouseEnter)
+
   const listItemRef = React.useRef(null);
   const handleRef = useForkRef(listItemRef, ref);
 
