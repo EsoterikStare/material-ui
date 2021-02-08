@@ -65,6 +65,8 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const [openSubMenuIndex, setOpenSubMenuIndex] = React.useState(null);
   const [entering, setEntering] = React.useState(false);
+  // const [anchorPoints, setAnchorPoints] = React.useState({x: null, y: null, height: null, width: null});
+  // const [menuPoints, setMenuPoints] = React.useState({x: null, y: null, height: null, width: null});
   const isSubMenu = typeof setParentOpenSubMenuIndex !== 'undefined';
 
   const atLeastOneSubMenu =
@@ -185,6 +187,22 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     setOpenSubMenuIndex(value);
   };
 
+  // const getAnchorPoints = event => {
+  //   // the listItem that triggered the event
+  //   const boundingRect = event.target.getBoundingClientRect();
+  //   const { x, y, width, height } = boundingRect;
+  //   setAnchorPoints(x, y, width, height);
+  // }
+
+  // const getMenuPoints = event => {
+  //   // the listItem that triggered the event
+  //   debugger
+  //   const boundingRect = event.target.getBoundingClientRect();
+  //   const { x, y, width, height } = boundingRect;
+  //   setMenuPoints(x, y, width, height);
+  // }
+
+
   const items = React.Children.map(children, (child, index) => {
     if (!React.isValidElement(child)) {
       return undefined;
@@ -206,6 +224,11 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       };
     }
 
+    // if(hasSubMenu) {
+    //   additionalProps.onMouseEnter = getAnchorPoints;
+    //   additionalProps.TransitionProps = {onEntered: getMenuPoints};
+    // }
+
     // If the current Menu item in this map has a subMenu,
     // we need the parent Menu to orchestrate its subMenu
     if (hasSubMenu && parentMenuOpen) {
@@ -225,6 +248,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (atLeastOneSubMenu) {
       additionalProps.onMouseMove = (e) => {
         setOpenSubMenuIndex(index);
+        // console.log('opened sub menu')
         if (onMouseMoveChildProp) {
           onMouseMoveChildProp(e);
         }
@@ -241,7 +265,25 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     return child;
   });
 
+
+  // const getSvgProps = () => {
+  //   if(contentAnchorRef && contentAnchorRef.current) {
+  //     const contentBox = contentAnchorRef.current.getBoundingClientRect();
+  //     // console.log({c: contentAnchorRef})
+
+  //     console.log({contentBox})
+  //     return {
+  //       top: contentBox.top,
+  //       height: contentBox.height,
+  //       width: contentBox.width,
+  //       x: contentBox.x,
+  //       y: contentBox.y
+  //     };
+  //   }
+  //  return {};
+  // }
   return (
+
     <Popover
       getContentAnchorEl={getContentAnchorEl}
       className={clsx({
@@ -281,7 +323,11 @@ const Menu = React.forwardRef(function Menu(props, ref) {
       >
         {items}
       </MenuList>
+      {/* <svg id="svg-test" style={{ pointerEvents: 'none', position: 'absolute', zIndex: "1" }}>
+        <path stroke="#00ff00" strokeWidth="2" id="test" style={{pointerEvents: 'auto'}} />
+      </svg> */}
     </Popover>
+
   );
 });
 

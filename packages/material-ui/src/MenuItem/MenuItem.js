@@ -42,7 +42,25 @@ export const styles = (theme) => ({
     [theme.breakpoints.up('sm')]: {
       minHeight: 'auto',
     },
+    // '&:hover': {
+    //   overflow: 'visible'
+    // },
+    // '&:hover&::after': {
+    //   display: 'block',
+    //   position: 'absolute',
+    //   content: "''",
+    //   width: 150,
+    //   height: 200,
+    //   top: '50%',
+    //   left: '75%',
+    //   transform: 'rotate(-30deg)',
+    //   transformOrigin: 'center left',
+    //   zIndex: 1700,
+    //   border: '1px solid red',
+    //   // background: 'red !important'
+    // }
   },
+  
   // TODO v5: remove
   /* Styles applied to the root element unless `disableGutters={true}`. */
   gutters: {},
@@ -66,6 +84,23 @@ export const styles = (theme) => ({
   /* Styles applied to parent item of open sub menu. */
   openSubMenuParent: {
     backgroundColor: theme.palette.action.hover,
+    '&:hover': {
+      overflow: 'visible'
+    },
+    '&:hover&::after': {
+      display: 'block',
+      position: 'absolute',
+      content: "''",
+      width: 150,
+      height: 200,
+      top: '50%',
+      left: '75%',
+      transform: 'rotate(-30deg)',
+      transformOrigin: 'center left',
+      zIndex: 1700,
+      border: '1px solid red',
+      // background: 'red !important'
+    }
   },
   /* Styles applied to subMenuIcon when direction is 'rtl'. */
   rtlSubMenuIcon: {
@@ -75,6 +110,9 @@ export const styles = (theme) => ({
 
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   const theme = useTheme();
+
+  const [anchorPoints, setAnchorPoints] = React.useState({x: null, y: null, height: null, width: null});
+  const [menuPoints, setMenuPoints] = React.useState({x: null, y: null, height: null, width: null});
 
   const {
     children,
@@ -103,6 +141,52 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
+  React.useEffect(() => {
+    if (anchorPoints.height === null || !menuPoints.height === null) {
+      return;
+    }
+
+    // maybe need a cleanup, idk
+    // return () => {
+    //   active = false;
+    // };
+    // 
+    // document.querySelector('#test').setAttribute( 'd', `
+    //   M ${anchorPoints.x} ${anchorPoints.y}
+    //   Q ${menuPoints.x} ${anchorPoints.y},
+    //     ${menuPoints.x} ${menuPoints.y}
+    //   v ${menuPoints.height}
+    //   Q ${menuPoints.x} ${anchorPoints.y + anchorPoints.height},
+    //     ${anchorPoints.x} ${anchorPoints.y + anchorPoints.height}
+    //   h ${anchorPoints.width}
+    //   v ${-anchorPoints.height}
+    //   z` );
+
+    document.querySelector('#test').setAttribute( 'd', "M150 0 L75 200 L225 200 Z");
+    console.log(document.querySelector('#test'))
+  }, [anchorPoints, menuPoints]);
+    
+  const getAnchorPoints = () => {
+    // the listItem that triggered the event
+    const boundingRect = listItemRef.current.getBoundingClientRect();
+    const { x, y, width, height } = boundingRect;
+    // console.log()
+    setAnchorPoints({x, y, width, height});
+  }
+
+  const getMenuPoints = (openedMenu) => {
+    // the listItem that triggered the event
+    if(!openedMenu) return;
+    const boundingRect = openedMenu.getBoundingClientRect();
+    const { x, y, width, height } = boundingRect;
+    setMenuPoints({x, y, width, height});
+  }
+
+  const getMeasurements = e => {
+    getMenuPoints(e);
+    getAnchorPoints();
+  }
+
 
   const {
     anchorEl, // disallowed
@@ -116,43 +200,45 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   } = subMenu ? subMenu.props : {};
 
   const listItem = (
-    <ListItem
-      key={subMenu && 'subMenuItem'}
-      button
-      role={role}
-      tabIndex={tabIndex}
-      component={component}
-      selected={selected}
-      disableGutters={disableGutters}
-      classes={{ dense: classes.dense, ...ListItemClasses }}
-      className={clsx(
-        classes.root,
-        {
-          [classes.selected]: selected,
-          [classes.gutters]: !disableGutters,
-          [classes.openSubMenuParent]: openSubMenu,
-        },
-        className,
-      )}
-      onKeyDown={createChainedFunction(onArrowRightKeydown, onKeyDown)}
-      ref={handleRef}
-      aria-expanded={subMenu ? openSubMenu : undefined}
-      aria-haspopup={subMenu ? true : undefined}
-      {...other}
-    >
-      {subMenu ? (
-        <div className={classes.subMenuItemWrapper}>
-          {children}
-          <SubMenuIcon
-            className={clsx(classes.subMenuIcon, {
-              [classes.rtlSubMenuIcon]: theme.direction === 'rtl',
-            })}
-          />
-        </div>
-      ) : (
-        children
-      )}
-    </ListItem>
+      <ListItem
+        key={subMenu && 'subMenuItem'}
+        button
+        role={role}
+        tabIndex={tabIndex}
+        component={component}
+        selected={selected}
+        disableGutters={disableGutters}
+        classes={{ dense: classes.dense, ...ListItemClasses }}
+        className={clsx(
+          classes.root,
+          {
+            [classes.selected]: selected,
+            [classes.gutters]: !disableGutters,
+            [classes.openSubMenuParent]: openSubMenu,
+          },
+          className,
+        )}
+        onKeyDown={createChainedFunction(onArrowRightKeydown, onKeyDown)}
+        ref={handleRef}
+        aria-expanded={subMenu ? openSubMenu : undefined}
+        aria-haspopup={subMenu ? true : undefined}
+        {...other}
+      >
+        {subMenu ? (
+          <React.Fragment>
+            <div className={classes.subMenuItemWrapper}>
+              {children}
+              <SubMenuIcon
+                className={clsx(classes.subMenuIcon, {
+                  [classes.rtlSubMenuIcon]: theme.direction === 'rtl',
+                })}
+              />
+            </div>
+          </React.Fragment>
+        ) : (
+          children
+        )}
+      </ListItem>
   );
 
   if (!subMenu) return listItem;
@@ -169,6 +255,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
           onClose: createChainedFunction(onParentClose, subOnClose),
+          // TransitionProps: { onEntered: e => getMeasurements(e)},
           setParentOpenSubMenuIndex,
           transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
           ...allowedSubMenuProps,
