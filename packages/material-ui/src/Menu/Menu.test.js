@@ -8,7 +8,7 @@ import {
   describeConformance,
   fireEvent,
   getClasses,
-  waitFor
+  waitFor,
 } from 'test/utils';
 import Button from '../Button';
 import Popover from '../Popover';
@@ -398,7 +398,7 @@ describe('<Menu />', () => {
 
     it('sub menu stays open when mouse is outside of menu', async (done) => {
       const { findByRole, getByRole, queryByRole } = render(<CascadingMenu />);
-      const button = getByRole('button')
+      const button = getByRole('button');
 
       act(() => {
         fireEvent.click(button);
@@ -408,16 +408,16 @@ describe('<Menu />', () => {
         fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
       });
 
-      let regularItem
+      let regularItem;
       // await waitFor(async () => {
-        regularItem = await findByRole('menuitem', { name: 'Regular item' });
-        // console.log({ done })
-        // await done()
-        expect(regularItem).to.not.equal(null);
-        // await done()
+      regularItem = await findByRole('menuitem', { name: 'Regular item' });
+      // console.log({ done })
+      // await done()
+      expect(regularItem).to.not.equal(null);
+      // await done()
       // })
 
-      await done()
+      await done();
 
       // await act(async () => {
       //   clock.tick(0);
@@ -440,7 +440,6 @@ describe('<Menu />', () => {
       //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
       //   await done()
       // });
-
     });
 
     // it('opens a sub Menu on RightArrow keydown', () => {
@@ -636,7 +635,6 @@ describe('<Menu />', () => {
     //   act(() => {
     //     clock.tick(0);
     //   });
-
 
     //   expect(Array.from(settings.classList)).to.include(
     //     'MuiMenuItem-openSubMenuParent',
