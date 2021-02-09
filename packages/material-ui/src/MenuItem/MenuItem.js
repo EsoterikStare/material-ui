@@ -89,7 +89,6 @@ export const styles = (theme) => ({
       transform: 'var(--dynamic-rotation)', // gives it a bias to shift towards lower menu items
       transformOrigin: 'var(--dynamic-origin)',
       zIndex: 1700, // need the after element to float above the other menu items
-      border: '1px solid red',
     }
   },
   /* Styles applied to subMenuIcon when direction is 'rtl'. */
