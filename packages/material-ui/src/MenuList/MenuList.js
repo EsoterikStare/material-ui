@@ -115,12 +115,6 @@ const MenuList = React.forwardRef(function MenuList(props, ref) {
     lastTime: null,
   });
 
-  // if(isSubMenu && getMenuPoints) {
-  //   debugger
-  //   console.log(getMenuPoints);
-  // }
-
-
   useEnhancedEffect(() => {
     if (autoFocus) {
       listRef.current.focus();

@@ -68,8 +68,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const [openSubMenuIndex, setOpenSubMenuIndex] = React.useState(null);
   const [entering, setEntering] = React.useState(false);
-  // const [anchorPoints, setAnchorPoints] = React.useState({x: null, y: null, height: null, width: null});
-  // const [menuPoints, setMenuPoints] = React.useState({x: null, y: null, height: null, width: null});
   const isSubMenu = typeof setParentOpenSubMenuIndex !== 'undefined';
 
   const atLeastOneSubMenu =
@@ -230,7 +228,6 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     if (atLeastOneSubMenu) {
       additionalProps.onMouseMove = (e) => {
         setOpenSubMenuIndex(index);
-        // console.log('opened sub menu')
         if (onMouseMoveChildProp) {
           onMouseMoveChildProp(e);
         }

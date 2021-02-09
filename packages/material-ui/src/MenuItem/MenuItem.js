@@ -153,7 +153,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     //  current list item, a rotation of -20 is the max we'd want to change it
 
     // anything -200 or more should be -20 degrees... we can try a ratio between 0 to -200 and -37 to -20
-    // note 200 is just a guess, not sure if there's a better way to calcul
+    // note 200 is just a guess, not sure if there's a better way to calculate
     const totalDiff = topDiff + bottomDiff;
     const diffRatio = Math.abs(totalDiff/200);
     const calculatedRotation = Math.trunc(17 * diffRatio);
@@ -168,7 +168,6 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       // update rotation amount, -125 just feels "right"
       updatedRotation = totalDiff > 100 ? updatedRotation - 125 : updatedRotation;
     }
-    // console.log({totalDiff, updatedRotation})
     listItemRef.current.style.setProperty("--dynamic-rotation", `rotate(${updatedRotation}deg)`);
 
     // maybe need a cleanup, idk
