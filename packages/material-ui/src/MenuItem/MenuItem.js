@@ -72,6 +72,8 @@ export const styles = (theme) => ({
     '--dynamic-height': 0,
     '--dynamic-width': 0,
     '--dynamic-rotation': `rotate(${BASE_ROTATION}deg)`,
+    '--dynamic-origin': 'top left',
+    '--dynamic-left-align': '50%',
     backgroundColor: theme.palette.action.hover,
     '&:hover': {
       overflow: 'visible'
@@ -83,9 +85,9 @@ export const styles = (theme) => ({
       width: 'var(--dynamic-width)',
       height:'var(--dynamic-height)',
       top: '50%',
-      left: '50%',
+      left: 'var(--dynamic-left-align)',
       transform: 'var(--dynamic-rotation)', // gives it a bias to shift towards lower menu items
-      transformOrigin: 'top left',
+      transformOrigin: 'var(--dynamic-origin)',
       zIndex: 1700, // need the after element to float above the other menu items
       border: '1px solid red',
     }
@@ -156,28 +158,23 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     const diffRatio = Math.abs(totalDiff/200);
     const calculatedRotation = Math.trunc(17 * diffRatio);
     const rotationAmount = Math.min(calculatedRotation, 17);
-    const updatedRotation = BASE_ROTATION + rotationAmount;
-    console.log({updatedRotation})
+    let updatedRotation = BASE_ROTATION + rotationAmount;
+
+    if (totalDiff >= 100) {
+      // update the transform origin to top right
+      listItemRef.current.style.setProperty("--dynamic-origin", 'top right');
+      // update the left setting to -50%
+      listItemRef.current.style.setProperty("--dynamic-left-align", '-50%');
+      // update rotation amount, -125 just feels "right"
+      updatedRotation = totalDiff > 100 ? updatedRotation - 125 : updatedRotation;
+    }
+    // console.log({totalDiff, updatedRotation})
     listItemRef.current.style.setProperty("--dynamic-rotation", `rotate(${updatedRotation}deg)`);
 
     // maybe need a cleanup, idk
     // return () => {
     //   active = false;
     // };
-    // 
-    // document.querySelector('#test').setAttribute( 'd', `
-    //   M ${anchorPoints.x} ${anchorPoints.y}
-    //   Q ${menuPoints.x} ${anchorPoints.y},
-    //     ${menuPoints.x} ${menuPoints.y}
-    //   v ${menuPoints.height}
-    //   Q ${menuPoints.x} ${anchorPoints.y + anchorPoints.height},
-    //     ${anchorPoints.x} ${anchorPoints.y + anchorPoints.height}
-    //   h ${anchorPoints.width}
-    //   v ${-anchorPoints.height}
-    //   z` );
-
-    // document.querySelector('#test').setAttribute( 'd', "M150 0 L75 200 L225 200 Z");
-    // console.log(document.querySelector('#test'))
   }, [anchorPoints, menuPoints]);
     
   const getAnchorPoints = () => {
