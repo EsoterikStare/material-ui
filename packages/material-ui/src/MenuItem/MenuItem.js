@@ -28,7 +28,8 @@ const LTR_TRANSFORM_ORIGIN = {
   horizontal: 'left',
 };
 
-const BASE_ROTATION = -37;
+const RTL_BASE_ROTATION = -37;
+const LTR_BASE_ROTATION = 53;
 
 export const styles = (theme) => ({
   /* Styles applied to the root element. */
@@ -71,7 +72,7 @@ export const styles = (theme) => ({
   openSubMenuParent: {
     '--dynamic-height': 0,
     '--dynamic-width': 0,
-    '--dynamic-rotation': `rotate(${BASE_ROTATION}deg)`,
+    '--dynamic-rotation': `rotate(${RTL_BASE_ROTATION}deg)`,
     '--dynamic-origin': 'top left',
     '--dynamic-left-align': '50%',
     backgroundColor: theme.palette.action.hover,
@@ -158,18 +159,29 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     const diffRatio = Math.abs(totalDiff/200);
     const calculatedRotation = Math.trunc(17 * diffRatio);
     const rotationAmount = Math.min(calculatedRotation, 17);
-    let updatedRotation = BASE_ROTATION + rotationAmount;
+    let updatedRotation = RTL_BASE_ROTATION + rotationAmount;
 
-    if (totalDiff >= 100) {
-      // update the transform origin to top right
-      listItemRef.current.style.setProperty("--dynamic-origin", 'top right');
-      // update the left setting to -50%
-      listItemRef.current.style.setProperty("--dynamic-left-align", '-50%');
-      // update rotation amount, -125 just feels "right"
-      updatedRotation = totalDiff > 100 ? updatedRotation - 125 : updatedRotation;
+    if (theme.direction === 'ltr') {
+      if (totalDiff >= 100) {
+        // update the transform origin to top right
+        listItemRef.current.style.setProperty("--dynamic-origin", 'top right');
+        // update the left setting to -50%
+        listItemRef.current.style.setProperty("--dynamic-left-align", '-50%');
+        // update rotation amount, -125 just feels "right"
+        updatedRotation = totalDiff > 100 ? updatedRotation - 125 : updatedRotation;
+      }
+      listItemRef.current.style.setProperty("--dynamic-rotation", `rotate(${updatedRotation}deg)`);
+    } else {
+      if (totalDiff >= 100) {
+        listItemRef.current.style.setProperty("--dynamic-origin", 'top left');
+        listItemRef.current.style.setProperty("--dynamic-left-align", '-50%');
+        updatedRotation = totalDiff > 100 ? updatedRotation - 125 : updatedRotation;
+      } else {
+        listItemRef.current.style.setProperty("--dynamic-origin", 'top right');
+        listItemRef.current.style.setProperty("--dynamic-left-align", '50%');
+      }
+      listItemRef.current.style.setProperty("--dynamic-rotation", `rotate(${updatedRotation * -1}deg)`);
     }
-    listItemRef.current.style.setProperty("--dynamic-rotation", `rotate(${updatedRotation}deg)`);
-
     // maybe need a cleanup, idk
     // return () => {
     //   active = false;
