@@ -42,6 +42,9 @@ export const styles = {
   enablePointerEvents: {
     pointerEvents: 'auto', // To enable capturing hover events on MenuList
   },
+  allowPaperOverflow: {
+    overflow: 'visible' // For menus with a subMenu, we need the pseudo element to be able to extend past the menu
+  }
 };
 
 const Menu = React.forwardRef(function Menu(props, ref) {
@@ -298,7 +301,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
           ...PaperProps.classes,
           root: classes.paper,
         },
-        className: clsx(PaperProps.className, { [classes.enablePointerEvents]: isSubMenu }),
+        className: clsx(PaperProps.className, { [classes.enablePointerEvents]: isSubMenu, [classes.allowPaperOverflow]: atLeastOneSubMenu  }),
       }}
       open={open}
       ref={ref}

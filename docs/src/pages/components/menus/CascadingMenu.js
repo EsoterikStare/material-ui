@@ -57,6 +57,12 @@ export default function CascadingMenu() {
                 Zoom
               </MenuItem>
               <MenuItem onClick={handleClose}>Help</MenuItem>
+              <MenuItem onClick={handleClose}>Info</MenuItem>
+              <MenuItem onClick={handleClose}>Talk to a Rep</MenuItem>
+              <MenuItem onClick={handleClose}>Get a Quote</MenuItem>
+              <MenuItem onClick={handleClose}>Jumanji</MenuItem>
+              <MenuItem onClick={handleClose}>Really Help</MenuItem>
+              <MenuItem onClick={handleClose}>HELP PLZ</MenuItem>
             </SubMenu>
           }
         >

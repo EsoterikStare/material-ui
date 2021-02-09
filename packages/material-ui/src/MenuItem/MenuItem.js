@@ -28,6 +28,8 @@ const LTR_TRANSFORM_ORIGIN = {
   horizontal: 'left',
 };
 
+const BASE_ROTATION = -37;
+
 export const styles = (theme) => ({
   /* Styles applied to the root element. */
   root: {
@@ -42,23 +44,6 @@ export const styles = (theme) => ({
     [theme.breakpoints.up('sm')]: {
       minHeight: 'auto',
     },
-    // '&:hover': {
-    //   overflow: 'visible'
-    // },
-    // '&:hover&::after': {
-    //   display: 'block',
-    //   position: 'absolute',
-    //   content: "''",
-    //   width: 150,
-    //   height: 200,
-    //   top: '50%',
-    //   left: '75%',
-    //   transform: 'rotate(-30deg)',
-    //   transformOrigin: 'center left',
-    //   zIndex: 1700,
-    //   border: '1px solid red',
-    //   // background: 'red !important'
-    // }
   },
   
   // TODO v5: remove
@@ -82,7 +67,11 @@ export const styles = (theme) => ({
     marginLeft: theme.spacing(2),
   },
   /* Styles applied to parent item of open sub menu. */
+  // inspired by this example https://codepen.io/oldcoyote/pen/YoBeyo
   openSubMenuParent: {
+    '--dynamic-height': 0,
+    '--dynamic-width': 0,
+    '--dynamic-rotation': `rotate(${BASE_ROTATION}deg)`,
     backgroundColor: theme.palette.action.hover,
     '&:hover': {
       overflow: 'visible'
@@ -91,15 +80,14 @@ export const styles = (theme) => ({
       display: 'block',
       position: 'absolute',
       content: "''",
-      width: 150,
-      height: 200,
+      width: 'var(--dynamic-width)',
+      height:'var(--dynamic-height)',
       top: '50%',
-      left: '75%',
-      transform: 'rotate(-30deg)',
-      transformOrigin: 'center left',
-      zIndex: 1700,
+      left: '50%',
+      transform: 'var(--dynamic-rotation)', // gives it a bias to shift towards lower menu items
+      transformOrigin: 'top left',
+      zIndex: 1700, // need the after element to float above the other menu items
       border: '1px solid red',
-      // background: 'red !important'
     }
   },
   /* Styles applied to subMenuIcon when direction is 'rtl'. */
@@ -111,8 +99,8 @@ export const styles = (theme) => ({
 const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   const theme = useTheme();
 
-  const [anchorPoints, setAnchorPoints] = React.useState({x: null, y: null, height: null, width: null});
-  const [menuPoints, setMenuPoints] = React.useState({x: null, y: null, height: null, width: null});
+  const [anchorPoints, setAnchorPoints] = React.useState({x: null, y: null, height: null, width: null, top: null, bottom: null });
+  const [menuPoints, setMenuPoints] = React.useState({x: null, y: null, height: null, width: null, top: null, bottom: null});
 
   const {
     children,
@@ -146,6 +134,32 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       return;
     }
 
+    // using the width and screen coordinates, we need to calculate the new height 
+    // and width of the generated after pseudoelement to try to contain as much of 
+    // the opened menu as possible. Simple idea is to just rotate it 37 degrees and 
+    // make sure its diagonal size matches the height of the opened sub menu, but
+    // better mathematics could make it more exact
+    listItemRef.current.style.setProperty("--dynamic-width", `${menuPoints.width}px`);
+    listItemRef.current.style.setProperty("--dynamic-height", `${menuPoints.height}px`);
+  
+    // if negative, menu is higher than anchor
+    const topDiff = anchorPoints.top - menuPoints.top;
+    // depending on how much more bottom oriented vs top oriented the sub menu is,
+    // we can update the rotation to better match an expected path
+    const bottomDiff = anchorPoints.bottom - menuPoints.bottom;
+    // worst case where its a very tall menu thats almost entirely below the 
+    //  current list item, a rotation of -20 is the max we'd want to change it
+
+    // anything -200 or more should be -20 degrees... we can try a ratio between 0 to -200 and -37 to -20
+    // note 200 is just a guess, not sure if there's a better way to calcul
+    const totalDiff = topDiff + bottomDiff;
+    const diffRatio = Math.abs(totalDiff/200);
+    const calculatedRotation = Math.trunc(17 * diffRatio);
+    const rotationAmount = Math.min(calculatedRotation, 17);
+    const updatedRotation = BASE_ROTATION + rotationAmount;
+    console.log({updatedRotation})
+    listItemRef.current.style.setProperty("--dynamic-rotation", `rotate(${updatedRotation}deg)`);
+
     // maybe need a cleanup, idk
     // return () => {
     //   active = false;
@@ -162,32 +176,32 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
     //   v ${-anchorPoints.height}
     //   z` );
 
-    document.querySelector('#test').setAttribute( 'd', "M150 0 L75 200 L225 200 Z");
-    console.log(document.querySelector('#test'))
+    // document.querySelector('#test').setAttribute( 'd', "M150 0 L75 200 L225 200 Z");
+    // console.log(document.querySelector('#test'))
   }, [anchorPoints, menuPoints]);
     
   const getAnchorPoints = () => {
     // the listItem that triggered the event
     const boundingRect = listItemRef.current.getBoundingClientRect();
-    const { x, y, width, height } = boundingRect;
-    // console.log()
-    setAnchorPoints({x, y, width, height});
+    const { x, y, width, height, top, bottom } = boundingRect;
+
+    setAnchorPoints({x, y, width, height, top, bottom});
   }
 
   const getMenuPoints = (openedMenu) => {
     // the listItem that triggered the event
     if(!openedMenu) return;
     const boundingRect = openedMenu.getBoundingClientRect();
-    const { x, y, width, height } = boundingRect;
-    setMenuPoints({x, y, width, height});
+    const { x, y, width, height, top, bottom } = boundingRect;
+
+    setMenuPoints({x, y, width, height, top, bottom});
   }
 
   const getMeasurements = e => {
     getMenuPoints(e);
     getAnchorPoints();
   }
-
-
+  
   const {
     anchorEl, // disallowed
     onParentClose: onParentCloseProp, // disallowed
@@ -255,7 +269,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
           MenuListProps: { ...MenuListProps, isSubMenu: true },
           open: openSubMenu,
           onClose: createChainedFunction(onParentClose, subOnClose),
-          // TransitionProps: { onEntered: e => getMeasurements(e)},
+          TransitionProps: { onEntered: e => getMeasurements(e)},
           setParentOpenSubMenuIndex,
           transformOrigin: theme.direction === 'rtl' ? RTL_TRANSFORM_ORIGIN : LTR_TRANSFORM_ORIGIN,
           ...allowedSubMenuProps,
