@@ -28,8 +28,7 @@ const LTR_TRANSFORM_ORIGIN = {
   horizontal: 'left',
 };
 
-const RTL_BASE_ROTATION = -37;
-const LTR_BASE_ROTATION = 53;
+const BASE_ROTATION = -37;
 
 export const styles = (theme) => ({
   /* Styles applied to the root element. */
@@ -72,7 +71,7 @@ export const styles = (theme) => ({
   openSubMenuParent: {
     '--dynamic-height': 0,
     '--dynamic-width': 0,
-    '--dynamic-rotation': `rotate(${RTL_BASE_ROTATION}deg)`,
+    '--dynamic-rotation': `rotate(${BASE_ROTATION}deg)`,
     '--dynamic-origin': 'top left',
     '--dynamic-left-align': '50%',
     backgroundColor: theme.palette.action.hover,
@@ -137,37 +136,34 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       return;
     }
 
-    // using the width and screen coordinates, we need to calculate the new height 
-    // and width of the generated after pseudoelement to try to contain as much of 
-    // the opened menu as possible. Simple idea is to just rotate it 37 degrees and 
-    // make sure its diagonal size matches the height of the opened sub menu, but
-    // better mathematics could make it more exact
+    /* using the width and screen coordinates, we need to calculate the new height 
+      and width of the generated after pseudoelement to try to contain as much of 
+      the opened menu as possible. */
     listItemRef.current.style.setProperty("--dynamic-width", `${menuPoints.width}px`);
     listItemRef.current.style.setProperty("--dynamic-height", `${menuPoints.height}px`);
   
     // if negative, menu is higher than anchor
     const topDiff = anchorPoints.top - menuPoints.top;
-    // depending on how much more bottom oriented vs top oriented the sub menu is,
-    // we can update the rotation to better match an expected path
+    /* depending on how much more bottom oriented vs top oriented the sub menu is,
+     we can update the rotation to better match an expected path */
     const bottomDiff = anchorPoints.bottom - menuPoints.bottom;
-    // worst case where its a very tall menu thats almost entirely below the 
-    //  current list item, a rotation of -20 is the max we'd want to change it
-
-    // anything -200 or more should be -20 degrees... we can try a ratio between 0 to -200 and -37 to -20
-    // note 200 is just a guess, not sure if there's a better way to calculate
+    /* worst case where its a very tall menu thats almost entirely below the 
+       current list item (or vice versa), a rotation of -20 is the max we'd want to change it
+       anything -200 or more should be -20 degrees... we can try a ratio between 0 to -200 and -37 to -20
+       note 200 is just a guess, not sure if there's a better way to calculate */
     const totalDiff = topDiff + bottomDiff;
     const diffRatio = Math.abs(totalDiff/200);
-    const calculatedRotation = Math.trunc(17 * diffRatio);
+    const calculatedRotation = Math.trunc(17 * diffRatio); // 17 because thats the diff between -37 and -20
     const rotationAmount = Math.min(calculatedRotation, 17);
-    let updatedRotation = RTL_BASE_ROTATION + rotationAmount;
+    let updatedRotation = BASE_ROTATION + rotationAmount;
 
+    /* depending on the direction and menu height differences,
+       we need to update the transform origins, left alignment,
+       and rotation amount to better fit the rendered sub menus */
     if (theme.direction === 'ltr') {
       if (totalDiff >= 100) {
-        // update the transform origin to top right
         listItemRef.current.style.setProperty("--dynamic-origin", 'top right');
-        // update the left setting to -50%
         listItemRef.current.style.setProperty("--dynamic-left-align", '-50%');
-        // update rotation amount, -125 just feels "right"
         updatedRotation = totalDiff > 100 ? updatedRotation - 125 : updatedRotation;
       }
       listItemRef.current.style.setProperty("--dynamic-rotation", `rotate(${updatedRotation}deg)`);
@@ -182,11 +178,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
       }
       listItemRef.current.style.setProperty("--dynamic-rotation", `rotate(${updatedRotation * -1}deg)`);
     }
-    // maybe need a cleanup, idk
-    // return () => {
-    //   active = false;
-    // };
-  }, [anchorPoints, menuPoints]);
+  }, [anchorPoints, menuPoints, theme.direction]);
     
   const getAnchorPoints = () => {
     // the listItem that triggered the event
@@ -197,7 +189,7 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
   }
 
   const getMenuPoints = (openedMenu) => {
-    // the listItem that triggered the event
+    // the sub menu that opened
     if(!openedMenu) return;
     const boundingRect = openedMenu.getBoundingClientRect();
     const { x, y, width, height, top, bottom } = boundingRect;
