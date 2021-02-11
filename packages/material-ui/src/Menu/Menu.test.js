@@ -253,392 +253,743 @@ describe('<Menu />', () => {
   });
 
   describe('cascading menu', () => {
-    let clock;
+    it('renders a subMenu', () => {
+      const clock = useFakeTimers();
+      const expected = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
 
-    beforeEach(() => {
-      clock = useFakeTimers();
-    });
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
 
-    afterEach(() => {
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole, queryByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Test' }));
+      });
+
       clock.restore();
+      expect(queryByRole('menuitem', { name: expected })).to.not.equal(null);
     });
 
-    const CascadingMenu = (props) => {
-      const [anchorEl, setAnchorEl] = React.useState(null);
+    it('renders a nested subMenu', () => {
+      const clock = useFakeTimers();
+      const expected = 'NestedSubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
 
-      const handleButtonClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem
+                      subMenu={
+                        <SubMenu>
+                          <MenuItem>{expected}</MenuItem>
+                        </SubMenu>
+                      }
+                    >
+                      Test2
+                    </MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
       };
 
-      const handleItemClick = () => {
-        setAnchorEl(null);
+      const { getByRole, queryByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Test' }));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Test2' }));
+      });
+
+      clock.restore();
+      expect(queryByRole('menuitem', { name: expected })).to.not.equal(null);
+    });
+
+    it('collapses the subMenu when active parent item is changed', () => {
+      const clock = useFakeTimers();
+      const expected = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+              <MenuItem>Other</MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
       };
 
-      return (
-        <div>
-          <Button onClick={handleButtonClick}>Open Menu</Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleItemClick}
-            transitionDuration={0}
-            {...props}
-          >
-            <MenuItem
-              id="settings-item"
-              subMenu={
-                <SubMenu>
-                  <MenuItem id="regular-item" onClick={handleItemClick}>
-                    Regular item
-                  </MenuItem>
-                  <MenuItem
-                    id="go-deeper-1"
-                    subMenu={
-                      <SubMenu>
-                        <MenuItem key="deeper2" id="go-deeper-2">
-                          Bottom depth
-                        </MenuItem>
-                      </SubMenu>
-                    }
-                  >
-                    Go deeper
-                  </MenuItem>
-                </SubMenu>
-              }
-            >
-              Settings
-            </MenuItem>
-            <MenuItem
-              id="account-item"
-              subMenu={
-                <SubMenu>
-                  <MenuItem id="reset-password" onClick={handleItemClick}>
-                    Reset password
-                  </MenuItem>
-                  <MenuItem id="change-username" onClick={handleItemClick}>
-                    Change username
-                  </MenuItem>
-                  <MenuItem onClick={handleItemClick}>Delete account</MenuItem>
-                </SubMenu>
-              }
-            >
-              My account
-            </MenuItem>
-          </Menu>
-        </div>
+      const { getByRole, queryByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Test' }));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Other' }));
+      });
+
+      clock.restore();
+      expect(queryByRole('menuitem', { name: expected })).to.equal(null);
+    });
+
+    it('keeps subMenus open when mousing outside of menus', () => {
+      const clock = useFakeTimers();
+      const expected = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole, queryByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.mouseMove(getByRole('menuitem', { name: 'Test' }));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.mouseOut(getByRole('menuitem', { name: 'Test' }));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.mouseEnter(getByRole('button'));
+      });
+
+      clock.restore();
+      expect(queryByRole('menuitem', { name: expected })).to.not.equal(null);
+    });
+
+    it('opens a subMenu on right arrow keydown', () => {
+      const clock = useFakeTimers();
+      const expected = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole, queryByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Test' }), { key: 'ArrowRight' });
+      });
+
+      clock.restore();
+      expect(queryByRole('menuitem', { name: expected })).to.not.equal(null);
+    });
+
+    it('closes a subMenu on left arrow keydown', () => {
+      const clock = useFakeTimers();
+      const expected = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole, queryByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Test' }), { key: 'ArrowRight' });
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: expected }), { key: 'ArrowLeft' });
+      });
+
+      clock.restore();
+      expect(queryByRole('menuitem', { name: expected })).to.equal(null);
+    });
+
+    it('closes all menus on tab keydown', () => {
+      const clock = useFakeTimers();
+      const expected = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} transitionDuration={0}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole, queryByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Test' }), { key: 'ArrowRight' });
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: expected }), { key: 'Tab' });
+      });
+
+      // Restore regular clock before doing setTimeout because sinon fake clocks replace the normal
+      // functionality and cause this to fail.
+      clock.restore();
+
+      // This is gross and potentially flakey but it's the only way we could get the second assertion to pass.
+      // Having the first assertion in here too eliminates the need for an additional clock.tick().
+      setTimeout(() => {
+        expect(queryByRole('menuitem', { name: expected })).to.equal(null);
+        expect(queryByRole('menuitem', { name: 'Test' })).to.equal(null);
+      }, 1000);
+    });
+
+    it('closes all menus on escape keydown', async () => {
+      const clock = useFakeTimers();
+      const expected = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} transitionDuration={0}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole, queryByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Test' }), { key: 'ArrowRight' });
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: expected }), { key: 'Escape' });
+      });
+
+      // Restore regular clock before doing setTimeout because sinon fake clocks replace the normal
+      // functionality and cause this to fail.
+      clock.restore();
+
+      // This is gross and potentially flakey but it's the only way we could get the second assertion to pass.
+      // Having the first assertion in here too eliminates the need for an additional clock.tick().
+      setTimeout(() => {
+        expect(queryByRole('menuitem', { name: expected })).to.equal(null);
+        expect(queryByRole('menuitem', { name: 'Test' })).to.equal(null);
+      }, 1000);
+    });
+
+    it('changes subMenu item focus with down arrow', () => {
+      const clock = useFakeTimers();
+      const expected = 'Second';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>First</MenuItem>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Test' }), { key: 'ArrowRight' });
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'First' }), { key: 'ArrowDown' });
+      });
+
+      clock.restore();
+      expect(getByRole('menuitem', { name: expected })).to.equal(document.activeElement); // is focused
+      expect(Array.from(getByRole('menuitem', { name: expected }).classList)).to.include(
+        'Mui-focusVisible',
+      ); // looks focused
+    });
+
+    it('changes subMenu item focus with up arrow', () => {
+      const clock = useFakeTimers();
+      const expected = 'Second';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>First</MenuItem>
+                    <MenuItem>{expected}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Test' }), { key: 'ArrowRight' });
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'First' }), { key: 'ArrowUp' });
+      });
+
+      clock.restore();
+      expect(getByRole('menuitem', { name: expected })).to.equal(document.activeElement); // is focused
+      expect(Array.from(getByRole('menuitem', { name: expected }).classList)).to.include(
+        'Mui-focusVisible',
+      ); // looks focused
+    });
+
+    it('focuses first item when it opens a subMenu', () => {
+      const clock = useFakeTimers();
+      const expected = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{expected}</MenuItem>
+                    <MenuItem>Other</MenuItem>
+                  </SubMenu>
+                }
+              >
+                Test
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { getByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: 'Test' }), { key: 'ArrowRight' });
+      });
+
+      clock.restore();
+      expect(getByRole('menuitem', { name: expected })).to.equal(document.activeElement); // is focused
+      expect(Array.from(getByRole('menuitem', { name: expected }).classList)).to.include(
+        'Mui-focusVisible',
+      ); // looks focused
+    });
+
+    it('changes focus with right and left arrow keys', async () => {
+      const clock = useFakeTimers();
+      const firstFocus = 'MenuItem';
+      const secondFocus = 'SubMenuItem';
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>{secondFocus}</MenuItem>
+                  </SubMenu>
+                }
+              >
+                {firstFocus}
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
+
+      const { findByRole, getByRole } = render(<CascadingMenu />);
+
+      act(() => {
+        fireEvent.click(getByRole('button'));
+      });
+
+      act(() => {
+        clock.tick(0);
+      });
+
+      // ensure focus is on first item in root menu
+      expect(getByRole('menuitem', { name: firstFocus })).to.equal(document.activeElement); // is focused
+      expect(Array.from(getByRole('menuitem', { name: firstFocus }).classList)).to.include(
+        'Mui-focusVisible',
       );
-    };
 
-    // it('displays a sub menu level 1', () => {
-    //   const { getByRole, queryByRole } = render(<CascadingMenu />);
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-    // });
-
-    // it('displays a sub menu level 2', () => {
-    //   const { getByRole, queryByRole } = render(<CascadingMenu />);
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   act(() => {
-    //     fireEvent.mouseMove(getByRole('menuitem', { name: 'Go deeper' }));
-    //   });
-
-    //   act(() => {
-    //     clock.tick(500);
-    //   });
-
-    //   expect(queryByRole('menuitem', { name: 'Bottom depth' })).to.not.equal(null);
-    // });
-
-    // it('sub menus collapse when active parent item is changed', async () => {
-    //   const { findByText, getByRole, queryByRole } = render(<CascadingMenu />);
-
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.mouseMove(getByRole('menuitem', { name: 'My account' }));
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(queryByRole('menuitem', { name: 'Change username' })).to.not.equal(null);
-    //   const settings = await findByText('Settings')
-    //   act(() => {
-    //     fireEvent.mouseMove(settings);
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(queryByRole('menuitem', { name: 'Change username' })).to.equal(null);
-    // });
-
-    it('sub menu stays open when mouse is outside of menu', async (done) => {
-      const { findByRole, getByRole, queryByRole } = render(<CascadingMenu />);
-      const button = getByRole('button');
-
+      // arrow right
       act(() => {
-        fireEvent.click(button);
+        fireEvent.keyDown(getByRole('menuitem', { name: firstFocus }), { key: 'ArrowRight' });
       });
 
       act(() => {
-        fireEvent.mouseMove(getByRole('menuitem', { name: 'Settings' }));
+        clock.tick(0);
       });
 
-      let regularItem;
-      // await waitFor(async () => {
-      regularItem = await findByRole('menuitem', { name: 'Regular item' });
-      // console.log({ done })
-      // await done()
-      expect(regularItem).to.not.equal(null);
-      // await done()
-      // })
+      // ensure focus moved to first item in submenu
+      expect(getByRole('menuitem', { name: secondFocus })).to.equal(document.activeElement); // is focused
+      expect(Array.from(getByRole('menuitem', { name: secondFocus }).classList)).to.include(
+        'Mui-focusVisible',
+      ); // looks focused
 
-      await done();
+      // arrow back left
+      act(() => {
+        fireEvent.keyDown(getByRole('menuitem', { name: secondFocus }), { key: 'ArrowLeft' });
+      });
 
-      // await act(async () => {
-      //   clock.tick(0);
-      //   await done()
-      // });
+      act(() => {
+        clock.tick(0);
+      });
 
-      // act(() => {
-      //   fireEvent.mouseMove(getByRole('menuitem', { name: 'Regular item' }));
-      // });
-
-      // act(() => {
-      //   fireEvent.mouseOut(getByRole('menuitem', { name: 'Regular item' }));
-      // });
-
-      // act(() => {
-      //   fireEvent.mouseEnter(button);
-      // });
-
-      // await waitFor(async () => {
-      //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-      //   await done()
-      // });
+      clock.restore();
+      // ensure focus moved back to first item in root menu
+      expect(getByRole('menuitem', { name: firstFocus })).to.equal(document.activeElement); // is focused
+      const fFocus = await findByRole('menuitem', { name: firstFocus });
+      const hasFocusVisible = Array.from(fFocus.classList).includes('Mui-focusVisible');
+      expect(hasFocusVisible).to.equal(true); // looks focused
     });
 
-    // it('opens a sub Menu on RightArrow keydown', () => {
-    //   const { getByRole, queryByRole } = render(<CascadingMenu />);
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
-    //   });
+    it('keeps parent items of open sub menus highlighted', () => {
+      const clock = useFakeTimers();
+      const CascadingMenu = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
 
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
+        const handleButtonClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
 
-    //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-    // });
+        return (
+          <React.Fragment>
+            <Button onClick={handleButtonClick} />
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}>
+              <MenuItem
+                subMenu={
+                  <SubMenu>
+                    <MenuItem>SubMenuItem</MenuItem>
+                  </SubMenu>
+                }
+              >
+                MenuItem
+              </MenuItem>
+            </Menu>
+          </React.Fragment>
+        );
+      };
 
-    // it('closes current sub Menu on LeftArrow keydown', () => {
-    //   const { getByRole, queryByRole } = render(<CascadingMenu />);
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
-    //   });
+      const { queryByRole } = render(<CascadingMenu />);
 
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
+      act(() => {
+        fireEvent.click(queryByRole('button'));
+      });
 
-    //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowLeft' });
-    //   });
+      act(() => {
+        clock.tick(0);
+      });
 
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
+      act(() => {
+        fireEvent.keyDown(queryByRole('menuitem', { name: 'MenuItem' }), { key: 'ArrowRight' });
+      });
 
-    //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.equal(null);
-    // });
-
-    // it('closes all menus on Tab keydown', () => {
-    //   const { getByRole, queryByRole } = render(<CascadingMenu />);
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'Tab' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.equal(null);
-    //   expect(queryByRole('menuitem', { name: 'Settings' })).to.equal(null);
-    // });
-
-    // it('closes all menus on Escape keydown', () => {
-    //   const { getByRole, queryByRole } = render(<CascadingMenu />);
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.not.equal(null);
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'Escape' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(queryByRole('menuitem', { name: 'Regular item' })).to.equal(null);
-    //   expect(queryByRole('menuitem', { name: 'Settings' })).to.equal(null);
-    // });
-
-    // it('changes focus with up and down arrow buttons', () => {
-    //   const { getByRole } = render(<CascadingMenu />);
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(getByRole('menuitem', { name: 'Regular item' })).to.equal(document.activeElement); // is focused
-    //   expect(Array.from(getByRole('menuitem', { name: 'Regular item' }).classList)).to.include(
-    //     'Mui-focusVisible',
-    //   ); // looks focused
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Regular item' }), { key: 'ArrowDown' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(getByRole('menuitem', { name: 'Go deeper' })).to.equal(document.activeElement); // is focused
-    //   expect(Array.from(getByRole('menuitem', { name: 'Go deeper' }).classList)).to.include(
-    //     'Mui-focusVisible',
-    //   ); // looks focused
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Go deeper' }), { key: 'ArrowUp' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(getByRole('menuitem', { name: 'Regular item' })).to.equal(document.activeElement); // is focused
-    //   expect(Array.from(getByRole('menuitem', { name: 'Regular item' }).classList)).to.include(
-    //     'Mui-focusVisible',
-    //   ); // looks focused
-    // });
-
-    // it('changes focus with left and right arrow buttons', async () => {
-    //   const { findByRole, getByRole } = render(<CascadingMenu />);
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-    //   act(() => {
-    //     fireEvent.keyDown(getByRole('menuitem', { name: 'Settings' }), { key: 'ArrowRight' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   let regularItem = getByRole('menuitem', { name: 'Regular item' });
-    //   expect(regularItem).to.equal(document.activeElement); // is focused
-    //   expect(Array.from(regularItem.classList)).to.include('Mui-focusVisible'); // looks focused
-    //   act(() => {
-    //     fireEvent.keyDown(regularItem, { key: 'ArrowLeft' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   // There is an async element to the way this works, so we must test asyncronously.
-    //   const settings = await findByRole('menuitem', { name: 'Settings' });
-    //   expect(settings).to.equal(document.activeElement); // is focused
-    //   expect(Array.from(settings.classList)).to.include('Mui-focusVisible'); // looks focused
-
-    //   act(() => {
-    //     fireEvent.keyDown(settings, { key: 'ArrowRight' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   regularItem = getByRole('menuitem', { name: 'Regular item' });
-    //   expect(regularItem).to.equal(document.activeElement); // is focused
-    //   expect(Array.from(regularItem.classList)).to.include('Mui-focusVisible'); // looks focused
-    // });
-
-    // it('keeps parent items of open sub menus highlighted', async () => {
-    //   const { findByRole, getByRole } = render(<CascadingMenu />);
-
-    //   act(() => {
-    //     fireEvent.click(getByRole('button'));
-    //   });
-
-    //   const settings = await findByRole('menuitem', { name: 'Settings' })
-    //   act(() => {
-    //     fireEvent.keyDown(settings, { key: 'ArrowRight' });
-    //   });
-
-    //   act(() => {
-    //     clock.tick(0);
-    //   });
-
-    //   expect(Array.from(settings.classList)).to.include(
-    //     'MuiMenuItem-openSubMenuParent',
-    //   );
-    // });
+      clock.restore();
+      expect(Array.from(queryByRole('menuitem', { name: 'MenuItem' }).classList)).to.include(
+        'MuiMenuItem-openSubMenuParent',
+      );
+    });
   });
 });
