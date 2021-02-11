@@ -8,7 +8,6 @@ import {
   describeConformance,
   fireEvent,
   getClasses,
-  waitFor,
 } from 'test/utils';
 import Button from '../Button';
 import Popover from '../Popover';
