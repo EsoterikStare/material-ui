@@ -238,16 +238,14 @@ const MenuItem = React.forwardRef(function MenuItem(props, ref) {
         {...other}
       >
         {subMenu ? (
-          <React.Fragment>
-            <div className={classes.subMenuItemWrapper}>
-              {children}
-              <SubMenuIcon
-                className={clsx(classes.subMenuIcon, {
-                  [classes.rtlSubMenuIcon]: theme.direction === 'rtl',
-                })}
-              />
-            </div>
-          </React.Fragment>
+          <div className={classes.subMenuItemWrapper}>
+            {children}
+            <SubMenuIcon
+              className={clsx(classes.subMenuIcon, {
+                [classes.rtlSubMenuIcon]: theme.direction === 'rtl',
+              })}
+            />
+          </div>
         ) : (
           children
         )}
