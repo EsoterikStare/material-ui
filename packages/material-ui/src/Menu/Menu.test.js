@@ -637,7 +637,7 @@ describe('<Menu />', () => {
       setTimeout(() => {
         expect(queryByRole('menuitem', { name: expected })).to.equal(null);
         expect(queryByRole('menuitem', { name: 'Test' })).to.equal(null);
-      }, 500);
+      }, 1000);
     });
 
     it('closes all menus on escape keydown', async () => {
@@ -699,7 +699,7 @@ describe('<Menu />', () => {
       setTimeout(() => {
         expect(queryByRole('menuitem', { name: expected })).to.equal(null);
         expect(queryByRole('menuitem', { name: 'Test' })).to.equal(null);
-      }, 500);
+      }, 1000);
     });
 
     it('changes subMenu item focus with down arrow', () => {
